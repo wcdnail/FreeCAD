@@ -156,7 +156,7 @@ PyObject *TopoShapePy::PyMake(struct _typeobject *, PyObject *, PyObject *)  // 
 int TopoShapePy::PyInit(PyObject* args, PyObject* keywds)
 {
 #ifdef FC_USE_TNP_FIX
-    static char* kwlist[] = {"shape", "op", "tag", "hasher", nullptr};
+    static char* kwlist[] = {(char*)"shape", (char*)"op", (char*)"tag", (char*)"hasher", nullptr};
     long tag = 0;
     PyObject* pyHasher = nullptr;
     const char* op = nullptr;
@@ -2477,7 +2477,7 @@ PyObject* TopoShapePy::makeEvolved(PyObject *args, PyObject *kwds)
     auto JoinType = JoinType::arc;
     double Tolerance = 0.0000001;
 
-    static char* kwds_evolve[] = {"Profile", "Join", "AxeProf", "Solid", "ProfOnSpine", "Tolerance", nullptr};
+    static char* kwds_evolve[] = {(char*)"Profile", (char*)"Join", (char*)"AxeProf", (char*)"Solid", (char*)"ProfOnSpine", (char*)"Tolerance", nullptr};
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "O!|iO!O!O!d", kwds_evolve,
                                      &TopoShapePy::Type, &Profile, &JoinType,
                                      &PyBool_Type, &AxeProf, &PyBool_Type, &Solid,
@@ -3125,7 +3125,7 @@ PyObject* TopoShapePy::findSubShape(PyObject* args)
 
 PyObject* TopoShapePy::findSubShapesWithSharedVertex(PyObject* args, PyObject* keywds)
 {
-    static char* kwlist[] = {"shape", "needName", "checkGeometry", "tol", "atol", nullptr};
+    static char* kwlist[] = {(char*)"shape", (char*)"needName", (char*)"checkGeometry", (char*)"tol", (char*)"atol", nullptr};
     PyObject* pyobj;
     PyObject* needName = Py_False;
     PyObject* checkGeometry = Py_True;

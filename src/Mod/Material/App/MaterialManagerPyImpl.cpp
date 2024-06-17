@@ -223,14 +223,20 @@ PyObject* MaterialManagerPy::materialsWithModelComplete(PyObject* args)
 
 PyObject* MaterialManagerPy::save(PyObject* args, PyObject* kwds)
 {
-    char* libraryName {};
-    PyObject* obj {};
-    char* path {};
-    PyObject* overwrite = Py_False;
-    PyObject* saveAsCopy = Py_False;
-    PyObject* saveInherited = Py_False;
-    static char* kwds_save[] =
-        {"library", "material", "path", "overwrite", "saveAsCopy", "saveInherited", nullptr};
+    char*            libraryName{nullptr};
+    PyObject*                obj{nullptr};
+    char*                   path{nullptr};
+    PyObject*          overwrite{Py_False};
+    PyObject*         saveAsCopy{Py_False};
+    PyObject*      saveInherited{Py_False};
+    static char       slibrary[]{"library"};
+    static char      smaterial[]{"material"};
+    static char          spath[]{"path"};
+    static char     soverwrite[]{"overwrite"};
+    static char    ssaveAsCopy[]{"saveAsCopy"};
+    static char ssaveInherited[]{"saveInherited"};
+    static char*     kwds_save[]{slibrary, smaterial, spath, soverwrite, ssaveAsCopy, ssaveInherited, nullptr};
+
     if (!PyArg_ParseTupleAndKeywords(args,
                                      kwds,
                                      "etOet|O!O!O!",
@@ -300,11 +306,12 @@ void addMaterials(Py::List& list,
 
 PyObject* MaterialManagerPy::filterMaterials(PyObject* args, PyObject* kwds)
 {
-    PyObject* filterPy {};
-    PyObject* includeLegacy = Py_False;
-    static char* kwds_save[] = {"filter",
-                                "includeLegacy",
-                                nullptr};
+    PyObject*           filterPy{nullptr};
+    PyObject*      includeLegacy{Py_False};
+    static char        sfilter[]{"filter"};
+    static char sincludeLegacy[]{"includeLegacy"};
+    static char*     kwds_save[]{sfilter, sincludeLegacy, nullptr};
+
     if (!PyArg_ParseTupleAndKeywords(args,
                                      kwds,
                                      //  "O|O!",

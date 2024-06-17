@@ -56,6 +56,26 @@ Other options are described at the [wiki Download page](https://wiki.freecad.org
 Compiling
 ---------
 
+### Build with VCPKG
+
+(Fork specific)
+
+Clone VCPKG [this fork](https://gitflic.ru/project/gera/wcpkg.git) it contain all patches to build FreeCAD.
+Also this fork provide vcpkg-tool WITH NO MS metering service - sending metering was prohibited (removed from code).
+
+```
+cd /FreeCAD/source/root/dir
+
+setup-vcpkg
+
+cmake --build bld
+```
+
+Or run MSVS from solution in bld dir.
+(My MSVS with ReSharper **crashes** with opened FreeCAD solution file! I use cmake for build)
+
+### Build with VCPKG done
+
 Compiling FreeCAD requires installation of several libraries and their 
 development files such as OCCT (Open Cascade), Coin and Qt, listed in the 
 pages below. Once this is done, FreeCAD can be compiled with 

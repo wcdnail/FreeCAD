@@ -27,7 +27,7 @@
 
 // Standard*
 #include <Standard_AbortiveTransaction.hxx>
-#include <Standard_Address.hxx>
+//#include <Standard_Address.hxx>
 #include <Standard_Boolean.hxx>
 #include <Standard_Byte.hxx>
 #include <Standard_Character.hxx>
@@ -41,7 +41,7 @@
 #include <Standard_DomainError.hxx>
 #include <Standard_ErrorHandler.hxx>
 #include <Standard_ExtCharacter.hxx>
-#include <Standard_ExtString.hxx>
+//#include <Standard_ExtString.hxx>
 #include <Standard_Failure.hxx>
 #include <Standard_GUID.hxx>
 #include <Standard_ImmutableObject.hxx>

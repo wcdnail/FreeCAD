@@ -3,6 +3,13 @@
 # for further info why
 cmake_minimum_required(VERSION 3.16.3 FATAL_ERROR)
 
+set(VCPKG_ROOT "$ENV{VCPKG_ROOT}" CACHE PATH "VCPKG_ROOT")
+if (VCPKG_ROOT)
+    if (NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+        set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "VCPKG toolchain file")
+    endif()
+endif()
+
 # policy CMP0072 was introduced with CMake 3.11
 # relates to FindOpenGL module
 # and cache variables OPENGL_gl_LIBRARY, OPENGL_glu_LIBRARY
@@ -96,6 +103,31 @@ endif(BUILD_VR)
 
 SetLibraryVersions()
 SetGlobalCompilerAndLinkerSettings()
+
+if (VCPKG_ROOT)
+    if ("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-")
+        if (MSVS)
+            set(VCPKG_TARGET_TRIPLET x64-windows)
+        elseif (MSYS OR MINGW)
+            set(VCPKG_TARGET_TRIPLET x64-msys-clang)
+        else()
+            set(VCPKG_TARGET_TRIPLET x64-linux)
+        endif()
+        message(STATUS "VCPKG triplet setup from CMAKE: ${VCPKG_TARGET_TRIPLET}")
+    endif()
+    set(VCPKG_INSTALLED_DIR "${VCPKG_ROOT}/installed/${VCPKG_TARGET_TRIPLET}")
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(VCPKG_INSTALLED_CONF_DIR "${VCPKG_INSTALLED_DIR}/debug")
+    else()
+        set(VCPKG_INSTALLED_CONF_DIR "${VCPKG_INSTALLED_DIR}")
+    endif()
+    message(STATUS "VCPKG installed dir: ${VCPKG_INSTALLED_DIR}")
+    message(STATUS "VCPKG installed conf dir: ${VCPKG_INSTALLED_CONF_DIR}")
+    include_directories(
+        ${VCPKG_INSTALLED_DIR}/include
+        ${VCPKG_INSTALLED_DIR}/include/Qt6/QtCore5Compat
+    )
+endif()
 
 add_subdirectory(src)
 add_subdirectory(data)

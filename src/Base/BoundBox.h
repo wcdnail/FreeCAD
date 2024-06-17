@@ -30,6 +30,8 @@
 #include "Tools2D.h"
 #include "ViewProj.h"
 
+#undef min
+#undef max
 
 namespace Base
 {
