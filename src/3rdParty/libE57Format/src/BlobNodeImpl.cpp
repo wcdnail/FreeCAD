@@ -205,8 +205,7 @@ namespace e57
    void BlobNodeImpl::dump( int indent, std::ostream &os ) const
    {
       // don't checkImageFileOpen
-      os << space( indent ) << "type:        Blob"
-         << " (" << type() << ")" << std::endl;
+      os << space( indent ) << "type:        Blob" << " (" << type() << ")" << std::endl;
       NodeImpl::dump( indent, os );
       os << space( indent ) << "blobLogicalLength_:           " << blobLogicalLength_ << std::endl;
       os << space( indent ) << "binarySectionLogicalStart:    " << binarySectionLogicalStart_ << std::endl;

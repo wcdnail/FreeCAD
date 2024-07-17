@@ -34,6 +34,7 @@ boost-interprocess ^
 boost-statechart ^
 boost-convert ^
 boost-geometry ^
+boost-assign ^
 ms-gsl ^
 netgen[occ] ^
 --recurse

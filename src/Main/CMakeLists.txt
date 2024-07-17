@@ -3,6 +3,8 @@ configure_file(freecad.rc.cmake ${CMAKE_CURRENT_BINARY_DIR}/freecad.rc)
 configure_file(freecadCmd.rc.cmake ${CMAKE_CURRENT_BINARY_DIR}/freecadCmd.rc)
 file(COPY icon.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 if(BUILD_GUI)
     include_directories(
         ${Boost_INCLUDE_DIRS}
@@ -45,6 +47,12 @@ if(BUILD_GUI)
     endif(NOT BUILD_DYNAMIC_LINK_PYTHON)
 
     add_executable(FreeCADMain WIN32 ${FreeCAD_SRCS})
+    set_target_properties(FreeCADMain PROPERTIES FOLDER "Main")
+    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES
+        icon.ico
+        MainGui.cpp
+    )
+    
     target_link_libraries(FreeCADMain ${FreeCAD_LIBS})
     if (FREECAD_WARN_ERROR)
         target_compile_warn_error(FreeCADMain)
@@ -70,15 +78,13 @@ if(BUILD_GUI)
 
     if (MSVC)
         set(DBG_PATH "PATH=$(PATH);${VCPKG_INSTALLED_CONF_DIR}/bin")
-        set_target_properties(FreeCADMain PROPERTIES VS_DEBUGGER_ENVIRONMENT "${DBG_PATH}")
-        #set_target_properties(FreeCADMain PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE})
-        set_target_properties(FreeCADMain PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "\$(SolutionDir)bin\\\$(ConfigurationName)")        
-    
-        #set_target_properties(FreeCADMain PROPERTIES VS_DEBUGGER_COMMAND_ARGUMENTS 
-           #"-v3 --server=0.0.0.0:27027"
-           #"--cert=${CMAKE_SOURCE_DIR}/ssl-cert.pem --pk=${CMAKE_SOURCE_DIR}/ssl-pk.pem"
+        set(QTP_PATH "QT_QPA_PLATFORM_PLUGIN_PATH=\$(VCPKG_ROOT)\\installed\\x64-windows\\Qt6\\plugins\\platforms")
+        set(FC_PYTHONHOME "FC_PYTHONHOME=\$(VCPKG_ROOT)\\installed\\x64-windows\\tools\\python3")
+        set_target_properties(FreeCADMain PROPERTIES VS_DEBUGGER_ENVIRONMENT "${FC_PYTHONHOME}\n${QTP_PATH}\n${DBG_PATH}")
+        set_target_properties(FreeCADMain PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "\$(SolutionDir)bin\\\$(ConfigurationName)")
+        #set_target_properties(FreeCADMain PROPERTIES VS_DEBUGGER_COMMAND_ARGUMENTS
+            # #TODO: DEBUG command line here
         #)
-
         set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT FreeCADMain)
     endif()
 
@@ -92,6 +98,7 @@ SET(FreeCADMainCmd_SRCS
 )
 
 add_executable(FreeCADMainCmd ${FreeCADMainCmd_SRCS})
+set_target_properties(FreeCADMainCmd PROPERTIES FOLDER "Main")
 
 SET(FreeCADMainCmd_LIBS
     FreeCADApp
@@ -139,6 +146,7 @@ SET(FreeCADMainPy_SRCS
 )
 
 add_library(FreeCADMainPy SHARED ${FreeCADMainPy_SRCS})
+set_target_properties(FreeCADMainPy PROPERTIES FOLDER "Main")
 
 target_link_libraries(FreeCADMainPy FreeCADApp)
 if (FREECAD_WARN_ERROR)
@@ -167,6 +175,7 @@ if(BUILD_GUI)
     )
 
     add_library(FreeCADGuiPy SHARED ${FreeCADGuiPy_SRCS})
+    set_target_properties(FreeCADGuiPy PROPERTIES FOLDER "Main")
 
     target_link_libraries(FreeCADGuiPy FreeCADGui)
     if (FREECAD_WARN_ERROR)

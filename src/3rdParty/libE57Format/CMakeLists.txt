@@ -42,6 +42,8 @@ project( E57Format
 	    2.2.1
 )
 
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 include( Tags )
 
 # Check if we are building ourself or being included and use this to set some defaults
@@ -113,6 +115,8 @@ else()
 	message( STATUS "[E57] Building static library" )
 	add_library( E57Format STATIC ${E57Format_SOURCES})
 endif()
+
+set_target_properties(E57Format PROPERTIES FOLDER "3rdParty")
 
 include( E57ExportHeader )
 

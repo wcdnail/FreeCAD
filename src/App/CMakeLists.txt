@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 if(WIN32)
     add_definitions(-DFCApp)
     add_definitions(-DBOOST_DYN_LINK)
@@ -339,6 +341,8 @@ if(FREECAD_USE_PCH)
 endif(FREECAD_USE_PCH)
 
 add_library(FreeCADApp SHARED ${FreeCADApp_SRCS})
+set_target_properties(FreeCADApp PROPERTIES FOLDER "Main")
+
 target_link_libraries(FreeCADApp ${FreeCADApp_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(FreeCADApp)

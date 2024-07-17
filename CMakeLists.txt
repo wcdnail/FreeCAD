@@ -10,6 +10,9 @@ if (VCPKG_ROOT)
     endif()
 endif()
 
+set(VCPKG_APPLOCAL_DEPS OFF)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 # policy CMP0072 was introduced with CMake 3.11
 # relates to FindOpenGL module
 # and cache variables OPENGL_gl_LIBRARY, OPENGL_glu_LIBRARY

@@ -47,8 +47,7 @@ namespace e57
 
    CompressedVectorWriterImpl::CompressedVectorWriterImpl( std::shared_ptr<CompressedVectorNodeImpl> ni,
                                                            std::vector<SourceDestBuffer> &sbufs ) :
-      cVector_( ni ),
-      isOpen_( false ) // set to true when succeed below
+      cVector_( ni ), isOpen_( false ) // set to true when succeed below
    {
       //???  check if cvector already been written (can't write twice)
 
@@ -601,7 +600,9 @@ namespace e57
                                                         const char *srcFunctionName ) const
    {
       // unimplemented...
-      (void)srcFileName; (void)srcLineNumber; (void)srcFunctionName;
+      (void)srcFileName;
+      (void)srcLineNumber;
+      (void)srcFunctionName;
    }
 
    void CompressedVectorWriterImpl::checkWriterOpen( const char *srcFileName, int srcLineNumber,

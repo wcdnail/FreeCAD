@@ -544,7 +544,8 @@ void DataPacket::dump( int indent, std::ostream &os ) const
 
 void IndexPacket::verify( unsigned bufferLength, uint64_t totalRecordCount, uint64_t fileSize ) const
 {
-   (void)totalRecordCount; (void)fileSize;
+   (void)totalRecordCount;
+   (void)fileSize;
    //??? do all packets need versions?  how extend without breaking older
    // checking?  need to check
    // file version#?

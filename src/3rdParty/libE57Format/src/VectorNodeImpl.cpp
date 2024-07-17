@@ -125,8 +125,7 @@ namespace e57
    void VectorNodeImpl::dump( int indent, std::ostream &os ) const
    {
       /// don't checkImageFileOpen
-      os << space( indent ) << "type:        Vector"
-         << " (" << type() << ")" << std::endl;
+      os << space( indent ) << "type:        Vector" << " (" << type() << ")" << std::endl;
       NodeImpl::dump( indent, os );
       os << space( indent ) << "allowHeteroChildren: " << allowHeteroChildren() << std::endl;
       for ( unsigned i = 0; i < children_.size(); i++ )

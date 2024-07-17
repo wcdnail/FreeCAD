@@ -1265,8 +1265,7 @@ namespace e57
             groupSDBuffers.emplace_back( imf_, "startPointIndex", startPointIndex, groupCount, true );
          }
 
-         if ( ( name.compare( "pointCount" ) == 0 ) && lineGroupRecord.isDefined( "pointCount" ) &&
-              pointCount )
+         if ( ( name.compare( "pointCount" ) == 0 ) && lineGroupRecord.isDefined( "pointCount" ) && pointCount )
          {
             groupSDBuffers.emplace_back( imf_, "pointCount", pointCount, groupCount, true );
          }
@@ -1297,23 +1296,20 @@ namespace e57
       {
          ustring name = proto.get( protoIndex ).elementName();
          NodeType type = proto.get( protoIndex ).type();
-         bool scaled = (type == E57_SCALED_INTEGER);
+         bool scaled = ( type == E57_SCALED_INTEGER );
          // E57_EXT_surface_normals
          ustring norExtUri;
          bool haveNormalsExt = imf_.extensionsLookupPrefix( "nor", norExtUri );
 
-         if ( ( name.compare( "cartesianX" ) == 0 ) && proto.isDefined( "cartesianX" ) &&
-              buffers.cartesianX )
+         if ( ( name.compare( "cartesianX" ) == 0 ) && proto.isDefined( "cartesianX" ) && buffers.cartesianX )
          {
             destBuffers.emplace_back( imf_, "cartesianX", buffers.cartesianX, count, true, scaled );
          }
-         else if ( ( name.compare( "cartesianY" ) == 0 ) && proto.isDefined( "cartesianY" ) &&
-                   buffers.cartesianY )
+         else if ( ( name.compare( "cartesianY" ) == 0 ) && proto.isDefined( "cartesianY" ) && buffers.cartesianY )
          {
             destBuffers.emplace_back( imf_, "cartesianY", buffers.cartesianY, count, true, scaled );
          }
-         else if ( ( name.compare( "cartesianZ" ) == 0 ) && proto.isDefined( "cartesianZ" ) &&
-                   buffers.cartesianZ )
+         else if ( ( name.compare( "cartesianZ" ) == 0 ) && proto.isDefined( "cartesianZ" ) && buffers.cartesianZ )
          {
             destBuffers.emplace_back( imf_, "cartesianZ", buffers.cartesianZ, count, true, scaled );
          }
@@ -1342,28 +1338,23 @@ namespace e57
          {
             destBuffers.emplace_back( imf_, "sphericalInvalidState", buffers.sphericalInvalidState, count, true );
          }
-         else if ( ( name.compare( "rowIndex" ) == 0 ) && proto.isDefined( "rowIndex" ) &&
-                   buffers.rowIndex )
+         else if ( ( name.compare( "rowIndex" ) == 0 ) && proto.isDefined( "rowIndex" ) && buffers.rowIndex )
          {
             destBuffers.emplace_back( imf_, "rowIndex", buffers.rowIndex, count, true );
          }
-         else if ( ( name.compare( "columnIndex" ) == 0 ) && proto.isDefined( "columnIndex" ) &&
-                   buffers.columnIndex )
+         else if ( ( name.compare( "columnIndex" ) == 0 ) && proto.isDefined( "columnIndex" ) && buffers.columnIndex )
          {
             destBuffers.emplace_back( imf_, "columnIndex", buffers.columnIndex, count, true );
          }
-         else if ( ( name.compare( "returnIndex" ) == 0 ) && proto.isDefined( "returnIndex" ) &&
-                   buffers.returnIndex )
+         else if ( ( name.compare( "returnIndex" ) == 0 ) && proto.isDefined( "returnIndex" ) && buffers.returnIndex )
          {
             destBuffers.emplace_back( imf_, "returnIndex", buffers.returnIndex, count, true );
          }
-         else if ( ( name.compare( "returnCount" ) == 0 ) && proto.isDefined( "returnCount" ) &&
-                   buffers.returnCount )
+         else if ( ( name.compare( "returnCount" ) == 0 ) && proto.isDefined( "returnCount" ) && buffers.returnCount )
          {
             destBuffers.emplace_back( imf_, "returnCount", buffers.returnCount, count, true );
          }
-         else if ( ( name.compare( "timeStamp" ) == 0 ) && proto.isDefined( "timeStamp" ) &&
-                   buffers.timeStamp )
+         else if ( ( name.compare( "timeStamp" ) == 0 ) && proto.isDefined( "timeStamp" ) && buffers.timeStamp )
          {
             destBuffers.emplace_back( imf_, "timeStamp", buffers.timeStamp, count, true, scaled );
          }
@@ -1372,8 +1363,7 @@ namespace e57
          {
             destBuffers.emplace_back( imf_, "isTimeStampInvalid", buffers.isTimeStampInvalid, count, true );
          }
-         else if ( ( name.compare( "intensity" ) == 0 ) && proto.isDefined( "intensity" ) &&
-                   buffers.intensity )
+         else if ( ( name.compare( "intensity" ) == 0 ) && proto.isDefined( "intensity" ) && buffers.intensity )
          {
             destBuffers.emplace_back( imf_, "intensity", buffers.intensity, count, true, scaled );
          }
@@ -1382,18 +1372,15 @@ namespace e57
          {
             destBuffers.emplace_back( imf_, "isIntensityInvalid", buffers.isIntensityInvalid, count, true );
          }
-         else if ( ( name.compare( "colorRed" ) == 0 ) && proto.isDefined( "colorRed" ) &&
-                   buffers.colorRed )
+         else if ( ( name.compare( "colorRed" ) == 0 ) && proto.isDefined( "colorRed" ) && buffers.colorRed )
          {
             destBuffers.emplace_back( imf_, "colorRed", buffers.colorRed, count, true, scaled );
          }
-         else if ( ( name.compare( "colorGreen" ) == 0 ) && proto.isDefined( "colorGreen" ) &&
-                   buffers.colorGreen )
+         else if ( ( name.compare( "colorGreen" ) == 0 ) && proto.isDefined( "colorGreen" ) && buffers.colorGreen )
          {
             destBuffers.emplace_back( imf_, "colorGreen", buffers.colorGreen, count, true, scaled );
          }
-         else if ( ( name.compare( "colorBlue" ) == 0 ) && proto.isDefined( "colorBlue" ) &&
-                   buffers.colorBlue )
+         else if ( ( name.compare( "colorBlue" ) == 0 ) && proto.isDefined( "colorBlue" ) && buffers.colorBlue )
          {
             destBuffers.emplace_back( imf_, "colorBlue", buffers.colorBlue, count, true, scaled );
          }

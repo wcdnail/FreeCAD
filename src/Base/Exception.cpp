@@ -172,6 +172,14 @@ void Exception::setPyException() const
     PyErr_SetString(exc, what());
 }
 
+void Exception::FormatPyStatusMessage(std::string_view sMessage, PyStatus const& status)
+{
+    std::ostringstream stm;
+    stm << sMessage 
+        << " (" << status.exitcode << " : " << status.err_msg << ")";
+    _sErrMsg = std::move(stm.str());
+}
+
 // ---------------------------------------------------------
 
 TYPESYSTEM_SOURCE(Base::AbortException, Base::Exception)
@@ -615,12 +623,18 @@ PyObject* AttributeError::getPyExceptionType() const
 RuntimeError::RuntimeError() = default;
 
 RuntimeError::RuntimeError(const char* sMessage)
-    : Exception(sMessage)
+    : Exception{sMessage}
 {}
 
 RuntimeError::RuntimeError(const std::string& sMessage)
-    : Exception(sMessage)
+    : Exception{sMessage}
 {}
+
+RuntimeError::RuntimeError(std::string_view sMessage, PyStatus const& status)
+    : Exception{}
+{
+    FormatPyStatusMessage(sMessage, status);
+}
 
 PyObject* RuntimeError::getPyExceptionType() const
 {

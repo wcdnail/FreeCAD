@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 if(WIN32)
     add_definitions(-DFCBase)
     add_definitions(-DPYCXX_DLL)
@@ -386,6 +388,7 @@ if(FREECAD_USE_PCH)
 endif(FREECAD_USE_PCH)
 
 add_library(FreeCADBase SHARED ${FreeCADBase_SRCS})
+set_target_properties(FreeCADBase PROPERTIES FOLDER "Main")
 
 target_link_libraries(FreeCADBase ${FreeCADBase_LIBS})
 if (FREECAD_WARN_ERROR)

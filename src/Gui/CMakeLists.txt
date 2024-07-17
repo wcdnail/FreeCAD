@@ -1367,6 +1367,7 @@ if (EIGEN3_NO_DEPRECATED_COPY)
 endif ()
 
 add_library(FreeCADGui SHARED ${FreeCADGui_SRCS})
+set_target_properties(FreeCADGui PROPERTIES FOLDER "Main")
 target_link_libraries(FreeCADGui ${FreeCADGui_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(FreeCADGui)

@@ -10,6 +10,8 @@ add_library(
   main.c
 )
 
+set_target_properties(QuicklookFCStd PROPERTIES FOLDER "Mac")
+
 set_target_properties(
   QuicklookFCStd
   PROPERTIES

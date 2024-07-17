@@ -1,3 +1,4 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
 
 SET(Examples_Files
     Schenkel.stp

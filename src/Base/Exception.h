@@ -25,11 +25,11 @@
 #ifndef BASE_EXCEPTION_H
 #define BASE_EXCEPTION_H
 
-#include <csignal>
-#include <string>
 #include "BaseClass.h"
 #include "FileInfo.h"
-
+#include <Python.h>
+#include <csignal>
+#include <string>
 
 using PyObject = struct _object;
 
@@ -252,6 +252,8 @@ protected:
     Exception();
     Exception(const Exception& inst);
     Exception(Exception&& inst) noexcept;
+
+    void FormatPyStatusMessage(std::string_view sMessage, PyStatus const& status);
 
 protected:
     std::string _sErrMsg;
@@ -681,6 +683,7 @@ public:
     RuntimeError();
     explicit RuntimeError(const char* sMessage);
     explicit RuntimeError(const std::string& sMessage);
+    explicit RuntimeError(std::string_view sMessage, PyStatus const& status);
     RuntimeError(const RuntimeError&) = default;
     RuntimeError(RuntimeError&&) = default;
     /// Destruction

@@ -597,12 +597,12 @@ void initInterpreter(int argc, char* argv[])
 
     status = PyConfig_SetBytesArgv(&config, argc, argv);
     if (PyStatus_Exception(status)) {
-        throw Base::RuntimeError("Failed to set config");
+        throw Base::RuntimeError("Failed to set config", status);
     }
 
     status = Py_InitializeFromConfig(&config);
     if (PyStatus_Exception(status)) {
-        throw Base::RuntimeError("Failed to init from config");
+        throw Base::RuntimeError("Failed to init from config", status);
     }
 
     // If FreeCAD was run from within a Python virtual environment, ensure that the site-packages

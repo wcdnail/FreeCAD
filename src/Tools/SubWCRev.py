@@ -521,16 +521,16 @@ def main():
     for i in vcs:
         if i.extractInfo(srcdir, bindir):
             # Open the template file and the version file
-            inp = open("%s/src/Build/Version.h.in" % (bindir))
+            inp = open("%s/Version.h.in" % (bindir))
             lines = inp.readlines()
             inp.close()
             lines = i.writeVersion(lines)
-            out = open("%s/src/Build/Version.h.out" % (bindir), "w")
+            out = open("%s/Version.h.out" % (bindir), "w")
             out.writelines(lines)
             out.write("\n")
             out.close()
             i.printInfo()
-            sys.stdout.write("%s/src/Build/Version.h.out written\n" % (bindir))
+            sys.stdout.write("%s/Version.h.out written\n" % (bindir))
             break
 
 

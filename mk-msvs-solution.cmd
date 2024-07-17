@@ -2,8 +2,8 @@
 
 rem Var section -------------------------------------------------------------------------
 
-set BUILD_CONF=Release
-:: set BUILD_CONF=Debug
+:: set BUILD_CONF=Release
+set BUILD_CONF=Debug
 
 call %CD%\mk-vars.cmd
 call %CD%\mk-trace.cmd
@@ -20,12 +20,12 @@ cd %BUILD_DIR%
 
 rem -------------------------------------------------------------------------------------
 :: -DNGLIB_INCLUDE_DIR="%VCPKG_ROOT%\installed\x64-windows\include" ^
+:: -DCMAKE_CONFIGURATION_TYPES:STRING="%BUILD_CONF%" ^
 
 chcp 65001 >NUL
-cmake -G %VT_CMAKE_GENERATOR% ^
+cmake -Wno-dev -G %VT_CMAKE_GENERATOR% ^
 -DCMAKE_TOOLCHAIN_FILE="%VCPKG_ROOT%\scripts\buildsystems\vcpkg.cmake" ^
 -DCMAKE_BUILD_TYPE:STRING="%BUILD_CONF%" ^
--DCMAKE_CONFIGURATION_TYPES:STRING="%BUILD_CONF%" ^
 -DCMAKE_C_COMPILER:FILEPATH="%VT_C_COMPILER%" ^
 -DCMAKE_CXX_COMPILER:FILEPATH="%VT_CXX_COMPILER%" ^
 -DCMAKE_RC_COMPILER:FILEPATH="%MSVC_RC_COMPILER%" ^
