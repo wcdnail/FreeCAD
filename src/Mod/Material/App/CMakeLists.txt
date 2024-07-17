@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 if(MSVC)
     add_definitions(-DFCAppMaterial -DHAVE_ACOSH -DHAVE_ASINH -DHAVE_ATANH)
 else(MSVC)
@@ -117,6 +119,7 @@ if(FREECAD_USE_PCH)
 endif(FREECAD_USE_PCH)
 
 add_library(Materials SHARED ${Materials_SRCS})
+set_target_properties(Materials PROPERTIES FOLDER "Mod/Materials")
 target_link_libraries(Materials ${Materials_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(Materials)

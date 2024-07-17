@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif(MSVC)
@@ -30,6 +32,7 @@ SET(DraftUtils_SRCS
 )
 
 add_library(DraftUtils SHARED ${DraftUtils_SRCS})
+set_target_properties(DraftUtils PROPERTIES FOLDER "Mod/Draft")
 target_link_libraries(DraftUtils ${DraftUtils_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(DraftUtils)

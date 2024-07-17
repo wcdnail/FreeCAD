@@ -50,6 +50,7 @@ SET(all_files
 ADD_CUSTOM_TARGET(AssemblyScripts ALL
     SOURCES ${all_files}
 )
+set_target_properties(AssemblyScripts PROPERTIES FOLDER "Mod/AssemblyScripts")
 
 SET(test_files
     ${Assembly_Scripts}
@@ -59,6 +60,7 @@ SET(test_files
 ADD_CUSTOM_TARGET(AssemblyTests ALL
     SOURCES ${test_files}
 )
+set_target_properties(AssemblyTests PROPERTIES FOLDER "Mod/AssemblyScripts")
 
 fc_copy_sources(AssemblyScripts "${CMAKE_BINARY_DIR}/Mod/Assembly" ${all_files})
 fc_copy_sources(AssemblyTests "${CMAKE_BINARY_DIR}/Mod/Assembly" ${test_files})

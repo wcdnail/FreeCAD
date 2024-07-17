@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 if (PCL_SURFACE_FOUND AND PCL_FEATURES_FOUND)
     add_definitions(-DHAVE_PCL_SURFACE)
 
@@ -73,6 +75,7 @@ if(FREECAD_USE_PCH)
 endif(FREECAD_USE_PCH)
 
 add_library(ReverseEngineering SHARED ${Reen_SRCS})
+set_target_properties(ReverseEngineering PROPERTIES FOLDER "Mod/ReverseEngineering")
 target_link_libraries(ReverseEngineering ${Reen_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(ReverseEngineering)

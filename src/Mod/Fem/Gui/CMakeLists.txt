@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 # Many warnings caused by vtk
 if(CMAKE_COMPILER_IS_CLANGXX)
     add_compile_options(-Wno-pedantic) # needed for vtk headers
@@ -381,6 +383,7 @@ SET(FemGuiSymbol_IV
 )
 
 add_library(FemGui SHARED ${FemGui_SRCS} ${FemGuiIcon_SVG} ${FemGuiSymbol_IV})
+set_target_properties(FemGui PROPERTIES FOLDER "Mod/FEM")
 target_link_libraries(FemGui ${FemGui_LIBS} ${VTK_LIBRARIES})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(FemGui)
@@ -424,6 +427,7 @@ SET(FemGuiPythonUI_SRCS
 ADD_CUSTOM_TARGET(FemPythonUi ALL
     SOURCES ${FemGuiPythonUI_SRCS}
 )
+set_target_properties(FemPythonUi PROPERTIES FOLDER "Mod/FEM")
 
 fc_copy_sources(FemPythonUi "${CMAKE_BINARY_DIR}/Mod/Fem" ${FemGuiPythonUI_SRCS})
 

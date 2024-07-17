@@ -18,6 +18,7 @@ SET(PreferencePackTemplates_Files
 ADD_CUSTOM_TARGET(PreferencePackTemplates_data ALL
     SOURCES ${PreferencePackTemplates_Files}
 )
+set_target_properties(PreferencePackTemplates_data PROPERTIES FOLDER "Main/Preferences")
 
 fc_copy_sources(PreferencePackTemplates_data "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_DATADIR}/Gui/PreferencePackTemplates"
                                   ${PreferencePackTemplates_Files})

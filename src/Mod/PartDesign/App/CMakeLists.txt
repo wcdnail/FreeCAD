@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/src
@@ -142,6 +144,7 @@ SET(PartDesign_SRCS
 )
 
 add_library(PartDesign SHARED ${PartDesign_SRCS})
+set_target_properties(PartDesign PROPERTIES FOLDER "Mod/PartDesign")
 target_link_libraries(PartDesign ${PartDesign_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(PartDesign)

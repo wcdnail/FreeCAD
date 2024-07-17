@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 if(WIN32)
     add_definitions(-DFCAppPoints)
 endif(WIN32)
@@ -62,6 +64,7 @@ if(FREECAD_USE_PCH)
 endif(FREECAD_USE_PCH)
 
 add_library(Points SHARED ${Points_SRCS} ${Points_Scripts})
+set_target_properties(Points PROPERTIES FOLDER "Mod/Points")
 
 link_directories(${CMAKE_BINARY_DIR}/src/3rdParty/libE57Format)
 

@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
@@ -86,6 +88,7 @@ SOURCE_GROUP("SCL" FILES ${SCL_Resources})
 generate_from_xml(StepShapePy)
 
 add_library(Import SHARED ${Import_SRCS})
+set_target_properties(Import PROPERTIES FOLDER "Mod/Import")
 target_link_libraries(Import ${Import_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(Import)
@@ -94,6 +97,7 @@ endif()
 ADD_CUSTOM_TARGET(ImportPy ALL
     SOURCES ${SCL_Resources}
 )
+set_target_properties(ImportPy PROPERTIES FOLDER "Mod/Import")
 
 fc_target_copy_resource(ImportPy
     ${CMAKE_SOURCE_DIR}/src/Mod/Import/App

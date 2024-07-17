@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 if(FREETYPE_FOUND)
     add_definitions(-DFCUseFreeType)
 endif(FREETYPE_FOUND)
@@ -581,6 +583,7 @@ if(EIGEN3_NO_DEPRECATED_COPY)
 endif()
 
 add_library(Part SHARED ${Part_SRCS})
+set_target_properties(Part PROPERTIES FOLDER "Mod/Part")
 target_link_libraries(Part ${Part_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(Part)

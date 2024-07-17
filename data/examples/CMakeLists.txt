@@ -17,6 +17,8 @@ ADD_CUSTOM_TARGET(Example_data ALL
     SOURCES ${Examples_Files}
 )
 
+set_target_properties(Example_data PROPERTIES FOLDER "Examples")
+
 # 0001097: CMake stops with error "Circular ... <- ... dependency dropped."
 if(NOT "${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
     fc_copy_sources(Example_data "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_DATADIR}/examples" ${Examples_Files})
@@ -126,6 +128,7 @@ if (WIN32 AND FREECAD_LIBPACK_USE)
         ${FREECAD_LIBPACK_PYTHON}
     )
     add_custom_target(LibPack_Files ALL SOURCES ${FREECAD_LIBPACK_FILES})
+    set_target_properties(LibPack_Files PROPERTIES FOLDER "Examples")
 
 endif(WIN32 AND FREECAD_LIBPACK_USE)
 

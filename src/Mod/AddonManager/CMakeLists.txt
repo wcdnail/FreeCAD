@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 IF (BUILD_GUI)
     PYSIDE_WRAP_RC(AddonManager_QRC_SRCS Resources/AddonManager.qrc)
     add_subdirectory(Widgets)
@@ -147,7 +149,7 @@ SET(AddonManagerTests_ALL
     ${AddonManagerTests_SRCS}
     ${AddonManagerTestsApp_SRCS}
     ${AddonManagerTestsFiles_SRCS}
-	)
+)
 
 IF (BUILD_GUI)
     LIST(APPEND AddonManagerTests_ALL ${AddonManagerTestsGui_SRCS})
@@ -156,10 +158,12 @@ ENDIF (BUILD_GUI)
 ADD_CUSTOM_TARGET(AddonManager ALL
     SOURCES ${AddonManager_SRCS} ${AddonManager_QRC_SRCS}
 )
+set_target_properties(AddonManager PROPERTIES FOLDER "Mod/AddonManager")
 
 ADD_CUSTOM_TARGET(AddonManagerTests ALL
     SOURCES ${AddonManagerTests_ALL}
 )
+set_target_properties(AddonManagerTests PROPERTIES FOLDER "Mod/AddonManager")
 
 fc_copy_sources(AddonManager "${CMAKE_BINARY_DIR}/Mod/AddonManager" ${AddonManager_SRCS})
 

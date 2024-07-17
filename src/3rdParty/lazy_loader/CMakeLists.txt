@@ -7,7 +7,7 @@ SET(lazy_loader
 add_custom_target(lazy_loader ALL SOURCES
     ${lazy_loader}
 )
-set_target_properties(lazy_loader PROPERTIES FOLDER "Other")
+set_target_properties(lazy_loader PROPERTIES FOLDER "Utils")
 SET_PYTHON_PREFIX_SUFFIX(lazy_loader)
 
 fc_copy_sources(lazy_loader "${CMAKE_BINARY_DIR}/Ext/lazy_loader" ${lazy_loader})

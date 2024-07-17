@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/src
@@ -195,6 +197,7 @@ SET(SketcherGuiIcon_SVG
 )
 
 add_library(SketcherGui SHARED ${SketcherGui_SRCS} ${SketcherGuiIcon_SVG})
+set_target_properties(SketcherGui PROPERTIES FOLDER "Mod/Sketcher")
 target_link_libraries(SketcherGui ${SketcherGui_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(SketcherGui)

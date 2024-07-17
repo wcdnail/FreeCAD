@@ -40,6 +40,7 @@ SET(Drawing_Templates
 add_custom_target(DrawingScripts ALL
     SOURCES ${Drawing_Scripts} ${Drawing_Templates}
 )
+set_target_properties(DrawingScripts PROPERTIES FOLDER "Mod/Drawing")
 
 fc_target_copy_resource(DrawingScripts
     ${CMAKE_CURRENT_SOURCE_DIR}

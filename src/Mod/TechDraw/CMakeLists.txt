@@ -62,6 +62,7 @@ SET(TechDraw_LineGroupFile
 add_custom_target(TechDraw_Data ALL
 SOURCES ${TechDraw_Scripts} ${TechDraw_PATFile} ${TechDraw_CSVFile} ${TechDraw_LineGroupFile} ${TechDraw_ToolsScripts} ${TechDraw_ToolsGui}
 )
+set_target_properties(TechDraw_Data PROPERTIES FOLDER "Mod/TechDraw")
 
 fc_target_copy_resource(TechDraw_Data
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -204,6 +205,7 @@ SET(TDAllTest
 ADD_CUSTOM_TARGET(TDTestTarget ALL
     SOURCES ${TDAllTest}
 )
+set_target_properties(TDTestTarget PROPERTIES FOLDER "Mod/TechDraw")
 
 fc_copy_sources(TDTestTarget "${CMAKE_BINARY_DIR}/Mod/TechDraw" ${TDAllTest})
 

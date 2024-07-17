@@ -33,18 +33,6 @@
 #undef _PreComp_
 #endif
 
-#ifdef FC_OS_LINUX
-#include <unistd.h>
-#endif
-
-#if HAVE_CONFIG_H
-#include <config.h>
-#endif  // HAVE_CONFIG_H
-
-#include <cstdio>
-#include <map>
-#include <stdexcept>
-
 #include <QApplication>
 #include <QLocale>
 #include <QMessageBox>
@@ -57,6 +45,19 @@
 #include <Base/Exception.h>
 #include <Gui/Application.h>
 
+#ifdef FC_OS_LINUX
+#include <unistd.h>
+#endif
+
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif  // HAVE_CONFIG_H
+
+#include <cstdio>
+#include <map>
+#include <stdexcept>
+
+#include <filesystem>
 
 void PrintInitHelp();
 
@@ -125,15 +126,18 @@ int main(int argc, char** argv)
         _putenv_s("PYTHONHOME", mingw_prefix);
     }
 #else
-    _putenv("PYTHONPATH=");
+    _wputenv(L"PYTHONPATH=");
     // https://forum.freecad.org/viewtopic.php?f=4&t=18288
     // https://forum.freecad.org/viewtopic.php?f=3&t=20515
-    const char* fc_py_home = getenv("FC_PYTHONHOME");
+    wchar_t* fc_py_home{_wgetenv(L"FC_PYTHONHOME")};
     if (fc_py_home) {
-        _putenv_s("PYTHONHOME", fc_py_home);
+        _wputenv_s(L"PYTHONHOME", fc_py_home);
+        std::filesystem::path py_lib_path{fc_py_home};
+        py_lib_path /= L"Lib";
+        Py_SetPath(py_lib_path.c_str());
     }
     else {
-        _putenv("PYTHONHOME=");
+        _wputenv(L"PYTHONHOME=");
     }
 #endif
 
@@ -218,7 +222,7 @@ int main(int argc, char** argv)
         }
     }
     catch (const Base::UnknownProgramOption& e) {
-        QApplication app(argc, argv);
+        //QApplication app(argc, argv); // ##FIXME: ctor raises exception!
         QString appName = QString::fromLatin1(App::Application::Config()["ExeName"].c_str());
         QString msg = QString::fromLatin1(e.what());
         QString s = QLatin1String("<pre>") + msg + QLatin1String("</pre>");
@@ -226,7 +230,7 @@ int main(int argc, char** argv)
         exit(1);
     }
     catch (const Base::ProgramInformation& e) {
-        QApplication app(argc, argv);
+        //QApplication app(argc, argv); // ##FIXME: ctor raises exception!
         QString appName = QString::fromLatin1(App::Application::Config()["ExeName"].c_str());
         QString msg = QString::fromUtf8(e.what());
         QString s = QLatin1String("<pre>") + msg + QLatin1String("</pre>");
@@ -241,7 +245,7 @@ int main(int argc, char** argv)
     }
     catch (const Base::Exception& e) {
         // Popup an own dialog box instead of that one of Windows
-        QApplication app(argc, argv);
+        //QApplication app(argc, argv); // ##FIXME: ctor raises exception!
         QString appName = QString::fromLatin1(App::Application::Config()["ExeName"].c_str());
         QString msg;
         msg = QObject::tr("While initializing %1 the following exception occurred: '%2'\n\n"
@@ -270,7 +274,7 @@ int main(int argc, char** argv)
     }
     catch (...) {
         // Popup an own dialog box instead of that one of Windows
-        QApplication app(argc, argv);
+        //QApplication app(argc, argv); // ##FIXME: ctor raises exception!
         QString appName = QString::fromLatin1(App::Application::Config()["ExeName"].c_str());
         QString msg =
             QObject::tr("Unknown runtime error occurred while initializing %1.\n\n"

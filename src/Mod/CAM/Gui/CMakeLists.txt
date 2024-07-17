@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/src
@@ -84,6 +86,7 @@ SET(PathGuiIcon_SVG
 )
 
 add_library(PathGui SHARED ${PathGui_SRCS} ${PathGuiIcon_SVG})
+set_target_properties(PathGui PROPERTIES FOLDER "Mod/CAM")
 target_link_libraries(PathGui ${PathGui_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(PathGui)

@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 if(WIN32)
     add_definitions(-DFCAppSpreadsheet)
 endif(WIN32)
@@ -56,6 +58,7 @@ if(FREECAD_USE_PCH)
 endif(FREECAD_USE_PCH)
 
 add_library(Spreadsheet SHARED ${Spreadsheet_SRCS})
+set_target_properties(Spreadsheet PROPERTIES FOLDER "Mod/Spreadsheet")
 target_link_libraries(Spreadsheet ${Spreadsheet_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(Spreadsheet)

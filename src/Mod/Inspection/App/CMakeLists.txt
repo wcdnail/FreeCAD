@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
@@ -37,6 +39,7 @@ if(FREECAD_USE_PCH)
 endif(FREECAD_USE_PCH)
 
 add_library(Inspection SHARED ${Inspection_SRCS} ${Inspection_Scripts})
+set_target_properties(Inspection PROPERTIES FOLDER "Mod/Inspection")
 target_link_libraries(Inspection ${Inspection_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(Inspection)

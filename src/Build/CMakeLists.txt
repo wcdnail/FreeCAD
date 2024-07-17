@@ -30,21 +30,23 @@ if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/Version.h)
     )
 
     add_custom_target(fc_version
-    DEPENDS
-        ${CMAKE_CURRENT_BINARY_DIR}/Version.h
-    SOURCES
-        ${CMAKE_CURRENT_BINARY_DIR}/Version.h
-        ${CMAKE_SOURCE_DIR}/src/Tools/SubWCRev.py
+        DEPENDS
+            ${CMAKE_CURRENT_BINARY_DIR}/Version.h
+        SOURCES
+            ${CMAKE_CURRENT_SOURCE_DIR}/Version.h.cmake
+            ${CMAKE_CURRENT_BINARY_DIR}/Version.h
+            ${CMAKE_SOURCE_DIR}/src/Tools/SubWCRev.py
     )
 
 else (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/Version.h)
 
     add_custom_target(fc_version
-    DEPENDS
-        ${CMAKE_CURRENT_SOURCE_DIR}/Version.h
-    SOURCES
-        ${CMAKE_CURRENT_SOURCE_DIR}/Version.h
-        ${CMAKE_SOURCE_DIR}/src/Tools/SubWCRev.py
+        DEPENDS
+            ${CMAKE_CURRENT_SOURCE_DIR}/Version.h
+        SOURCES
+            ${CMAKE_CURRENT_SOURCE_DIR}/Version.h.cmake
+            ${CMAKE_CURRENT_SOURCE_DIR}/Version.h
+            ${CMAKE_SOURCE_DIR}/src/Tools/SubWCRev.py
     )
 
 endif (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/Version.h)

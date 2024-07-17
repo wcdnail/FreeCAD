@@ -37,6 +37,7 @@ endif(BUILD_GUI)
 ADD_CUSTOM_TARGET(Test ALL
     SOURCES ${Test_SRCS} ${TestData_SRCS}
 )
+set_target_properties(Test PROPERTIES FOLDER "Mod/Test")
 
 fc_copy_sources(Test "${CMAKE_BINARY_DIR}/Mod/Test" ${Test_SRCS} ${TestData_SRCS})
 

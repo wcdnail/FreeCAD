@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 # SPDX-License-Identifier: LGPL-2.1-or-later
 # /****************************************************************************
 #  *                                                                          *
@@ -42,6 +44,7 @@ SET(Start_SRCS
         RecentFilesModel.h)
 
 add_library(Start SHARED ${Start_SRCS})
+set_target_properties(Start PROPERTIES FOLDER "Mod/Start")
 target_link_libraries(Start ${Start_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(Start)

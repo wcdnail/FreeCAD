@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
@@ -38,6 +40,7 @@ SET(ImportGui_SRCS
 )
 
 add_library(ImportGui SHARED ${ImportGui_SRCS})
+set_target_properties(ImportGui PROPERTIES FOLDER "Mod/Import")
 target_link_libraries(ImportGui ${ImportGui_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(ImportGui)

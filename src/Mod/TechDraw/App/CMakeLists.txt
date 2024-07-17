@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_BINARY_DIR}/src
@@ -280,6 +282,7 @@ endif(FREECAD_USE_PCH)
 
 add_library(TechDraw SHARED ${TechDraw_SRCS} ${Draw_SRCS} ${TechDrawAlgos_SRCS}
                            ${Geometry_SRCS} ${Python_SRCS})
+set_target_properties(TechDraw PROPERTIES FOLDER "Mod/TechDraw")
 target_link_libraries(TechDraw ${TechDrawLIBS} ${TechDraw})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(TechDraw)

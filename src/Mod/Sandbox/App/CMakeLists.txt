@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 if(WIN32)
     add_definitions(-DFCAppSandbox)
 endif(WIN32)

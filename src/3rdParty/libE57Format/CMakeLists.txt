@@ -116,7 +116,7 @@ else()
 	add_library( E57Format STATIC ${E57Format_SOURCES})
 endif()
 
-set_target_properties(E57Format PROPERTIES FOLDER "3rdParty")
+set_target_properties(E57Format PROPERTIES FOLDER "Utils")
 
 include( E57ExportHeader )
 

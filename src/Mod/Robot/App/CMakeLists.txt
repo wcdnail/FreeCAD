@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/src
@@ -122,6 +124,7 @@ SOURCE_GROUP("Python" FILES ${Python_SRCS})
 SOURCE_GROUP("Module" FILES ${Mod_SRCS})
 
 add_library(Robot SHARED ${Robot_SRCS})
+set_target_properties(Robot PROPERTIES FOLDER "Mod/Robot")
 target_link_libraries(Robot ${Robot_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(Robot)

@@ -82,6 +82,7 @@ add_custom_target(PartScripts ALL SOURCES
     ${CompoundTools_Scripts}
     ${Part_tests}
 )
+set_target_properties(PartScripts PROPERTIES FOLDER "Mod/Part")
 
 fc_target_copy_resource(PartScripts
     ${CMAKE_CURRENT_SOURCE_DIR}

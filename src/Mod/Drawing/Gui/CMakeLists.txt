@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/src
@@ -82,6 +84,7 @@ SET(DrawingGuiIcon_SVG
 
 add_library(DrawingGui SHARED ${DrawingGui_SRCS} ${DrawingGuiView_SRCS}
                               ${DrawingGuiViewProvider_SRCS} ${DrawingGuiIcon_SVG})
+set_target_properties(DrawingGui PROPERTIES FOLDER "Mod/Drawing")
 target_link_libraries(DrawingGui ${DrawingGui_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(DrawingGui)

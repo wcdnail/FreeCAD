@@ -28,6 +28,7 @@ SET(PointsAllScripts
 ADD_CUSTOM_TARGET(PointsScripts ALL
     SOURCES ${PointsAllScripts}
 )
+set_target_properties(PointsScripts PROPERTIES FOLDER "Mod/Points")
 fc_copy_sources(PointsScripts "${CMAKE_BINARY_DIR}/Mod/Points" ${PointsAllScripts})
 
 # install directories for Python packages

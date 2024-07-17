@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 if(MSVC)
     add_compile_options(/utf-8)
 endif(MSVC)
@@ -478,6 +480,7 @@ endif(FREECAD_USE_PCH)
 
 add_library(TechDrawGui SHARED ${TechDrawGui_SRCS} ${TechDrawGuiView_SRCS} ${TechDrawGuiViewProvider_SRCS}
                                ${TechDrawGuiNav_SRCS} ${TechDrawGuiIcon_SVG} ${TechDrawGuiFonts} ${MRTE_SRCS})
+set_target_properties(TechDrawGui PROPERTIES FOLDER "Mod/TechDraw")
 target_link_libraries(TechDrawGui ${TechDrawGui_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(TechDrawGui)

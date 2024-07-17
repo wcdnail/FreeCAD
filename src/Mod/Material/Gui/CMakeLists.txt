@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 if(MSVC)
     add_definitions(-DHAVE_ACOSH -DHAVE_ATANH -DHAVE_ASINH)
 else(MSVC)
@@ -159,6 +161,7 @@ SET(Material_Ui_Files
 )
 
 add_library(MatGui SHARED ${MatGui_SRCS} ${MatGuiIcon_SVG} ${MatGuiImages} ${Material_Ui_Files})
+set_target_properties(MatGui PROPERTIES FOLDER "Mod/Materials")
 target_link_libraries(MatGui ${MatGui_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(MatGui)

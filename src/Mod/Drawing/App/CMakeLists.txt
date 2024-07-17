@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${Boost_INCLUDE_DIRS}
@@ -66,6 +68,7 @@ if(FREECAD_USE_PCH)
 endif(FREECAD_USE_PCH)
 
 add_library(Drawing SHARED ${Drawing_SRCS} ${Features_SRCS} ${DrawingAlgos_SRCS})
+set_target_properties(Drawing PROPERTIES FOLDER "Mod/Drawing")
 target_link_libraries(Drawing ${Drawing_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(Drawing)

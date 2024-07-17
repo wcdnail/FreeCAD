@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     add_definitions(-fext-numeric-literals) #fix for gcc and qt5
 endif()
@@ -118,6 +120,7 @@ SOURCE_GROUP("Module" FILES ${Mod_SRCS})
 #endif(WIN32)
 
 add_library(Path SHARED ${Path_SRCS})
+set_target_properties(Path PROPERTIES FOLDER "Mod/CAM")
 target_link_libraries(Path ${Path_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(Path)

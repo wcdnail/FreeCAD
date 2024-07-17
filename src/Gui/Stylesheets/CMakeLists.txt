@@ -31,6 +31,7 @@ SOURCE_GROUP("overlay_icons" FILES ${Overlay_icons})
 ADD_CUSTOM_TARGET(Stylesheets_data ALL
     SOURCES ${Stylesheets_Files} ${Images_Files} ${Images_Files2} ${Overlay_Stylesheets_Files} ${Overlay_icons}
 )
+set_target_properties(Stylesheets_data PROPERTIES FOLDER "Main/Stylesheets")
 
 fc_copy_sources(Stylesheets_data "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_DATADIR}/Gui/Stylesheets"
                                   ${Stylesheets_Files}

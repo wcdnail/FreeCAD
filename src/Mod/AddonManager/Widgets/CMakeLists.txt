@@ -17,6 +17,7 @@ SOURCE_GROUP("" FILES ${AddonManagerWidget_SRCS})
 ADD_CUSTOM_TARGET(AddonManagerWidget ALL
     SOURCES ${AddonManagerWidget_SRCS}
 )
+set_target_properties(AddonManagerWidget PROPERTIES FOLDER "Mod/AddonManager")
 
 fc_copy_sources(AddonManagerWidget "${CMAKE_BINARY_DIR}/Mod/AddonManager/Widgets" ${AddonManagerWidget_SRCS})
 

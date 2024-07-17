@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 # Turn compiler warnings on for gcc 
 if (CMAKE_BUILD_TOOL MATCHES "make")
     MESSAGE(STATUS "setting gcc options: -Wall -Werror -Wno-deprecated -pedantic-errors")
@@ -104,13 +106,14 @@ add_library(
   ${AREA_SRC_COMMON}
   ${AREA_SRC_CLIPPER}
 )
+set_target_properties(area-native PROPERTIES FOLDER "Mod/CAM")
 
 add_library(
     area
     SHARED
     ${PYAREA_SRC}
 )
-
+set_target_properties(area PROPERTIES FOLDER "Mod/CAM")
 
 if(MSVC)
     set(area_native_LIBS

@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 include_directories(
   ${CMAKE_BINARY_DIR}
   ${CMAKE_BINARY_DIR}/src
@@ -70,6 +72,7 @@ endif(FREECAD_USE_PCH)
 
 link_directories(${OCC_LIBRARY_DIR})
 add_library(Surface SHARED ${Surface_SRCS})
+set_target_properties(Surface PROPERTIES FOLDER "Mod/Surface")
 target_link_libraries(Surface ${Surface_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(Surface)

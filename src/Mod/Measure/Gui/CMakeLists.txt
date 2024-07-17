@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/src
@@ -87,6 +89,7 @@ SET(MeasureGuiIcon_SVG
 )
 
 add_library(MeasureGui SHARED ${MeasureGui_SRCS} ${MeasureGuiIcon_SVG})
+set_target_properties(MeasureGui PROPERTIES FOLDER "Mod/Measure")
 target_link_libraries(MeasureGui ${MeasureGui_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(MeasureGui)

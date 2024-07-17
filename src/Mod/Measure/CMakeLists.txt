@@ -15,6 +15,7 @@ endif(BUILD_GUI)
 add_custom_target(MeasureScripts ALL
     SOURCES ${Measure_Scripts}
 )
+set_target_properties(MeasureScripts PROPERTIES FOLDER "Mod/Measure")
 
 fc_target_copy_resource(MeasureScripts
     ${CMAKE_CURRENT_SOURCE_DIR}

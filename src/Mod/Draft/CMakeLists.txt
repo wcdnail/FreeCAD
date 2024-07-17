@@ -316,6 +316,7 @@ SET(DraftGuiIcon_SVG
 ADD_CUSTOM_TARGET(Draft ALL
     SOURCES ${Draft_SRCS_all} ${Draft_QRC_SRCS} ${DraftGuiIcon_SVG}
 )
+set_target_properties(Draft PROPERTIES FOLDER "Mod/Draft")
 
 fc_copy_sources(Draft "${CMAKE_BINARY_DIR}/Mod/Draft" ${Draft_SRCS_all})
 

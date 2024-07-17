@@ -111,8 +111,11 @@ if(DOXYGEN_FOUND)
         COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_BINARY_DIR}/CMakeCache.txt
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     )
+    set_target_properties(WebDoc PROPERTIES FOLDER "Dox")
 
 else( DOXYGEN_FOUND )
     ADD_CUSTOM_TARGET(DevDoc
                       echo "Doxygen not found.  Install it and rerun CMake")
 endif( DOXYGEN_FOUND )
+
+set_target_properties(DevDoc PROPERTIES FOLDER "Dox")

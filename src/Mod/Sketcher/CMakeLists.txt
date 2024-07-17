@@ -35,6 +35,7 @@ set(Sketcher_Profiles
 add_custom_target(SketcherScripts ALL
     SOURCES ${Sketcher_Scripts} ${Sketcher_Profiles} ${Sketcher_TestScripts}
 )
+set_target_properties(SketcherScripts PROPERTIES FOLDER "Mod/Sketcher")
 
 fc_target_copy_resource(SketcherScripts
     ${CMAKE_CURRENT_SOURCE_DIR}

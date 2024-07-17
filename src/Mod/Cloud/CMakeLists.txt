@@ -76,6 +76,7 @@ endif(BUILD_GUI)
 add_custom_target(CloudScripts ALL
     SOURCES ${Cloud_Scripts}
 )
+set_target_properties(CloudScripts PROPERTIES FOLDER "Mod/CloudScripts")
 
 fc_target_copy_resource_flat(CloudScripts
     ${CMAKE_CURRENT_SOURCE_DIR}

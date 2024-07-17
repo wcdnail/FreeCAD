@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 # SPDX-License-Identifier: LGPL-2.1-or-later
 # /****************************************************************************
 #  *                                                                          *
@@ -89,6 +91,7 @@ if (FREECAD_USE_PCH)
 endif (FREECAD_USE_PCH)
 
 add_library(StartGui SHARED ${StartGui_SRCS} ${StartGuiIcon_SVG} ${StartGuiThumbnail_PNG})
+set_target_properties(StartGui PROPERTIES FOLDER "Mod/Start")
 # target_link_libraries(StartGui ${StartGui_LIBS} Qt::Quick Qt::Qml Qt::QuickWidgets)
 target_link_libraries(StartGui ${StartGui_LIBS})
 if (FREECAD_WARN_ERROR)

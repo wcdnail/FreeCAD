@@ -30,6 +30,7 @@ SOURCE_GROUP("" FILES ${Show_SRCS})
 ADD_CUSTOM_TARGET(Show ALL
     SOURCES ${Show_All_SRCS}
 )
+set_target_properties(Show PROPERTIES FOLDER "Mod/Show")
 
 fc_copy_sources(Show "${CMAKE_BINARY_DIR}/Mod/Show" ${Show_All_SRCS})
 

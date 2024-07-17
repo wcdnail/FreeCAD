@@ -26,6 +26,7 @@ set(MaterialTestData_Files
 ADD_CUSTOM_TARGET(MaterialTestData ALL
     SOURCES ${MaterialTestData_Files}
 )
+set_target_properties(MaterialTestData PROPERTIES FOLDER "Mod/Material")
 
 fc_target_copy_resource(MaterialTestData
     ${CMAKE_CURRENT_SOURCE_DIR}

@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/src
@@ -95,6 +97,7 @@ if(FREECAD_USE_PCH)
 endif(FREECAD_USE_PCH)
 
 add_library(CAMSimulator SHARED ${CAMSimulator_SRCS})
+set_target_properties(CAMSimulator PROPERTIES FOLDER "Mod/CAM")
 target_link_libraries(CAMSimulator ${CAMSimulator_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(CAMSimulator)

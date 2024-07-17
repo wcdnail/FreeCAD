@@ -15,6 +15,7 @@ endif(BUILD_GUI)
 add_custom_target(ReverseEngineeringScripts ALL
     SOURCES ${Reen_Scripts}
 )
+set_target_properties(ReverseEngineeringScripts PROPERTIES FOLDER "Mod/ReverseEngineering")
 
 fc_target_copy_resource(ReverseEngineeringScripts
     ${CMAKE_CURRENT_SOURCE_DIR}

@@ -49,6 +49,7 @@ SET(all_files ${Idf_SRCS} ${IdfLibs_SRCS} )
 ADD_CUSTOM_TARGET(Idf ALL
     SOURCES ${all_files}
 )
+set_target_properties(Idf PROPERTIES FOLDER "Mod/IDF")
 
 fc_copy_sources(Idf "${CMAKE_BINARY_DIR}/Mod/Idf" ${all_files})
 

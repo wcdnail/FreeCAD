@@ -38,6 +38,7 @@ endif ()
 add_custom_target(RobotScripts ALL
     SOURCES ${Robot_Scripts} ${Robot_Resources}
 )
+set_target_properties(RobotScripts PROPERTIES FOLDER "Mod/Robot")
 
 fc_target_copy_resource(RobotScripts
     ${CMAKE_CURRENT_SOURCE_DIR}

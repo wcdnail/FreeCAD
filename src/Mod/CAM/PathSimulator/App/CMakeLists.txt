@@ -1,3 +1,4 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
 
 include_directories(
     ${CMAKE_BINARY_DIR}
@@ -42,6 +43,7 @@ generate_from_xml(PathSimPy)
 SOURCE_GROUP("Python" FILES ${Python_SRCS})
 
 add_library(PathSimulator SHARED ${PathSimulator_SRCS})
+set_target_properties(PathSimulator PROPERTIES FOLDER "Mod/CAM")
 target_link_libraries(PathSimulator ${PathSimulator_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(PathSimulator)

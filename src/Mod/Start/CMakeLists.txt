@@ -46,6 +46,7 @@ endif (BUILD_GUI)
 add_custom_target(StartScripts ALL
         SOURCES ${Start_Scripts}
         )
+set_target_properties(StartScripts PROPERTIES FOLDER "Mod/Start")
 
 fc_target_copy_resource(StartScripts
         ${CMAKE_CURRENT_SOURCE_DIR}

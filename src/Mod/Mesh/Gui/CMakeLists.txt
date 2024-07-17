@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${Boost_INCLUDE_DIRS}
@@ -169,6 +171,7 @@ if (EIGEN3_NO_DEPRECATED_COPY)
 endif ()
 
 add_library(MeshGui SHARED ${MeshGui_SRCS} ${MeshGuiIcon_SVG})
+set_target_properties(MeshGui PROPERTIES FOLDER "Mod/Mesh")
 target_link_libraries(MeshGui ${MeshGui_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(MeshGui)

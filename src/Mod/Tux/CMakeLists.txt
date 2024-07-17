@@ -13,6 +13,7 @@ SOURCE_GROUP("" FILES ${Tux_SRCS})
 ADD_CUSTOM_TARGET(Tux ALL
     SOURCES ${Tux_SRCS} ${Tux_QRC_SRCS}
 )
+set_target_properties(Tux PROPERTIES FOLDER "Mod/Tux")
 
 fc_copy_sources(Tux "${CMAKE_BINARY_DIR}/Mod/Tux" ${Tux_SRCS})
 

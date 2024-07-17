@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/src
@@ -126,6 +128,7 @@ SET(RobotGuiIcon_SVG
 )
 
 add_library(RobotGui SHARED ${RobotGui_SRCS} ${RobotGuiIcon_SVG})
+set_target_properties(RobotGui PROPERTIES FOLDER "Mod/Robot")
 target_link_libraries(RobotGui ${RobotGui_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(RobotGui)

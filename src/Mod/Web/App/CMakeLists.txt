@@ -1,3 +1,4 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
@@ -30,6 +31,7 @@ if(FREECAD_USE_PCH)
 endif(FREECAD_USE_PCH)
 
 add_library(Web SHARED ${Web_SRCS})
+set_target_properties(Web PROPERTIES FOLDER "Mod/Web")
 target_link_libraries(Web ${Web_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(Web)

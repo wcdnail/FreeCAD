@@ -53,6 +53,7 @@ endif(BUILD_GUI)
 add_custom_target(ImportScripts ALL
     SOURCES ${Import_Scripts} ${DXF_Plate}
 )
+set_target_properties(ImportScripts PROPERTIES FOLDER "Mod/Import")
 
 fc_target_copy_resource(ImportScripts
     ${CMAKE_CURRENT_SOURCE_DIR}

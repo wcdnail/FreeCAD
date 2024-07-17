@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/src
@@ -71,6 +73,7 @@ endif(FREECAD_USE_PCH)
 
 link_directories(${OCC_LIBRARY_DIR})
 add_library(SurfaceGui SHARED ${SurfaceGui_SRCS} ${SurfaceGuiIcon_SVG})
+set_target_properties(SurfaceGui PROPERTIES FOLDER "Mod/Surface")
 target_link_libraries(SurfaceGui ${SurfaceGui_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(SurfaceGui)

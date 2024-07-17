@@ -37,7 +37,10 @@ cmake -Wno-dev -G %VT_CMAKE_GENERATOR% ^
 -DFREECAD_USE_EXTERNAL_SMESH=0 ^
 -DENABLE_DEVELOPER_TESTS=0 ^
 -DBUILD_DESIGNER_PLUGIN=0 ^
+-DFREECAD_USE_SHIBOKEN=OFF ^
+-DFREECAD_USE_PYSIDE=OFF ^
 -DFREECAD_USE_PCH=1 ^
+-DPACKAGE_WCURL="https://github.com/wcdnail/FreeCAD" ^
 %SOURCE_DIR%
 
 IF '%ERRORLEVEL%'=='0' GOTO CMAKE_OK
@@ -49,5 +52,5 @@ exit /B %RV%
 
 rem -------------------------------------------------------------------------------------
 :CMAKE_OK
-start "WFreeCAD" FreeCAD.sln
+:: start "WFreeCAD" FreeCAD.sln
 popd

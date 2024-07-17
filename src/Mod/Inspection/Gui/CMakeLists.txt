@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 include_directories(
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_CURRENT_BINARY_DIR}
@@ -56,6 +58,7 @@ SET(InspectionGuiIcon_SVG
 )
 
 add_library(InspectionGui SHARED ${InspectionGui_SRCS} ${InspectionGui_Scripts} ${InspectionGuiIcon_SVG})
+set_target_properties(InspectionGui PROPERTIES FOLDER "Mod/Inspection")
 target_link_libraries(InspectionGui ${InspectionGui_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(InspectionGui)

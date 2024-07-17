@@ -16,4 +16,6 @@ if ( E57_CLANG_FORMAT_EXE )
         COMMAND_EXPAND_LISTS
         VERBATIM
     )
+    
+    set_target_properties(format PROPERTIES FOLDER "Utils")
 endif()

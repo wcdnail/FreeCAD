@@ -21,6 +21,7 @@ endif(BUILD_GUI)
 add_custom_target(SurfaceScripts ALL
     SOURCES ${Surface_Scripts} ${Surface_TestScripts}
 )
+set_target_properties(SurfaceScripts PROPERTIES FOLDER "Mod/Surface")
 
 fc_target_copy_resource(SurfaceScripts
     ${CMAKE_CURRENT_SOURCE_DIR}

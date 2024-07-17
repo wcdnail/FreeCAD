@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 if (BUILD_SMESH)
     add_definitions(-DHAVE_SMESH)
     if(SMESH_VERSION_MAJOR LESS_EQUAL 9 AND SMESH_VERSION_MINOR LESS 10 )
@@ -80,6 +82,7 @@ if(FREECAD_USE_PCH)
 endif(FREECAD_USE_PCH)
 
 add_library(MeshPartGui SHARED ${MeshPartGui_SRCS} ${MeshPartGui_Scripts} ${FLATMESH_PY_SRCS})
+set_target_properties(MeshPartGui PROPERTIES FOLDER "Mod/MeshPart")
 target_link_libraries(MeshPartGui ${MeshPartGui_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(MeshPartGui)

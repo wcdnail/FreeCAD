@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${Boost_INCLUDE_DIRS}
@@ -65,6 +67,7 @@ if(FREECAD_USE_PCH)
 endif(FREECAD_USE_PCH)
 
 add_library(PointsGui SHARED ${PointsGui_SRCS} ${PointsGui_Scripts} ${PointsGuiIcon_SVG})
+set_target_properties(PointsGui PROPERTIES FOLDER "Mod/Points")
 target_link_libraries(PointsGui ${PointsGui_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(PointsGui)

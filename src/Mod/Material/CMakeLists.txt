@@ -299,6 +299,7 @@ set(MaterialTest_Files
 ADD_CUSTOM_TARGET(MaterialTest ALL
     SOURCES ${MaterialTest_Files}
 )
+set_target_properties(MaterialTest PROPERTIES FOLDER "Mod/Materials")
 
 fc_target_copy_resource(MaterialTest
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -316,6 +317,7 @@ set(MaterialPythonTestData_Files
 ADD_CUSTOM_TARGET(MaterialPythonTestData ALL
     SOURCES ${MaterialPythonTestData_Files}
 )
+set_target_properties(MaterialPythonTestData PROPERTIES FOLDER "Mod/Materials")
 
 fc_target_copy_resource(MaterialPythonTestData
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -325,6 +327,7 @@ fc_target_copy_resource(MaterialPythonTestData
 ADD_CUSTOM_TARGET(MaterialScripts ALL
     SOURCES ${MaterialScripts_Files} ${Material_QRC_SRCS}
 )
+set_target_properties(MaterialScripts PROPERTIES FOLDER "Mod/Materials")
 
 fc_target_copy_resource(MaterialScripts
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -336,6 +339,7 @@ INSTALL(FILES ${MaterialScripts_Files} DESTINATION Mod/Material)
 ADD_CUSTOM_TARGET(MaterialToolsLib ALL
     SOURCES ${MaterialTools_Files}
 )
+set_target_properties(MaterialToolsLib PROPERTIES FOLDER "Mod/Materials")
 
 fc_target_copy_resource(MaterialToolsLib
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -347,24 +351,37 @@ INSTALL(FILES ${MaterialTools_Files} DESTINATION Mod/Material/materialtools)
 ADD_CUSTOM_TARGET(MaterialLib ALL
     SOURCES ${MaterialLib_Files}
 )
+set_target_properties(MaterialLib PROPERTIES FOLDER "Mod/Materials")
+
 ADD_CUSTOM_TARGET(FluidMaterialLib ALL
     SOURCES ${FluidMaterial_Files}
 )
+set_target_properties(FluidMaterialLib PROPERTIES FOLDER "Mod/Materials")
+
 ADD_CUSTOM_TARGET(AppearanceLib ALL
     SOURCES ${AppearanceLib_Files}
 )
+set_target_properties(AppearanceLib PROPERTIES FOLDER "Mod/Materials")
+
 ADD_CUSTOM_TARGET(PatternLib ALL
     SOURCES ${PatternLib_Files}
 )
+set_target_properties(PatternLib PROPERTIES FOLDER "Mod/Materials")
+
 ADD_CUSTOM_TARGET(MaterialTestLib ALL
     SOURCES ${MaterialTestLib_Files}
 )
+set_target_properties(MaterialTestLib PROPERTIES FOLDER "Mod/Materials")
+
 ADD_CUSTOM_TARGET(MachiningLib ALL
     SOURCES ${MachiningLib_Files}
 )
+set_target_properties(MachiningLib PROPERTIES FOLDER "Mod/Materials")
+
 ADD_CUSTOM_TARGET(MaterialModelLib ALL
     SOURCES ${MaterialModel_Files}
 )
+set_target_properties(MaterialModelLib PROPERTIES FOLDER "Mod/Materials")
 
 # When a target copies files to different output directories then apparently it always builds the project
 # which is very annoying. So, the trick is to split this into two targets to avoid this behaviour.

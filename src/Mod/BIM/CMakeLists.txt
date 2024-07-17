@@ -205,6 +205,7 @@ ADD_CUSTOM_TARGET(BIM ALL
             ${nativeifc_SRCS}
             ${BIMGuiIcon_SVG}
 )
+set_target_properties(BIM PROPERTIES FOLDER "Mod/BIM")
 
 fc_copy_sources(BIM "${CMAKE_BINARY_DIR}/Mod/BIM" ${Arch_SRCS})
 fc_copy_sources(BIM "${CMAKE_BINARY_DIR}/Mod/BIM" ${Dice3DS_SRCS})

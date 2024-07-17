@@ -7,6 +7,7 @@ set(Web_Scripts
 add_custom_target(WebScripts ALL
     SOURCES ${Web_Scripts}
 )
+set_target_properties(WebScripts PROPERTIES FOLDER "Mod/Web")
 
 fc_target_copy_resource_flat(WebScripts
     ${CMAKE_CURRENT_SOURCE_DIR}

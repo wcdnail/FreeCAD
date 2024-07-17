@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 if (BUILD_SMESH)
     add_definitions(-DHAVE_SMESH)
     if(SMESH_VERSION_MAJOR LESS_EQUAL 9 AND SMESH_VERSION_MINOR LESS 10 )
@@ -74,6 +76,7 @@ if (MINGW AND CMAKE_COMPILER_IS_CLANGXX)
 endif()
 
 add_library(MeshPart SHARED ${MeshPart_SRCS} ${MeshPart_Scripts})
+set_target_properties(MeshPart PROPERTIES FOLDER "Mod/MeshPart")
 target_link_libraries(MeshPart ${MeshPart_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(MeshPart)
@@ -107,6 +110,7 @@ if (BUILD_FLAT_MESH)
 
 
         add_library(flatmesh SHARED ${FLATMESH_SRCS})
+        set_target_properties(flatmesh PROPERTIES FOLDER "Mod/MeshPart")
         SET_PYTHON_PREFIX_SUFFIX(flatmesh)
         target_link_libraries(flatmesh ${PYTHON_LIBRARIES} ${MeshPart_LIBS})
 
@@ -145,6 +149,7 @@ if (BUILD_FLAT_MESH)
 
 
                 add_library(flatmesh SHARED ${FLATMESH_SRCS})
+                set_target_properties(flatmesh PROPERTIES FOLDER "Mod/MeshPart")
                 SET_PYTHON_PREFIX_SUFFIX(flatmesh)
 
                 if (BUILD_DYNAMIC_LINK_PYTHON)

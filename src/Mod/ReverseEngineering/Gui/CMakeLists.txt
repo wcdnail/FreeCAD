@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/src
@@ -69,6 +71,7 @@ if(FREECAD_USE_PCH)
 endif(FREECAD_USE_PCH)
 
 add_library(ReverseEngineeringGui SHARED ${ReenGui_SRCS} ${ReverseEngineeringGuiIcon_SVG})
+set_target_properties(ReverseEngineeringGui PROPERTIES FOLDER "Mod/ReverseEngineering")
 target_link_libraries(ReverseEngineeringGui ${ReenGui_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(ReverseEngineeringGui)

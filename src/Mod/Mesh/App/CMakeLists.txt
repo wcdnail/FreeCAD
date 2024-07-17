@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 if(WIN32)
     add_definitions(-DFCAppMesh -DWM4_FOUNDATION_DLL_EXPORT)
 endif(WIN32)
@@ -409,6 +411,7 @@ if (EIGEN3_NO_DEPRECATED_COPY)
 endif ()
 
 add_library(Mesh SHARED ${Core_SRCS} ${WildMagic4_SRCS} ${Mesh_SRCS})
+set_target_properties(Mesh PROPERTIES FOLDER "Mod/Mesh")
 target_link_libraries(Mesh ${Mesh_LIBS})
 set_target_properties(Mesh PROPERTIES CXX_STANDARD_REQUIRED ON)
 set_target_properties(Mesh PROPERTIES CXX_STANDARD 17)

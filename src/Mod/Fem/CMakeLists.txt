@@ -519,6 +519,7 @@ SET(FemAllScripts
 ADD_CUSTOM_TARGET(FemScriptsTarget ALL
     SOURCES ${FemAllScripts}
 )
+set_target_properties(FemScriptsTarget PROPERTIES FOLDER "Mod/FEM")
 fc_copy_sources(FemScriptsTarget "${CMAKE_BINARY_DIR}/Mod/Fem" ${FemAllScripts})
 
 
@@ -653,6 +654,7 @@ if(BUILD_GUI)
     ADD_CUSTOM_TARGET(FemGuiScriptsTarget ALL
         SOURCES ${FemAllGuiScripts}
     )
+    set_target_properties(FemGuiScriptsTarget PROPERTIES FOLDER "Mod/FEM")
     fc_copy_sources(FemGuiScriptsTarget "${CMAKE_BINARY_DIR}/Mod/Fem" ${FemAllGuiScripts})
 
 

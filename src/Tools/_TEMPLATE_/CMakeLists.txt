@@ -15,6 +15,7 @@ endif(BUILD_GUI)
 add_custom_target(_TEMPLATE_Scripts ALL
     SOURCES ${_TEMPLATE__Scripts}
 )
+set_target_properties(_TEMPLATE_Scripts PROPERTIES FOLDER "Mod/_TEMPLATE")
 
 fc_target_copy_resource_flat(_TEMPLATE_Scripts
     ${CMAKE_CURRENT_SOURCE_DIR}

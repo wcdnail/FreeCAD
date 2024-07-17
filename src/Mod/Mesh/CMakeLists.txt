@@ -25,10 +25,12 @@ endif(BUILD_GUI)
 add_custom_target(MeshScripts ALL
     SOURCES ${Mesh_Scripts}
 )
+set_target_properties(MeshScripts PROPERTIES FOLDER "Mod/Mesh")
 
 add_custom_target(MeshTestData ALL
     SOURCES ${MeshTestDataFiles}
 )
+set_target_properties(MeshTestData PROPERTIES FOLDER "Mod/Mesh")
 
 fc_target_copy_resource_flat(MeshScripts
     ${CMAKE_CURRENT_SOURCE_DIR}

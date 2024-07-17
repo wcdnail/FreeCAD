@@ -96,6 +96,7 @@ add_custom_target(PartDesignScripts ALL SOURCES
     ${PartDesign_GearScripts}
     ${PartDesign_SprocketScripts}
 )
+set_target_properties(PartDesignScripts PROPERTIES FOLDER "Mod/PartDesign")
 
 fc_target_copy_resource(PartDesignScripts
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -167,6 +168,7 @@ set(PartDesignHoleDefines
 add_custom_target(PartDesignHole ALL SOURCES
     ${PartDesignHoleDefines}
 )
+set_target_properties(PartDesignHole PROPERTIES FOLDER "Mod/PartDesign")
 
 fc_target_copy_resource(PartDesignHole
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -192,6 +194,7 @@ if(BUILD_FEM)
     ADD_CUSTOM_TARGET(WizardShaft ALL
         SOURCES ${all_wizardshaft_files}
     )
+    set_target_properties(WizardShaft PROPERTIES FOLDER "Mod/PartDesign")
 
     SET(all_files ${all_wizardshaft_files})
 

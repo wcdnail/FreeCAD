@@ -68,10 +68,12 @@ SET(OpenSCADGuiIcon_SVG
 ADD_CUSTOM_TARGET(OpenSCAD ALL
     SOURCES ${all_files} ${OpenSCAD_QRC_SRCS} ${OpenSCADGuiIcon_SVG}
 )
+set_target_properties(OpenSCAD PROPERTIES FOLDER "Mod/OpenSCAD")
 
 ADD_CUSTOM_TARGET(OpenSCADTests ALL
     SOURCES ${OpenSCADTests_ALL}
 )
+set_target_properties(OpenSCADTests PROPERTIES FOLDER "Mod/OpenSCAD")
 
 fc_copy_sources(OpenSCAD "${CMAKE_BINARY_DIR}/Mod/OpenSCAD" ${all_files})
 

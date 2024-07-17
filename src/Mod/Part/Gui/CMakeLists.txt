@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/src
@@ -267,6 +269,7 @@ SET(PartGuiIcon_SVG
 )
 
 add_library(PartGui SHARED ${PartGui_SRCS} ${PartGuiIcon_SVG})
+set_target_properties(PartGui PROPERTIES FOLDER "Mod/Part")
 target_link_libraries(PartGui ${PartGui_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(PartGui)

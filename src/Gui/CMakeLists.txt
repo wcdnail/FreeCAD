@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 #add_subdirectory(Icons)
 add_subdirectory(Stylesheets)
 add_subdirectory(PreferencePacks)
@@ -1414,6 +1416,7 @@ set(FreeCADGui_Configs
 add_custom_target(FreeCADGui_Resources ALL
     SOURCES ${FreeCADGui_Scripts} ${FreeCADGui_Configs}
 )
+set_target_properties(FreeCADGui_Resources PROPERTIES FOLDER "Main")
 
 fc_copy_sources(FreeCADGui_Resources
     ${CMAKE_BINARY_DIR}/Ext/freecad/gui

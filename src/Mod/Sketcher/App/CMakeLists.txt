@@ -1,3 +1,5 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
+
 # Uncomment this code if you want to try Eigen's multithread
 #find_package(OpenMP)
 #if (OPENMP_FOUND)
@@ -144,6 +146,7 @@ SET(Sketcher_PCH_SRCS
 )
 
 add_library(Sketcher SHARED ${Sketcher_SRCS})
+set_target_properties(Sketcher PROPERTIES FOLDER "Mod/Sketcher")
 target_link_libraries(Sketcher ${Sketcher_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(Sketcher)

@@ -1,3 +1,4 @@
+set(VCPKG_APPLOCAL_DEPS OFF)
 
 # Many warnings caused by vtk
 if(CMAKE_COMPILER_IS_CLANGXX)
@@ -198,6 +199,7 @@ if(FREECAD_USE_PCH)
 endif(FREECAD_USE_PCH)
 
 add_library(Fem SHARED ${Fem_SRCS})
+set_target_properties(Fem PROPERTIES FOLDER "Mod/FEM")
 target_link_libraries(Fem ${Fem_LIBS} ${VTK_LIBRARIES})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(Fem)

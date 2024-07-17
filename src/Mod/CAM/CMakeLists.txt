@@ -406,6 +406,7 @@ SET(all_files
 ADD_CUSTOM_TARGET(PathScripts ALL
     SOURCES ${all_files}
 )
+set_target_properties(PathScripts PROPERTIES FOLDER "Mod/CAM")
 
 SET(test_files
   ${Path_Scripts}
@@ -415,6 +416,7 @@ SET(test_files
 ADD_CUSTOM_TARGET(Tests ALL
     SOURCES ${test_files}
 )
+set_target_properties(Tests PROPERTIES FOLDER "Mod/CAM")
 
 fc_copy_sources(PathScripts "${CMAKE_BINARY_DIR}/Mod/CAM" ${all_files})
 fc_copy_sources(Tests "${CMAKE_BINARY_DIR}/Mod/CAM" ${test_files})
