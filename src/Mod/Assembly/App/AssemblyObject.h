@@ -184,7 +184,7 @@ public:
     void jointParts(std::vector<App::DocumentObject*> joints);
     JointGroup* getJointGroup();
     ViewGroup* getExplodedViewGroup();
-    std::vector<App::DocumentObject*> getJoints(bool updateJCS = true, bool delBadJoints = true);
+    std::vector<App::DocumentObject*> getJoints(bool updateJCS = true, bool delBadJoints = false);
     std::vector<App::DocumentObject*> getGroundedJoints();
     std::vector<App::DocumentObject*> getJointsOfObj(App::DocumentObject* obj);
     std::vector<App::DocumentObject*> getJointsOfPart(App::DocumentObject* part);
@@ -237,8 +237,8 @@ public:
 
     static void swapJCS(App::DocumentObject* joint);
 
-    static bool isEdgeType(App::DocumentObject* obj, const char* elName, GeomAbs_CurveType type);
-    static bool isFaceType(App::DocumentObject* obj, const char* elName, GeomAbs_SurfaceType type);
+    static bool isEdgeType(App::DocumentObject* obj, std::string& elName, GeomAbs_CurveType type);
+    static bool isFaceType(App::DocumentObject* obj, std::string& elName, GeomAbs_SurfaceType type);
     static double getFaceRadius(App::DocumentObject* obj, const char* elName);
     static double getEdgeRadius(App::DocumentObject* obj, const char* elName);
 
@@ -252,12 +252,8 @@ public:
     static JointType getJointType(App::DocumentObject* joint);
     static const char* getElementFromProp(App::DocumentObject* obj, const char* propName);
     static std::string getElementTypeFromProp(App::DocumentObject* obj, const char* propName);
-    static App::DocumentObject* getLinkObjFromProp(App::DocumentObject* joint,
-                                                   const char* propName);
-    static App::DocumentObject*
-    getObjFromNameProp(App::DocumentObject* joint, const char* pObjName, const char* pPart);
-    static App::DocumentObject*
-    getLinkedObjFromNameProp(App::DocumentObject* joint, const char* pObjName, const char* pPart);
+    static App::DocumentObject* getObjFromProp(App::DocumentObject* joint, const char* propName);
+    static App::DocumentObject* getLinkedObjFromProp(App::DocumentObject* joint, const char* pObj);
     static Base::Placement getPlacementFromProp(App::DocumentObject* obj, const char* propName);
     static bool getTargetPlacementRelativeTo(Base::Placement& foundPlc,
                                              App::DocumentObject* targetObj,

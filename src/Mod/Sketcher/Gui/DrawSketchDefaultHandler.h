@@ -41,8 +41,6 @@
 
 #include "Utils.h"
 
-namespace bp = boost::placeholders;
-
 namespace SketcherGui
 {
 
@@ -431,20 +429,18 @@ public:
             this->iterateToNextConstructionMethod();
         }
         else if (key == SoKeyboardEvent::ESCAPE && pressed) {
-
-            if (this->isFirstState()) {
-                quit();
-            }
-            else {
-                handleContinuousMode();
-            }
+            rightButtonOrEsc();
         }
     }
 
     void pressRightButton(Base::Vector2d onSketchPos) override
     {
         Q_UNUSED(onSketchPos);
+        rightButtonOrEsc();
+    }
 
+    virtual void rightButtonOrEsc()
+    {
         if (this->isFirstState()) {
             quit();
         }
@@ -502,8 +498,7 @@ protected:
                     createAutoConstraints();
                 }
 
-                tryAutoRecomputeIfNotSolve(
-                    static_cast<Sketcher::SketchObject*>(sketchgui->getObject()));
+                tryAutoRecomputeIfNotSolve(sketchgui->getSketchObject());
             }
             catch (const Base::RuntimeError& e) {
                 // RuntimeError exceptions inside of the block above must provide a translatable
@@ -862,11 +857,29 @@ protected:
      * all the constraints stored in the AutoConstraints vector. */
     void createGeneratedAutoConstraints(bool owncommand)
     {
-        // add auto-constraints
-        if (owncommand) {
-            Gui::Command::openCommand(QT_TRANSLATE_NOOP("Command", "Add auto constraints"));
-        }
+        try {
+            // add auto-constraints
+            if (owncommand) {
+                Gui::Command::openCommand(QT_TRANSLATE_NOOP("Command", "Add auto constraints"));
+            }
 
+            tryAddAutoConstraints();
+
+            if (owncommand) {
+                Gui::Command::commitCommand();
+            }
+        }
+        catch (const Base::PyException&) {
+            if (owncommand) {
+                Gui::Command::abortCommand();
+            }
+        }
+    }
+
+    /** @brief Convenience function to automatically add to the SketchObjects
+     * all the constraints stored in the AutoConstraints vector. */
+    void tryAddAutoConstraints()
+    {
         auto autoConstraints = toPointerVector(AutoConstraints);
 
         Gui::Command::doCommand(
@@ -874,10 +887,6 @@ protected:
             Sketcher::PythonConverter::convert(Gui::Command::getObjectCmd(sketchgui->getObject()),
                                                autoConstraints)
                 .c_str());
-
-        if (owncommand) {
-            Gui::Command::commitCommand();
-        }
     }
 
     /** @brief Convenience function to remove redundant autoconstraints from the AutoConstraints

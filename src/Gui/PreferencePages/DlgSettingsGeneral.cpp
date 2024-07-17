@@ -31,6 +31,7 @@
 # include <QFileDialog>
 # include <QLocale>
 # include <QMessageBox>
+# include <QString>
 # include <algorithm>
 # include <boost/filesystem.hpp>
 #endif
@@ -40,6 +41,7 @@
 #include <Base/UnitsApi.h>
 
 #include <Gui/Document.h>
+#include <Gui/Command.h>
 
 #include <Gui/Action.h>
 #include <Gui/Application.h>
@@ -83,6 +85,7 @@ DlgSettingsGeneral::DlgSettingsGeneral( QWidget* parent )
     connect(ui->ImportConfig, &QPushButton::clicked, this, &DlgSettingsGeneral::onImportConfigClicked);
     connect(ui->SaveNewPreferencePack, &QPushButton::clicked, this, &DlgSettingsGeneral::saveAsNewPreferencePack);
     connect(ui->themesCombobox, qOverload<int>(&QComboBox::activated), this, &DlgSettingsGeneral::onThemeChanged);
+    connect(ui->moreThemesLabel, &QLabel::linkActivated, this, &DlgSettingsGeneral::onLinkActivated);
 
     ui->ManagePreferencePacks->setToolTip(tr("Manage preference packs"));
     connect(ui->ManagePreferencePacks, &QPushButton::clicked, this, &DlgSettingsGeneral::onManagePreferencePacksClicked);
@@ -251,16 +254,17 @@ void DlgSettingsGeneral::saveSettings()
     int blinkTime{hGrp->GetBool("EnableCursorBlinking", true) ? -1 : 0};
     qApp->setCursorFlashTime(blinkTime);
 
-    std::string qtStyle = hGrp->GetASCII("QtStyle");
-    qApp->setStyle(QString::fromStdString(qtStyle));
-
     saveDockWindowVisibility();
 
     hGrp = App::GetApplication().GetParameterGroupByPath("User parameter:BaseApp/Preferences/MainWindow");
     hGrp->SetBool("TiledBackground", ui->tiledBackground->isChecked());
 
-    if (themeChanged)
+    if (themeChanged) {
+        auto qtStyle = QString::fromStdString(hGrp->GetASCII("QtStyle"));
+
         saveThemes();
+        qApp->setStyle(qtStyle);
+    }
 }
 
 void DlgSettingsGeneral::loadSettings()
@@ -545,8 +549,8 @@ void DlgSettingsGeneral::saveDockWindowVisibility()
 void DlgSettingsGeneral::loadDockWindowVisibility()
 {
     ui->treeMode->clear();
-    ui->treeMode->addItem(tr("Combo View"));
-    ui->treeMode->addItem(tr("TreeView and PropertyView"));
+    ui->treeMode->addItem(tr("Combined"));
+    ui->treeMode->addItem(tr("Independent"));
 
     auto hGrp = App::GetApplication().GetParameterGroupByPath("User parameter:BaseApp/Preferences/DockWindows");
     bool propertyView = hGrp->GetGroup("PropertyView")->GetBool("Enabled", false);
@@ -725,6 +729,23 @@ void DlgSettingsGeneral::onUnitSystemIndexChanged(int index)
 void DlgSettingsGeneral::onThemeChanged(int index) {
     Q_UNUSED(index);
     themeChanged = true;
+}
+
+void DlgSettingsGeneral::onLinkActivated(const QString& link)
+{
+    auto const addonManagerLink = QStringLiteral("freecad:Std_AddonMgr");
+
+    if (link != addonManagerLink) {
+        return;
+    }
+
+    // Set the user preferences to include only preference packs.
+    // This is a quick and dirty way to open Addon Manager with only themes.
+    auto pref = App::GetApplication().GetParameterGroupByPath("User parameter:BaseApp/Preferences/Addons");
+    pref->SetInt("PackageTypeSelection", 3); // 3 stands for Preference Packs
+    pref->SetInt("StatusSelection", 0);      // 0 stands for any installation status 
+
+    Gui::Application::Instance->commandManager().runCommandByName("Std_AddonMgr");
 }
 
 ///////////////////////////////////////////////////////////

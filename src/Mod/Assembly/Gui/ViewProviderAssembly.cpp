@@ -55,6 +55,7 @@
 #include <Mod/Assembly/App/AssemblyObject.h>
 #include <Mod/Assembly/App/AssemblyUtils.h>
 #include <Mod/Assembly/App/JointGroup.h>
+#include <Mod/Assembly/App/ViewGroup.h>
 #include <Mod/PartDesign/App/Body.h>
 
 #include "ViewProviderAssembly.h"
@@ -91,6 +92,8 @@ ViewProviderAssembly::ViewProviderAssembly()
     , canStartDragging(false)
     , partMoving(false)
     , enableMovement(true)
+    , moveOnlyPreselected(false)
+    , moveInCommand(true)
     , jointVisibilityBackup(false)
     , ctrlPressed(false)
     , docsToMove({})
@@ -135,24 +138,34 @@ bool ViewProviderAssembly::canDragObject(App::DocumentObject* obj) const
         return false;
     }
 
-    // else if a solid is removed, remove associated joints if any.
+    return true;
+}
+
+bool ViewProviderAssembly::canDragObjectToTarget(App::DocumentObject* obj,
+                                                 App::DocumentObject* target) const
+{
+    // If a solid is removed from the assembly, its joints need to be removed.
     bool prompted = false;
     auto* assemblyPart = static_cast<AssemblyObject*>(getObject());
-    std::vector<App::DocumentObject*> joints = assemblyPart->getJoints();
+
+    // If target is null then it's being dropped on a doc.
+    if (target && assemblyPart->hasObject(target)) {
+        // If the obj stays in assembly then its ok.
+        return true;
+    }
 
     // Combine the joints and groundedJoints vectors into one for simplicity.
     std::vector<App::DocumentObject*> allJoints = assemblyPart->getJoints();
     std::vector<App::DocumentObject*> groundedJoints = assemblyPart->getGroundedJoints();
     allJoints.insert(allJoints.end(), groundedJoints.begin(), groundedJoints.end());
 
-    Gui::Command::openCommand(tr("Delete associated joints").toStdString().c_str());
     for (auto joint : allJoints) {
         // getLinkObjFromProp returns nullptr if the property doesn't exist.
-        App::DocumentObject* obj1 = AssemblyObject::getObjFromNameProp(joint, "Object1", "Part1");
-        App::DocumentObject* obj2 = AssemblyObject::getObjFromNameProp(joint, "Object2", "Part2");
-        App::DocumentObject* part1 = AssemblyObject::getLinkObjFromProp(joint, "Part1");
-        App::DocumentObject* part2 = AssemblyObject::getLinkObjFromProp(joint, "Part2");
-        App::DocumentObject* obj3 = AssemblyObject::getLinkObjFromProp(joint, "ObjectToGround");
+        App::DocumentObject* obj1 = AssemblyObject::getObjFromProp(joint, "Object1");
+        App::DocumentObject* obj2 = AssemblyObject::getObjFromProp(joint, "Object2");
+        App::DocumentObject* part1 = AssemblyObject::getObjFromProp(joint, "Part1");
+        App::DocumentObject* part2 = AssemblyObject::getObjFromProp(joint, "Part2");
+        App::DocumentObject* obj3 = AssemblyObject::getObjFromProp(joint, "ObjectToGround");
         if (obj == obj1 || obj == obj2 || obj == part1 || obj == part2 || obj == obj3) {
             if (!prompted) {
                 prompted = true;
@@ -173,7 +186,6 @@ bool ViewProviderAssembly::canDragObject(App::DocumentObject* obj) const
                                     joint->getNameInDocument());
         }
     }
-    Gui::Command::commitCommand();
 
     return true;
 }
@@ -237,7 +249,7 @@ void ViewProviderAssembly::setDragger()
     asmDragger->setAxisColors(Gui::ViewParams::instance()->getAxisXColor(),
                               Gui::ViewParams::instance()->getAxisYColor(),
                               Gui::ViewParams::instance()->getAxisZColor());
-    asmDragger->draggerSize.setValue(0.05f);
+    asmDragger->draggerSize.setValue(Gui::ViewParams::instance()->getDraggerScale());
 
     asmDraggerSwitch = new SoSwitch(SO_SWITCH_NONE);
     asmDraggerSwitch->addChild(asmDragger);
@@ -457,6 +469,38 @@ bool ViewProviderAssembly::mouseButtonPressed(int Button,
     return false;
 }
 
+bool ViewProviderAssembly::canDragObjectIn3d(App::DocumentObject* obj) const
+{
+    if (!obj) {
+        return false;
+    }
+
+    auto* assemblyPart = static_cast<AssemblyObject*>(getObject());
+
+    // Check if the selected object is a child of the assembly
+    if (!assemblyPart->hasObject(obj, true)) {
+        return false;
+    }
+
+    auto* propPlacement =
+        dynamic_cast<App::PropertyPlacement*>(obj->getPropertyByName("Placement"));
+    if (!propPlacement) {
+        return false;
+    }
+
+    // We have to exclude Grounded joints as they happen to have a Placement prop
+    auto* propLink = dynamic_cast<App::PropertyLink*>(obj->getPropertyByName("ObjectToGround"));
+    if (propLink) {
+        return false;
+    }
+
+    // We have to exclude grounded objects as they should not move.
+    if (assemblyPart->isPartGrounded(obj)) {
+        return false;
+    }
+    return true;
+}
+
 bool ViewProviderAssembly::getSelectedObjectsWithinAssembly(bool addPreselection, bool onlySolids)
 {
     // check the current selection, and check if any of the selected objects are within this
@@ -466,48 +510,38 @@ bool ViewProviderAssembly::getSelectedObjectsWithinAssembly(bool addPreselection
     docsToMove.clear();
 
     // Get the assembly object for this ViewProvider
-    AssemblyObject* assemblyPart = static_cast<AssemblyObject*>(getObject());
+    auto* assemblyPart = static_cast<AssemblyObject*>(getObject());
 
     if (!assemblyPart) {
         return false;
     }
 
-    for (auto& selObj : Gui::Selection().getSelectionEx("",
-                                                        App::DocumentObject::getClassTypeId(),
-                                                        Gui::ResolveMode::NoResolve)) {
-        // getSubNames() returns ["Body001.Pad.Face14", "Body002.Pad.Face7"]
-        //  if you have several objects within the same assembly selected.
+    if (!moveOnlyPreselected) {
+        for (auto& selObj : Gui::Selection().getSelectionEx("",
+                                                            App::DocumentObject::getClassTypeId(),
+                                                            Gui::ResolveMode::NoResolve)) {
+            // getSubNames() returns ["Body001.Pad.Face14", "Body002.Pad.Face7"]
+            //  if you have several objects within the same assembly selected.
 
-        std::vector<std::string> objsSubNames = selObj.getSubNames();
-        for (auto& subNamesStr : objsSubNames) {
-            std::vector<std::string> subNames = parseSubNames(subNamesStr);
-            if (subNames.empty()) {
-                continue;
-            }
-            if (onlySolids && subNames.back() != "") {
-                continue;
-            }
+            std::vector<std::string> objsSubNames = selObj.getSubNames();
+            for (auto& subNamesStr : objsSubNames) {
+                std::vector<std::string> subNames = parseSubNames(subNamesStr);
+                if (subNames.empty()) {
+                    continue;
+                }
+                if (onlySolids && subNames.back() != "") {
+                    continue;
+                }
 
-            App::DocumentObject* obj = getObjectFromSubNames(subNames);
-            if (!obj) {
-                continue;
-            }
+                App::DocumentObject* obj = getObjectFromSubNames(subNames);
 
-            // Check if the selected object is a child of the assembly
-            if (assemblyPart->hasObject(obj, true)) {
-                auto* propPlacement =
+                if (!canDragObjectIn3d(obj)) {
+                    continue;
+                }
+
+                auto* pPlc =
                     dynamic_cast<App::PropertyPlacement*>(obj->getPropertyByName("Placement"));
-                if (!propPlacement) {
-                    continue;
-                }
-                // We have to exclude Grounded joints as they happen to have a Placement prop
-                auto* propLink =
-                    dynamic_cast<App::PropertyLink*>(obj->getPropertyByName("ObjectToGround"));
-                if (propLink) {
-                    continue;
-                }
-
-                docsToMove.emplace_back(obj, propPlacement->getValue());
+                docsToMove.emplace_back(obj, pPlc->getValue());
             }
         }
     }
@@ -522,32 +556,26 @@ bool ViewProviderAssembly::getSelectedObjectsWithinAssembly(bool addPreselection
         std::string subNamesStr = Gui::Selection().getPreselection().pSubName;
         std::vector<std::string> subNames = parseSubNames(subNamesStr);
 
-        App::DocumentObject* preselectedObj = getObjectFromSubNames(subNames);
-        if (preselectedObj && assemblyPart->hasObject(preselectedObj, true)) {
+        App::DocumentObject* obj = getObjectFromSubNames(subNames);
+        if (canDragObjectIn3d(obj)) {
+
             bool alreadyIn = false;
             for (auto& pair : docsToMove) {
-                App::DocumentObject* obj = pair.first;
-                if (obj == preselectedObj) {
+                App::DocumentObject* obji = pair.first;
+                if (obji == obj) {
                     alreadyIn = true;
                     break;
                 }
             }
 
             if (!alreadyIn) {
-                auto* propPlacement = dynamic_cast<App::PropertyPlacement*>(
-                    preselectedObj->getPropertyByName("Placement"));
-                if (propPlacement) {
-                    // We have to exclude Grounded joints as they happen to have a Placement prop
-                    auto* propLink = dynamic_cast<App::PropertyLink*>(
-                        preselectedObj->getPropertyByName("ObjectToGround"));
-                    if (!propLink) {
-                        if (!ctrlPressed) {
-                            Gui::Selection().clearSelection();
-                            docsToMove.clear();
-                        }
-                        docsToMove.emplace_back(preselectedObj, propPlacement->getValue());
-                    }
+                auto* pPlc =
+                    dynamic_cast<App::PropertyPlacement*>(obj->getPropertyByName("Placement"));
+                if (!ctrlPressed && !moveOnlyPreselected) {
+                    Gui::Selection().clearSelection();
+                    docsToMove.clear();
                 }
+                docsToMove.emplace_back(obj, pPlc->getValue());
             }
         }
     }
@@ -758,8 +786,9 @@ void ViewProviderAssembly::initMove(const SbVec2s& cursorPos, Gui::View3DInvento
         prevPosition = initialPosition;
     }
 
-
-    Gui::Command::openCommand(tr("Move part").toStdString().c_str());
+    if (moveInCommand) {
+        Gui::Command::openCommand(tr("Move part").toStdString().c_str());
+    }
     partMoving = true;
 
     // prevent selection while moving
@@ -811,7 +840,9 @@ void ViewProviderAssembly::endMove()
         assemblyPart->setObjMasses({});
     }
 
-    Gui::Command::commitCommand();
+    if (moveInCommand) {
+        Gui::Command::commitCommand();
+    }
 }
 
 void ViewProviderAssembly::initMoveDragger()
@@ -887,14 +918,50 @@ void ViewProviderAssembly::onSelectionChanged(const Gui::SelectionChanges& msg)
 
 bool ViewProviderAssembly::onDelete(const std::vector<std::string>& subNames)
 {
-    // Delete the joingroup when assembly is deleted
+    // Delete the assembly groups when assembly is deleted
     for (auto obj : getObject()->getOutList()) {
-        if (obj->getTypeId() == Assembly::JointGroup::getClassTypeId()) {
-            obj->getDocument()->removeObject(obj->getNameInDocument());
+        if (obj->getTypeId() == Assembly::JointGroup::getClassTypeId()
+            || obj->getTypeId() == Assembly::ViewGroup::getClassTypeId()
+            /* || obj->getTypeId() == Assembly::BomGroup::getClassTypeId()*/) {
+
+            // Delete the group content first.
+            Gui::Command::doCommand(Gui::Command::Doc,
+                                    "doc = App.getDocument(\"%s\")\n"
+                                    "objName = \"%s\"\n"
+                                    "doc.getObject(objName).removeObjectsFromDocument()\n"
+                                    "doc.removeObject(objName)\n",
+                                    obj->getDocument()->getName(),
+                                    obj->getNameInDocument());
         }
     }
 
     return ViewProviderPart::onDelete(subNames);
+}
+
+bool ViewProviderAssembly::canDelete(App::DocumentObject* obj) const
+{
+    bool res = ViewProviderPart::canDelete(obj);
+    if (res) {
+        // If a component is deleted, then we delete the joints as well.
+        for (auto parent : obj->getInList()) {
+            if (!parent) {
+                continue;
+            }
+
+            auto* prop =
+                dynamic_cast<App::PropertyBool*>(parent->getPropertyByName("EnableLimits"));
+            auto* prop2 =
+                dynamic_cast<App::PropertyLink*>(parent->getPropertyByName("ObjectToGround"));
+            if (prop || prop2) {
+                Gui::Command::doCommand(Gui::Command::Doc,
+                                        "App.getDocument(\"%s\").removeObject(\"%s\")",
+                                        parent->getDocument()->getName(),
+                                        parent->getNameInDocument());
+            }
+        }
+    }
+
+    return res;
 }
 
 void ViewProviderAssembly::setDraggerVisibility(bool val)

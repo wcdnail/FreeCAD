@@ -51,6 +51,16 @@ MeasureDistance::MeasureDistance()
                                             "Distance between the two elements");
     Distance.setUnit(Base::Unit::Length);
 
+    ADD_PROPERTY_TYPE(DistanceX,(0.0),"Measurement",App::PropertyType(App::Prop_ReadOnly|App::Prop_Output),
+                                            "Distance in X direction");
+    DistanceX.setUnit(Base::Unit::Length);
+    ADD_PROPERTY_TYPE(DistanceY,(0.0),"Measurement",App::PropertyType(App::Prop_ReadOnly|App::Prop_Output),
+                                            "Distance in Y direction");
+    DistanceY.setUnit(Base::Unit::Length);
+    ADD_PROPERTY_TYPE(DistanceZ,(0.0),"Measurement",App::PropertyType(App::Prop_ReadOnly|App::Prop_Output),
+                                            "Distance in Z direction");
+    DistanceZ.setUnit(Base::Unit::Length);
+
     ADD_PROPERTY_TYPE(Position1,(Base::Vector3d(0.0,0.0,0.0)),"Measurement", App::Prop_Hidden, "Position1");
     ADD_PROPERTY_TYPE(Position2,(Base::Vector3d(0.0,1.0,0.0)),"Measurement", App::Prop_Hidden, "Position2");
 
@@ -150,7 +160,6 @@ bool MeasureDistance::getShape(App::PropertyLinkSub* prop, TopoDS_Shape& rShape)
     }
 
     auto handler = getGeometryHandler(mod);
-    std::string obName = static_cast<std::string>(ob->getNameInDocument());
     App::SubObjectT subject{ob, subName.c_str()};
     auto info = handler(subject);
     if (!info->valid) {
@@ -158,7 +167,7 @@ bool MeasureDistance::getShape(App::PropertyLinkSub* prop, TopoDS_Shape& rShape)
     }
     auto distanceInfo = std::dynamic_pointer_cast<Part::MeasureDistanceInfo>(info);
 
-    rShape = *distanceInfo->getShape();
+    rShape = distanceInfo->getShape();
     return true;
 }
 
@@ -197,7 +206,11 @@ App::DocumentObjectExecReturn *MeasureDistance::execute()
         return new App::DocumentObjectExecReturn("Could not get extrema");
     }
 
+    gp_Pnt delta = measure.PointOnShape2(1).XYZ() - measure.PointOnShape1(1).XYZ();
     Distance.setValue(measure.Value());
+    DistanceX.setValue(fabs(delta.X()));
+    DistanceY.setValue(fabs(delta.Y()));
+    DistanceZ.setValue(fabs(delta.Z()));
 
     gp_Pnt p1 = measure.PointOnShape1(1);
     Position1.setValue(p1.X(), p1.Y(), p1.Z());
@@ -229,3 +242,118 @@ std::vector<App::DocumentObject*> MeasureDistance::getSubject() const
     return {Element1.getValue()};
 }
 
+
+
+PROPERTY_SOURCE(Measure::MeasureDistanceDetached, Measure::MeasureBase)
+
+MeasureDistanceDetached::MeasureDistanceDetached()
+{
+    ADD_PROPERTY_TYPE(Distance,(0.0),"Measurement",App::PropertyType(App::Prop_ReadOnly|App::Prop_Output),
+                                            "Distance between the two elements");
+    Distance.setUnit(Base::Unit::Length);
+
+    ADD_PROPERTY_TYPE(DistanceX,(0.0),"Measurement",App::PropertyType(App::Prop_ReadOnly|App::Prop_Output),
+                                            "Distance in X direction");
+    DistanceX.setUnit(Base::Unit::Length);
+    ADD_PROPERTY_TYPE(DistanceY,(0.0),"Measurement",App::PropertyType(App::Prop_ReadOnly|App::Prop_Output),
+                                            "Distance in Y direction");
+    DistanceY.setUnit(Base::Unit::Length);
+    ADD_PROPERTY_TYPE(DistanceZ,(0.0),"Measurement",App::PropertyType(App::Prop_ReadOnly|App::Prop_Output),
+                                            "Distance in Z direction");
+    DistanceZ.setUnit(Base::Unit::Length);
+
+    ADD_PROPERTY_TYPE(Position1,(Base::Vector3d(0.0,0.0,0.0)),"Measurement", App::Prop_None, "Position1");
+    ADD_PROPERTY_TYPE(Position2,(Base::Vector3d(0.0,1.0,0.0)),"Measurement", App::Prop_None, "Position2");
+}
+
+MeasureDistanceDetached::~MeasureDistanceDetached() = default;
+
+
+bool MeasureDistanceDetached::isValidSelection(const App::MeasureSelection& selection){
+    return selection.size() == 2;
+}
+
+void MeasureDistanceDetached::parseSelection(const App::MeasureSelection& selection) {
+    auto sel1 = selection.at(0);
+    auto sel2 = selection.at(1);
+    
+    Position1.setValue(sel1.pickedPoint);
+    Position2.setValue(sel2.pickedPoint);
+}
+
+
+App::DocumentObjectExecReturn *MeasureDistanceDetached::execute()
+{
+    recalculateDistance();
+    return DocumentObject::StdReturn;
+}
+
+void MeasureDistanceDetached::recalculateDistance()
+{
+    auto delta = Position1.getValue() - Position2.getValue();
+    Distance.setValue(delta.Length());
+    DistanceX.setValue(fabs(delta.x));
+    DistanceY.setValue(fabs(delta.y));
+    DistanceZ.setValue(fabs(delta.z));
+}
+
+void MeasureDistanceDetached::onChanged(const App::Property* prop)
+{
+    if (isRestoring() || isRemoving()) {
+        return;
+    }
+
+    if (prop == &Position1 || prop == &Position2) {
+        recalculateDistance();
+    }
+    
+    MeasureBase::onChanged(prop);
+}
+
+
+std::vector<App::DocumentObject*> MeasureDistanceDetached::getSubject() const
+{
+    return {};
+}
+
+
+
+Base::Type MeasureDistanceType::getClassTypeId()
+{
+    return Base::Type::badType();
+}
+
+Base::Type MeasureDistanceType::getTypeId() const
+{
+    return Base::Type::badType();
+}
+
+void MeasureDistanceType::init()
+{
+    initSubclass(MeasureDistanceType::classTypeId,
+                 "App::MeasureDistance",
+                 "App::DocumentObject",
+                 &(MeasureDistanceType::create));
+}
+
+void* MeasureDistanceType::create()
+{
+    return new MeasureDistanceDetached();
+}
+
+Base::Type MeasureDistanceType::classTypeId = Base::Type::badType();
+
+
+
+// Migrate old MeasureDistance Type
+void MeasureDistanceDetached::handleChangedPropertyName(Base::XMLReader &reader,
+                                                const char * TypeName,
+                                                const char *PropName)
+{
+    if (strcmp(PropName, "P1") == 0 && strcmp(TypeName, "App::PropertyVector") == 0) {
+        Position1.Restore(reader);
+    }
+    else if (strcmp(PropName, "P2") == 0 && strcmp(TypeName, "App::PropertyVector") == 0) {
+        Position2.Restore(reader);
+    }
+}

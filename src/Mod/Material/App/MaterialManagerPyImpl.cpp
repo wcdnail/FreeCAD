@@ -31,6 +31,8 @@
 
 #include "MaterialManagerPy.cpp"
 
+#include <Base/PyWrapParseTupleAndKeywords.h>
+
 using namespace Materials;
 
 // returns a string which represents the object e.g. when printed in python
@@ -223,24 +225,17 @@ PyObject* MaterialManagerPy::materialsWithModelComplete(PyObject* args)
 
 PyObject* MaterialManagerPy::save(PyObject* args, PyObject* kwds)
 {
-    char*            libraryName{nullptr};
-    PyObject*                obj{nullptr};
-    char*                   path{nullptr};
-    PyObject*          overwrite{Py_False};
-    PyObject*         saveAsCopy{Py_False};
-    PyObject*      saveInherited{Py_False};
-    static char       slibrary[]{"library"};
-    static char      smaterial[]{"material"};
-    static char          spath[]{"path"};
-    static char     soverwrite[]{"overwrite"};
-    static char    ssaveAsCopy[]{"saveAsCopy"};
-    static char ssaveInherited[]{"saveInherited"};
-    static char*     kwds_save[]{slibrary, smaterial, spath, soverwrite, ssaveAsCopy, ssaveInherited, nullptr};
-
-    if (!PyArg_ParseTupleAndKeywords(args,
+    char* libraryName {};
+    PyObject* obj {};
+    char* path {};
+    PyObject* overwrite = Py_False;
+    PyObject* saveAsCopy = Py_False;
+    PyObject* saveInherited = Py_False;
+    static const std::array<const char *, 7> kwlist { "library", "material", "path", "overwrite", "saveAsCopy", "saveInherited", nullptr };
+    if (!Base::Wrapped_ParseTupleAndKeywords(args,
                                      kwds,
                                      "etOet|O!O!O!",
-                                     kwds_save,
+                                     kwlist,
                                      "utf-8", &libraryName,
                                      &obj,
                                      "utf-8", &path,
@@ -306,21 +301,20 @@ void addMaterials(Py::List& list,
 
 PyObject* MaterialManagerPy::filterMaterials(PyObject* args, PyObject* kwds)
 {
-    PyObject*           filterPy{nullptr};
-    PyObject*      includeLegacy{Py_False};
-    static char        sfilter[]{"filter"};
-    static char sincludeLegacy[]{"includeLegacy"};
-    static char*     kwds_save[]{sfilter, sincludeLegacy, nullptr};
-
-    if (!PyArg_ParseTupleAndKeywords(args,
-                                     kwds,
-                                     //  "O|O!",
-                                     "O!|O!",
-                                     kwds_save,
-                                     &MaterialFilterPy::Type,
-                                     &filterPy,
-                                     &PyBool_Type,
-                                     &includeLegacy)) {
+    PyObject* filterPy {};
+    PyObject* includeLegacy = Py_False;
+    static const std::array<const char*, 3> kwds_save{ "filter",
+                                                       "includeLegacy",
+                                                       nullptr };
+    if (!Base::Wrapped_ParseTupleAndKeywords(args,
+                                             kwds,
+                                             //  "O|O!",
+                                             "O!|O!",
+                                             kwds_save,
+                                             &MaterialFilterPy::Type,
+                                             &filterPy,
+                                             &PyBool_Type,
+                                             &includeLegacy)) {
         return nullptr;
     }
 

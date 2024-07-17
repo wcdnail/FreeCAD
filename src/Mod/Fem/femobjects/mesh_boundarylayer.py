@@ -40,13 +40,13 @@ class MeshBoundaryLayer(base_fempythonobject.BaseFemPythonObject):
     Type = "Fem::MeshBoundaryLayer"
 
     def __init__(self, obj):
-        super(MeshBoundaryLayer, self).__init__(obj)
+        super().__init__(obj)
 
         obj.addProperty(
             "App::PropertyInteger",
             "NumberOfLayers",
             "MeshBoundaryLayerProperties",
-            "set number of inflation layers for this boundary"
+            "set number of inflation layers for this boundary",
         )
         obj.setPropertyStatus("NumberOfLayers", "LockDynamic")
         obj.NumberOfLayers = 3
@@ -55,7 +55,7 @@ class MeshBoundaryLayer(base_fempythonobject.BaseFemPythonObject):
             "App::PropertyLength",
             "MinimumThickness",
             "MeshBoundaryLayerProperties",
-            "set minimum thickness,usually the first inflation layer"
+            "set minimum thickness,usually the first inflation layer",
         )
         obj.setPropertyStatus("MinimumThickness", "LockDynamic")
         # default to zero, user must specify a proper value for this property
@@ -64,7 +64,7 @@ class MeshBoundaryLayer(base_fempythonobject.BaseFemPythonObject):
             "App::PropertyFloat",
             "GrowthRate",
             "MeshBoundaryLayerProperties",
-            "set growth rate of inflation layers for smooth transition"
+            "set growth rate of inflation layers for smooth transition",
         )
         obj.setPropertyStatus("GrowthRate", "LockDynamic")
         obj.GrowthRate = 1.5
@@ -73,6 +73,6 @@ class MeshBoundaryLayer(base_fempythonobject.BaseFemPythonObject):
             "App::PropertyLinkSubList",
             "References",
             "MeshBoundaryLayerShapes",
-            "List of FEM mesh region shapes"
+            "List of FEM mesh region shapes",
         )
         obj.setPropertyStatus("References", "LockDynamic")

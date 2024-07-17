@@ -58,6 +58,7 @@
 #include <Gui/Selection.h>
 #include <Gui/SelectionObject.h>
 #include <Gui/SoFCColorBar.h>
+#include <Gui/SoFCColorBarNotifier.h>
 #include <Gui/TaskView/TaskDialog.h>
 #include <Gui/View3DInventor.h>
 #include <Gui/View3DInventorViewer.h>
@@ -232,6 +233,7 @@ ViewProviderFemPostObject::ViewProviderFemPostObject()
     m_colorRoot->addChild(m_colorStyle);
     m_colorBar = new Gui::SoFCColorBar;
     m_colorBar->Attach(this);
+    Gui::SoFCColorBarNotifier::instance().attach(m_colorBar);
     m_colorBar->ref();
 
     // create the vtk algorithms we use for visualisation
@@ -274,10 +276,16 @@ ViewProviderFemPostObject::~ViewProviderFemPostObject()
     m_material->unref();
     m_matPlainEdges->unref();
     m_switchMatEdges->unref();
-    m_colorBar->Detach(this);
-    m_colorBar->unref();
+    deleteColorBar();
     m_colorStyle->unref();
     m_colorRoot->unref();
+}
+
+void ViewProviderFemPostObject::deleteColorBar()
+{
+    Gui::SoFCColorBarNotifier::instance().detach(m_colorBar);
+    m_colorBar->Detach(this);
+    m_colorBar->unref();
 }
 
 void ViewProviderFemPostObject::attach(App::DocumentObject* pcObj)
@@ -316,8 +324,7 @@ void ViewProviderFemPostObject::attach(App::DocumentObject* pcObj)
         pcBar->ref();
         pcBar->setRange(fMin, fMax, 3);
         pcBar->Notify(0);
-        m_colorBar->Detach(this);
-        m_colorBar->unref();
+        deleteColorBar();
         m_colorBar = pcBar;
     }
 

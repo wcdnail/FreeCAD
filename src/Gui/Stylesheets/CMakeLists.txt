@@ -1,8 +1,7 @@
 
 SET(Stylesheets_Files
-    "Behave-dark.qss"
-    "Dark theme.qss"
-	"Light theme.qss"
+    	"FreeCAD Dark.qss"
+	"FreeCAD Light.qss"
 )
 
 SET(Overlay_Stylesheets_Files
@@ -10,7 +9,6 @@ SET(Overlay_Stylesheets_Files
     "overlay/Dark Theme + Light Background.qss"
     "overlay/Light Theme + Dark Background.qss"
     "overlay/Light Theme + Light Background.qss"
-    "overlay/DarkBehave_overlay.qss"
 )
 
 # Find all the image files
@@ -31,13 +29,13 @@ SOURCE_GROUP("overlay_icons" FILES ${Overlay_icons})
 
 
 ADD_CUSTOM_TARGET(Stylesheets_data ALL
-    SOURCES ${Stylesheets_Files} ${Images_Files} ${images_classic} ${Overlay_Stylesheets_Files} ${Overlay_icons}
+    SOURCES ${Stylesheets_Files} ${Images_Files} ${Images_Files2} ${Overlay_Stylesheets_Files} ${Overlay_icons}
 )
 
 fc_copy_sources(Stylesheets_data "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_DATADIR}/Gui/Stylesheets"
                                   ${Stylesheets_Files}
                                   ${Images_Files}
-                                  ${images_classic}
+                                  ${Images_Files2}
                                   ${Overlay_Stylesheets_Files}
                                   ${Overlay_icons})
 
@@ -67,7 +65,7 @@ INSTALL(
 )
 INSTALL(
     FILES
-         ${images_classic}
+         ${Images_Files2}
     DESTINATION
         ${CMAKE_INSTALL_DATADIR}/Gui/Stylesheets/images_classic
 )

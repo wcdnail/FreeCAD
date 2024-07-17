@@ -104,14 +104,6 @@ AttachExtension::AttachExtension()
                                 "Attach engine object driving the attachment.");
     AttacherEngine.setEnums(EngineEnums);
 
-    EXTENSION_ADD_PROPERTY_TYPE(
-        Support,
-        (nullptr, nullptr),
-        "Attachment",
-        (App::PropertyType)(App::Prop_Hidden),
-        "Support of the 2D geometry (Deprecated! Use AttachmentSupport instead");
-    Support.setScope(App::LinkScope::Global);
-
     EXTENSION_ADD_PROPERTY_TYPE(AttachmentSupport,
                                 (nullptr, nullptr),
                                 "Attachment",
@@ -147,6 +139,11 @@ AttachExtension::AttachExtension()
         "Attachment",
         App::Prop_None,
         "Extra placement to apply in addition to attachment (in local coordinates)");
+
+    // Only show these properties when applicable. Controlled by extensionOnChanged
+    this->MapPathParameter.setStatus(App::Property::Status::Hidden, true);
+    this->MapReversed.setStatus(App::Property::Status::Hidden, true);
+    this->AttachmentOffset.setStatus(App::Property::Status::Hidden, true);
 
     _props.attacherType = &AttacherType;
     _props.attachment = &AttachmentSupport;
@@ -313,6 +310,7 @@ bool AttachExtension::positionBySupport()
         throw Base::RuntimeError(
             "AttachExtension: can't positionBySupport, because no AttachEngine is set.");
     }
+    updateAttacherVals();
     Base::Placement plaOriginal = getPlacement().getValue();
     try {
         if (_props.attacher->mapMode == mmDeactivated) {
@@ -405,24 +403,48 @@ App::DocumentObjectExecReturn* AttachExtension::extensionExecute()
 void AttachExtension::extensionOnChanged(const App::Property* prop)
 {
     if (!getExtendedObject()->isRestoring()) {
-        if (prop == &Support) {
-            if (!prop->testStatus(App::Property::User3)) {
-                Base::ObjectStatusLocker<App::Property::Status, App::Property> guard(
-                    App::Property::User3,
-                    &Support);
-                AttachmentSupport.Paste(Support);
+        // If we change anything that affects our position, update it immediately so you can see it
+        // interactively.
+        if ((prop == &AttachmentSupport
+             || prop == &MapMode
+             || prop == &MapPathParameter
+             || prop == &MapReversed
+             || prop == &AttachmentOffset)){
+            bool bAttached = false;
+            try{
+                bAttached = positionBySupport();
+            } catch (Base::Exception &e) {
+                getExtendedObject()->setStatus(App::Error, true);
+                Base::Console().Error("PositionBySupport: %s\n",e.what());
+                //set error message - how?
+            } catch (Standard_Failure &e){
+                getExtendedObject()->setStatus(App::Error, true);
+                Base::Console().Error("PositionBySupport: %s\n",e.GetMessageString());
             }
+            // Hide properties when not applicable to reduce user confusion
+
+            eMapMode mmode = eMapMode(this->MapMode.getValue());
+
+            bool modeIsPointOnCurve = mmode == mmNormalToPath ||
+                mmode == mmFrenetNB || mmode == mmFrenetTN || mmode == mmFrenetTB ||
+                mmode == mmRevolutionSection || mmode == mmConcentric;
+
+            // MapPathParameter is only used if there is a reference to one edge and not edge + vertex
+            bool hasOneRef = false;
+            if (_props.attacher && _props.attacher->subnames.size() == 1) {
+                hasOneRef = true;
+            }
+
+            this->MapPathParameter.setStatus(App::Property::Status::Hidden, !bAttached || !(modeIsPointOnCurve && hasOneRef));
+            this->MapReversed.setStatus(App::Property::Status::Hidden, !bAttached);
+            this->AttachmentOffset.setStatus(App::Property::Status::Hidden, !bAttached);
+            getPlacement().setReadOnly(bAttached && mmode != mmTranslate); //for mmTranslate, orientation should remain editable even when attached.
+
         }
-        else if (prop == &AttacherEngine) {
+        if (prop == &AttacherEngine) {
             AttacherType.setValue(enumToClass(AttacherEngine.getValueAsString()));
         }
         else if (_props.matchProperty(prop)) {
-            if (prop == &AttachmentSupport) {
-                Base::ObjectStatusLocker<App::Property::Status, App::Property> guard(
-                    App::Property::User3,
-                    &Support);
-                Support.Paste(AttachmentSupport);
-            }
             _active = -1;
             updateAttacherVals(/*base*/ false);
             updatePropertyStatus(isAttacherActive());
@@ -443,23 +465,39 @@ void AttachExtension::extensionOnChanged(const App::Property* prop)
     App::DocumentObjectExtension::extensionOnChanged(prop);
 }
 
-void AttachExtension::extHandleChangedPropertyName(Base::XMLReader& reader,
-                                                   const char* TypeName,
-                                                   const char* PropName)
+bool AttachExtension::extensionHandleChangedPropertyName(Base::XMLReader& reader,
+                                                         const char* TypeName,
+                                                         const char* PropName)
 {
-    // Was superPlacement
     Base::Type type = Base::Type::fromName(TypeName);
-    if (AttachmentOffset.getClassTypeId() == type && strcmp(PropName, "superPlacement") == 0) {
+    // superPlacement -> AttachmentOffset
+    if (strcmp(PropName, "superPlacement") == 0 && AttachmentOffset.getClassTypeId() == type) {
         AttachmentOffset.Restore(reader);
+        return true;
     }
+    // Support -> AttachmentSupport
+    if (strcmp(PropName, "Support") == 0) {
+        // At one point, the type of Support changed from PropertyLinkSub to its present type
+        // of PropertyLinkSubList. Later, the property name changed to AttachmentSupport
+        App::PropertyLinkSub tmp;
+        if (strcmp(tmp.getTypeId().getName(), TypeName) == 0) {
+            tmp.setContainer(this->getExtendedContainer());
+            tmp.Restore(reader);
+            AttachmentSupport.setValue(tmp.getValue(), tmp.getSubValues());
+            this->MapMode.setValue(Attacher::mmFlatFace);
+            return true;
+        }
+        if (AttachmentSupport.getClassTypeId() == type) {
+            AttachmentSupport.Restore(reader);
+            return true;
+        }
+    }
+    return App::DocumentObjectExtension::extensionHandleChangedPropertyName(reader, TypeName, PropName);
 }
 
 void AttachExtension::onExtendedDocumentRestored()
 {
     try {
-        if (Support.getValue()) {
-            AttachmentSupport.Paste(Support);
-        }
         initBase(false);
         if (_baseProps.attachment) {
             _baseProps.attachment->setScope(App::LinkScope::Hidden);
@@ -471,6 +509,28 @@ void AttachExtension::onExtendedDocumentRestored()
         updatePropertyStatus(isAttacherActive());
 
         restoreAttacherEngine(this);
+
+        // Hide properties when not applicable to reduce user confusion
+        bool bAttached = positionBySupport();
+        eMapMode mmode = eMapMode(this->MapMode.getValue());
+        bool modeIsPointOnCurve =
+                (mmode == mmNormalToPath ||
+                 mmode == mmFrenetNB ||
+                 mmode == mmFrenetTN ||
+                 mmode == mmFrenetTB ||
+                 mmode == mmRevolutionSection ||
+                 mmode == mmConcentric);
+
+        // MapPathParameter is only used if there is a reference to one edge and not edge + vertex
+        bool hasOneRef = false;
+        if (_props.attacher && _props.attacher->subnames.size() == 1) {
+            hasOneRef = true;
+        }
+
+        this->MapPathParameter.setStatus(App::Property::Status::Hidden, !bAttached || !(modeIsPointOnCurve && hasOneRef));
+        this->MapReversed.setStatus(App::Property::Status::Hidden, !bAttached);
+        this->AttachmentOffset.setStatus(App::Property::Status::Hidden, !bAttached);
+        getPlacement().setReadOnly(bAttached && mmode != mmTranslate); //for mmTranslate, orientation should remain editable even when attached.
     }
     catch (Base::Exception&) {
     }

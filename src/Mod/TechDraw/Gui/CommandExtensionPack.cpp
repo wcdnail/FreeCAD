@@ -81,9 +81,9 @@ namespace TechDrawGui
 //internal helper functions
 TechDraw::LineFormat& _getActiveLineAttributes();
 Base::Vector3d _circleCenter(Base::Vector3d p1, Base::Vector3d p2, Base::Vector3d p3);
-void _createThreadCircle(const std::string Name, TechDraw::DrawViewPart* objFeat, float factor);
+void _createThreadCircle(const std::string Name, TechDraw::DrawViewPart* objFeat, double factor);
 void _createThreadLines(const std::vector<std::string>& SubNames, TechDraw::DrawViewPart* objFeat,
-                        float factor);
+                        double factor);
 void _setLineAttributes(TechDraw::CosmeticEdge* cosEdge);
 void _setLineAttributes(TechDraw::CenterLine* cosEdge);
 void _setLineAttributes(TechDraw::CosmeticEdge* cosEdge, int style, float weight, App::Color color);
@@ -1765,8 +1765,7 @@ CmdTechDrawExtensionAreaAnnotation::CmdTechDrawExtensionAreaAnnotation()
     sAppModule = "TechDraw";
     sGroup = QT_TR_NOOP("TechDraw");
     sMenuText = QT_TR_NOOP("Calculate the area of selected faces");
-    sToolTipText = QT_TR_NOOP("Select several faces<br>\
-    - click this tool");
+    sToolTipText = QT_TR_NOOP("Select several faces then click this tool");
     sWhatsThis = "TechDraw_ExtensionAreaAnnotation";
     sStatusTip = sToolTipText;
     sPixmap = "TechDraw_ExtensionAreaAnnotation";
@@ -2113,7 +2112,7 @@ Base::Vector3d _circleCenter(Base::Vector3d p1, Base::Vector3d p2, Base::Vector3
     return Base::Vector3d(center.x, center.y, 0.0);
 }
 
-void _createThreadCircle(const std::string Name, TechDraw::DrawViewPart* objFeat, float factor)
+void _createThreadCircle(const std::string Name, TechDraw::DrawViewPart* objFeat, double factor)
 {
     constexpr double ArcStartDegree{255.0};
     constexpr double ArcEndDegree{165.0};
@@ -2138,7 +2137,7 @@ void _createThreadCircle(const std::string Name, TechDraw::DrawViewPart* objFeat
 }
 
 void _createThreadLines(const std::vector<std::string>& SubNames, TechDraw::DrawViewPart* objFeat,
-                        float factor)
+                        double factor)
 {
     // create symbolizing lines of a thread from the side seen
     std::string GeoType0 = TechDraw::DrawUtil::getGeomTypeFromName(SubNames[0]);

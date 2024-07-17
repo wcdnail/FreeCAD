@@ -51,7 +51,6 @@
 #include <App/GeoFeatureGroupExtension.h>
 #include <App/Part.h>
 #include <App/Link.h>
-#include <App/MeasureDistance.h>
 #include <Base/Console.h>
 #include <Base/Parameter.h>
 
@@ -76,7 +75,6 @@
 #include "SelectionObject.h"
 #include "SoAxisCrossKit.h"
 #include "SoFCOffscreenRenderer.h"
-#include "TaskMeasure.h"
 #include "TextureMapping.h"
 #include "Tools.h"
 #include "Tree.h"
@@ -85,7 +83,6 @@
 #include "View3DInventor.h"
 #include "View3DInventorViewer.h"
 #include "ViewParams.h"
-#include "ViewProviderMeasureDistance.h"
 #include "ViewProviderGeometryObject.h"
 #include "WaitCursor.h"
 
@@ -1930,7 +1927,7 @@ StdViewScreenShot::StdViewScreenShot()
     sToolTipText= QT_TR_NOOP("Creates a screenshot of the active view");
     sWhatsThis  = "Std_ViewScreenShot";
     sStatusTip  = QT_TR_NOOP("Creates a screenshot of the active view");
-    sPixmap     = "camera-photo";
+    sPixmap     = "Std_ViewScreenShot";
     eType       = Alter3DView;
 }
 
@@ -3139,93 +3136,6 @@ void StdCmdTreeSelectAllInstances::activated(int iMsg)
     Selection().selStackPush();
 }
 
-//===========================================================================
-// Std_MeasureDistance
-//===========================================================================
-
-DEF_STD_CMD_A(StdCmdMeasureDistance)
-
-StdCmdMeasureDistance::StdCmdMeasureDistance()
-  : Command("Std_MeasureDistance")
-{
-    sGroup        = "View";
-    sMenuText     = QT_TR_NOOP("Measure distance");
-    sToolTipText  = QT_TR_NOOP("Activate the distance measurement tool");
-    sWhatsThis    = "Std_MeasureDistance";
-    sStatusTip    = QT_TR_NOOP("Activate the distance measurement tool");
-    sPixmap       = "view-measurement";
-    eType         = Alter3DView;
-}
-
-void StdCmdMeasureDistance::activated(int iMsg)
-{
-    Q_UNUSED(iMsg);
-    Gui::Document* doc = Gui::Application::Instance->activeDocument();
-    auto view = static_cast<Gui::View3DInventor*>(doc->getActiveView());
-    if (view) {
-        Gui::View3DInventorViewer* viewer = view->getViewer();
-        viewer->setEditing(true);
-
-        // NOLINTBEGIN
-        QCursor cursor = SelectionCallbackHandler::makeCursor(viewer, QSize(32, 32),
-                                                              "view-measurement-cross", 6, 25);
-        viewer->setEditingCursor(cursor);
-        // NOLINTEND
-
-        // Derives from QObject and we have a parent object, so we don't
-        // require a delete.
-        auto marker = new PointMarker(viewer);
-        viewer->addEventCallback(SoEvent::getClassTypeId(),
-            ViewProviderMeasureDistance::measureDistanceCallback, marker);
-     }
-}
-
-bool StdCmdMeasureDistance::isActive()
-{
-    App::Document* doc = App::GetApplication().getActiveDocument();
-    if (!doc || doc->countObjectsOfType(App::GeoFeature::getClassTypeId()) == 0)
-        return false;
-
-    Gui::MDIView* view = Gui::getMainWindow()->activeWindow();
-    if (view && view->isDerivedFrom(Gui::View3DInventor::getClassTypeId())) {
-        Gui::View3DInventorViewer* viewer = static_cast<Gui::View3DInventor*>(view)->getViewer();
-        return !viewer->isEditing();
-    }
-
-    return false;
-}
-
-//===========================================================================
-// Std_Measure
-// this is the Unified Measurement Facility Measure command
-//===========================================================================
-
-
-DEF_STD_CMD_A(StdCmdMeasure)
-
-StdCmdMeasure::StdCmdMeasure()
-  :Command("Std_Measure")
-{
-    sGroup        = "Measure";
-    sMenuText     = QT_TR_NOOP("&Measure");
-    sToolTipText  = QT_TR_NOOP("Measure a feature");
-    sWhatsThis    = "Std_Measure";
-    sStatusTip    = QT_TR_NOOP("Measure a feature");
-    sPixmap       = "umf-measurement";
-}
-
-void StdCmdMeasure::activated(int iMsg)
-{
-    Q_UNUSED(iMsg);
-
-    TaskMeasure *task = new TaskMeasure();
-    Gui::Control().showDialog(task);
-}
-
-
-bool StdCmdMeasure::isActive(){
-    return true;
-}
 
 //===========================================================================
 // Std_SceneInspector
@@ -3543,7 +3453,7 @@ StdTreePreSelection::StdTreePreSelection()
 {
     sGroup       = "TreeView";
     sMenuText    = QT_TR_NOOP("Pre-selection");
-    sToolTipText = QT_TR_NOOP("Preselect the object in 3D view when mouse over the tree item");
+    sToolTipText = QT_TR_NOOP("Preselect the object in 3D view when hovering the cursor over the tree item");
     sStatusTip   = sToolTipText;
     sWhatsThis   = "Std_TreePreSelection";
     sPixmap      = "tree-pre-sel";
@@ -3771,7 +3681,7 @@ StdCmdDockOverlayToggleTransparent::StdCmdDockOverlayToggleTransparent()
   :Command("Std_DockOverlayToggleTransparent")
 {
     sGroup        = "Standard-View";
-    sMenuText     = QT_TR_NOOP("Toggle transparent");
+    sMenuText     = QT_TR_NOOP("Toggle transparent mode");
     sToolTipText  = QT_TR_NOOP("Toggle transparent mode for the docked window under cursor.\n"
                                "This makes the docked window stay transparent at all times.");
     sWhatsThis    = "Std_DockOverlayToggleTransparent";
@@ -4124,8 +4034,6 @@ void CreateViewStdCommands()
     rcCmdMgr.addCommand(new StdCmdTreeExpand());
     rcCmdMgr.addCommand(new StdCmdTreeCollapse());
     rcCmdMgr.addCommand(new StdCmdTreeSelectAllInstances());
-    rcCmdMgr.addCommand(new StdCmdMeasureDistance());
-    rcCmdMgr.addCommand(new StdCmdMeasure());
     rcCmdMgr.addCommand(new StdCmdSceneInspector());
     rcCmdMgr.addCommand(new StdCmdTextureMapping());
     rcCmdMgr.addCommand(new StdCmdDemoMode());

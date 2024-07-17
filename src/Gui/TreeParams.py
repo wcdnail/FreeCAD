@@ -63,7 +63,7 @@ Params = [
     ParamInt('Indentation', 0, on_change=True),
     ParamBool('LabelExpression', False),
     ParamInt('IconSize', 0, on_change=True),
-    ParamInt('FontSize', 0, on_change=True),
+    ParamInt('FontSize', 0, on_change=True, title='Font size'),
     ParamInt('ItemSpacing', 0, on_change=True),
     ParamHex('ItemBackground', 0, on_change=True, title='Item background color', proxy=ParamColor(),
         doc = "Tree view item background. Only effective in overlay."),
@@ -83,7 +83,7 @@ Params = [
     ParamInt('ColumnSize2', 0),
     ParamInt('ColumnSize3', 0),
     ParamBool('TreeToolTipIcon', False, title='Show icon in tool tip'),
-    ParamBool('VisibilityIcon', False, on_change=True, title='Show visibility icon',
+    ParamBool('VisibilityIcon', True, on_change=True, title='Show visibility icon',
         doc = "If enabled, show an eye icon before the tree view items, showing the items visibility status. When clicked the visibility is toggled"),
 ]
 

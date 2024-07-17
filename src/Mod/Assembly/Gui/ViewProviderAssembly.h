@@ -72,6 +72,7 @@ public:
 
     bool doubleClicked() override;
     bool onDelete(const std::vector<std::string>& subNames) override;
+    bool canDelete(App::DocumentObject* obj) const override;
 
     /** @name enter/exit edit mode */
     //@{
@@ -87,6 +88,8 @@ public:
     }
 
     bool canDragObject(App::DocumentObject*) const override;
+    bool canDragObjectToTarget(App::DocumentObject* obj,
+                               App::DocumentObject* target) const override;
 
     App::DocumentObject* getActivePart() const;
 
@@ -113,8 +116,25 @@ public:
     {
         return enableMovement;
     }
+    virtual void setMoveOnlyPreselected(bool enable = true)
+    {
+        moveOnlyPreselected = enable;
+    }
+    virtual bool getMoveOnlyPreselected() const
+    {
+        return moveOnlyPreselected;
+    }
+    virtual void setMoveInCommand(bool enable = true)
+    {
+        moveInCommand = enable;
+    }
+    virtual bool getMoveInCommand() const
+    {
+        return moveInCommand;
+    }
 
 
+    bool canDragObjectIn3d(App::DocumentObject* obj) const;
     bool getSelectedObjectsWithinAssembly(bool addPreselection = true, bool onlySolids = false);
     App::DocumentObject* getObjectFromSubNames(std::vector<std::string>& subNames);
     std::vector<std::string> parseSubNames(std::string& subNamesStr);
@@ -148,6 +168,8 @@ public:
     bool canStartDragging;
     bool partMoving;
     bool enableMovement;
+    bool moveOnlyPreselected;
+    bool moveInCommand;
     bool jointVisibilityBackup;
     bool ctrlPressed;
     int numberOfSel;

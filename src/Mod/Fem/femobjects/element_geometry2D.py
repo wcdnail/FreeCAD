@@ -40,13 +40,13 @@ class ElementGeometry2D(base_fempythonobject.BaseFemPythonObject):
     Type = "Fem::ElementGeometry2D"
 
     def __init__(self, obj):
-        super(ElementGeometry2D, self).__init__(obj)
+        super().__init__(obj)
 
         obj.addProperty(
             "App::PropertyLength",
             "Thickness",
             "ShellThickness",
-            "set thickness of the shell elements"
+            "set thickness of the shell elements",
         )
         obj.setPropertyStatus("Thickness", "LockDynamic")
 
@@ -54,6 +54,6 @@ class ElementGeometry2D(base_fempythonobject.BaseFemPythonObject):
             "App::PropertyLinkSubList",
             "References",
             "ShellThickness",
-            "List of shell thickness shapes"
+            "List of shell thickness shapes",
         )
         obj.setPropertyStatus("References", "LockDynamic")

@@ -156,20 +156,24 @@ PyObject *TopoShapePy::PyMake(struct _typeobject *, PyObject *, PyObject *)  // 
 int TopoShapePy::PyInit(PyObject* args, PyObject* keywds)
 {
 #ifdef FC_USE_TNP_FIX
-    static char* kwlist[] = {(char*)"shape", (char*)"op", (char*)"tag", (char*)"hasher", nullptr};
+    static const std::array<const char*, 5> kwlist{ "shape",
+                                                    "op",
+                                                    "tag",
+                                                    "hasher",
+                                                    nullptr };
     long tag = 0;
     PyObject* pyHasher = nullptr;
     const char* op = nullptr;
     PyObject* pcObj = nullptr;
-    if (!PyArg_ParseTupleAndKeywords(args,
-                                     keywds,
-                                     "|OsiO!",
-                                     kwlist,
-                                     &pcObj,
-                                     &op,
-                                     &tag,
-                                     &App::StringHasherPy::Type,
-                                     &pyHasher)) {
+    if (!Base::Wrapped_ParseTupleAndKeywords(args,
+                                             keywds,
+                                             "|OsiO!",
+                                             kwlist,
+                                             &pcObj,
+                                             &op,
+                                             &tag,
+                                             &App::StringHasherPy::Type,
+                                             &pyHasher)) {
         return -1;
     }
     auto& self = *getTopoShapePtr();
@@ -2476,14 +2480,14 @@ PyObject* TopoShapePy::makeEvolved(PyObject *args, PyObject *kwds)
     PyObject* ProfOnSpine = Py_False;
     auto JoinType = JoinType::arc;
     double Tolerance = 0.0000001;
-
-    static char* kwds_evolve[] = {(char*)"Profile", (char*)"Join", (char*)"AxeProf", (char*)"Solid", (char*)"ProfOnSpine", (char*)"Tolerance", nullptr};
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "O!|iO!O!O!d", kwds_evolve,
-                                     &TopoShapePy::Type, &Profile, &JoinType,
-                                     &PyBool_Type, &AxeProf, &PyBool_Type, &Solid,
-                                     &PyBool_Type, &ProfOnSpine, &Tolerance))
+    
+    static const std::array<const char*, 7> kwds_evolve{"Profile", "Join", "AxeProf", "Solid", "ProfOnSpine", "Tolerance", nullptr};
+    if (!Base::Wrapped_ParseTupleAndKeywords(args, kwds, "O!|iO!O!O!d", kwds_evolve,
+        &TopoShapePy::Type, &Profile, &JoinType,
+        &PyBool_Type, &AxeProf, &PyBool_Type, &Solid,
+        &PyBool_Type, &ProfOnSpine, &Tolerance)) {
         return nullptr;
-
+    }
     try {
         return Py::new_reference_to(shape2pyshape(getTopoShapePtr()->makeElementEvolve(
             *static_cast<TopoShapePy*>(Profile)->getTopoShapePtr(), JoinType,
@@ -2598,35 +2602,18 @@ PyObject* TopoShapePy::removeSplitter(PyObject *args)
 PyObject* TopoShapePy::getElement(PyObject *args)
 {
     char* input;
-    if (!PyArg_ParseTuple(args, "s", &input))
+    PyObject* silent = Py_False;
+    if (!PyArg_ParseTuple(args, "s|O", &input, &silent)) {
         return nullptr;
-
-    boost::regex ex("^(Face|Edge|Vertex)[1-9][0-9]*$");
-
+    }
     try {
-        if (boost::regex_match(input, ex)) {
-            std::unique_ptr<Part::ShapeSegment> s(static_cast<Part::ShapeSegment*>
-                (getTopoShapePtr()->getSubElementByName(input)));
-            TopoDS_Shape shape = s->Shape;
-            switch (shape.ShapeType()) {
-                case TopAbs_FACE:
-                    return new TopoShapeFacePy(new TopoShape(shape));
-                case TopAbs_EDGE:
-                    return new TopoShapeEdgePy(new TopoShape(shape));
-                case TopAbs_VERTEX:
-                    return new TopoShapeVertexPy(new TopoShape(shape));
-                default:
-                    break;
-            }
+        PyObject* res = getTopoShapePtr()->getPySubShape(input, PyObject_IsTrue(silent));
+        if (!res) {
+            Py_Return;
         }
-
-        PyErr_SetString(PyExc_ValueError, "Invalid subelement name");
-        return nullptr;
+        return res;
     }
-    catch (Standard_Failure& e) {
-        PyErr_SetString(PartExceptionOCCError, e.GetMessageString());
-        return nullptr;
-    }
+    PY_CATCH_OCC
 }
 
 PyObject* TopoShapePy::countElement(PyObject *args)
@@ -3125,22 +3112,22 @@ PyObject* TopoShapePy::findSubShape(PyObject* args)
 
 PyObject* TopoShapePy::findSubShapesWithSharedVertex(PyObject* args, PyObject* keywds)
 {
-    static char* kwlist[] = {(char*)"shape", (char*)"needName", (char*)"checkGeometry", (char*)"tol", (char*)"atol", nullptr};
+    static const std::array<const char*, 6> kwlist {"shape", "needName", "checkGeometry", "tol", "atol", nullptr};
     PyObject* pyobj;
     PyObject* needName = Py_False;
     PyObject* checkGeometry = Py_True;
     double tol = 1e-7;
     double atol = 1e-12;
-    if (!PyArg_ParseTupleAndKeywords(args,
-                                     keywds,
-                                     "O!|OOdd",
-                                     kwlist,
-                                     &Type,
-                                     &pyobj,
-                                     &needName,
-                                     &checkGeometry,
-                                     &tol,
-                                     &atol)) {
+    if (!Base::Wrapped_ParseTupleAndKeywords(args,
+                                             keywds,
+                                             "O!|OOdd",
+                                             kwlist,
+                                             &Type,
+                                             &pyobj,
+                                             &needName,
+                                             &checkGeometry,
+                                             &tol,
+                                             &atol)) {
         return nullptr;
     }
 

@@ -220,6 +220,7 @@ Document::Document(App::Document* pcDocument,Application * app)
     // pointer to the python class
     // NOTE: As this Python object doesn't get returned to the interpreter we
     // mustn't increment it (Werner Jan-12-2006)
+    Base::PyGILStateLocker lock;
     _pcDocPy = new Gui::DocumentPy(this);
 
     ParameterGrp::handle hGrp = App::GetApplication().GetParameterGroupByPath("User parameter:BaseApp/Preferences/Document");
@@ -2530,4 +2531,33 @@ void Document::slotChangePropertyEditor(const App::Document &doc, const App::Pro
         setModified(true);
         getMainWindow()->setUserSchema(doc.UnitSystem.getValue());
     }
+}
+
+std::vector<App::DocumentObject*> Document::getTreeRootObjects() const
+{
+    std::vector<App::DocumentObject*> docObjects = d->_pcDocument->getObjects();
+    std::unordered_map<App::DocumentObject*, bool> rootMap;
+    for (auto it : docObjects) {
+        rootMap[it] = true;
+    }
+
+    for (auto obj : docObjects) {
+        ViewProvider* vp = Application::Instance->getViewProvider(obj);
+        if (!vp) {
+            continue;
+        }
+
+        std::vector<App::DocumentObject*> children = vp->claimChildren();
+        for (auto child : children) {
+            rootMap[child] = false;
+        }
+    }
+
+    std::vector<App::DocumentObject*> rootObjs;
+    for (const auto& it : rootMap) {
+        if (it.second) {
+            rootObjs.push_back(it.first);
+        }
+    }
+    return rootObjs;
 }

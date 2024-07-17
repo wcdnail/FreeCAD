@@ -3034,23 +3034,17 @@ TopoShape& TopoShape::makeElementThickSolid(const TopoShape& shape,
 }
 
 
-TopoShape& TopoShape::makeElementWires(const std::vector<TopoShape>& shapes,
+TopoShape& TopoShape::makeElementWires(const TopoShape& shape,
                                        const char* op,
                                        double tol,
                                        ConnectionPolicy policy,
                                        TopoShapeMap* output)
 {
-    if (shapes.empty()) {
-        FC_THROWM(NullShapeException, "Null shape");
-    }
-    if (shapes.size() == 1) {
-        return makeElementWires(shapes[0], op, tol, policy, output);
-    }
-    return makeElementWires(TopoShape(Tag).makeElementCompound(shapes), op, tol, policy, output);
+    return makeElementWires(std::vector<TopoShape>{shape}, op , tol, policy, output);
 }
 
 
-TopoShape& TopoShape::makeElementWires(const TopoShape& shape,
+TopoShape& TopoShape::makeElementWires(const std::vector<TopoShape>& shapes,
                                        const char* op,
                                        double tol,
                                        ConnectionPolicy policy,
@@ -3069,8 +3063,10 @@ TopoShape& TopoShape::makeElementWires(const TopoShape& shape,
         // resulting edges.
         Handle(TopTools_HSequenceOfShape) hEdges = new TopTools_HSequenceOfShape();
         Handle(TopTools_HSequenceOfShape) hWires = new TopTools_HSequenceOfShape();
-        for (TopExp_Explorer xp(shape.getShape(), TopAbs_EDGE); xp.More(); xp.Next()) {
-            hEdges->Append(xp.Current());
+        for (const auto &shape : shapes) {
+            for (const auto &edge : shape.getSubShapes(TopAbs_EDGE)) {
+                hEdges->Append(edge);
+            }
         }
         if (hEdges->Length() == 0) {
             FC_THROWM(NullShapeException, "Null shape");
@@ -3083,17 +3079,19 @@ TopoShape& TopoShape::makeElementWires(const TopoShape& shape,
         std::vector<TopoShape> wires;
         for (int i = 1; i <= hWires->Length(); i++) {
             auto wire = hWires->Value(i);
-            wires.emplace_back(Tag, Hasher, wire);
+            wires.emplace_back(Tag,Hasher,wire);
+            wires.back().mapSubElement(shapes, op);
         }
-        shape.mapSubElementsTo(wires, op);
         return makeElementCompound(wires, "", SingleShapeCompoundCreationPolicy::returnShape);
     }
 
     std::vector<TopoShape> wires;
     std::list<TopoShape> edgeList;
 
-    for (auto& edge : shape.getSubTopoShapes(TopAbs_EDGE)) {
-        edgeList.emplace_back(edge);
+    for (const auto &shape : shapes) {
+        for(const auto &e : shape.getSubTopoShapes(TopAbs_EDGE)) {
+            edgeList.emplace_back(e);
+        }
     }
 
     std::vector<TopoShape> edges;
@@ -4455,7 +4453,6 @@ TopoShape& TopoShape::makeElementRevolve(const TopoShape& _base,
 
 TopoShape& TopoShape::makeElementRevolution(const TopoShape& _base,
                                             const gp_Ax1& axis,
-                                            [[maybe_unused]]double d,
                                             const TopoDS_Face& supportface,
                                             const TopoDS_Face& uptoface,
                                             const char* face_maker,
@@ -5759,6 +5756,32 @@ bool TopoShape::isSame(const Data::ComplexGeoData& _other) const
     const auto& other = static_cast<const TopoShape&>(_other);
     return Tag == other.Tag && Hasher == other.Hasher && _Shape.IsEqual(other._Shape);
 }
+
+long TopoShape::isElementGenerated(const Data::MappedName& _name, int depth) const
+{
+    long res = 0;
+    long tag = 0;
+    traceElement(_name, [&](const Data::MappedName& name, int offset, long tag2, long) {
+        (void)offset;
+        if (tag2 < 0) {
+            tag2 = -tag2;
+        }
+        if (tag && tag2 != tag) {
+            if (--depth < 1) {
+                return true;
+            }
+        }
+        tag = tag2;
+        if (depth == 1 && name.startsWith(genPostfix(), offset)) {
+            res = tag;
+            return true;
+        }
+        return false;
+    });
+
+    return res;
+}
+
 void TopoShape::cacheRelatedElements(const Data::MappedName& name,
                                      HistoryTraceType sameType,
                                      const QVector<Data::MappedElement>& names) const

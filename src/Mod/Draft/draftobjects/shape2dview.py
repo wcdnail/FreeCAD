@@ -93,15 +93,13 @@ class Shape2DView(DraftObject):
             obj.Tessellation = False
         if not "InPlace" in pl:
             _tip = QT_TRANSLATE_NOOP("App::Property",
-                    "For Cutlines and Cutfaces modes, \
-                    this leaves the faces at the cut location")
+                    "For Cutlines and Cutfaces modes, this leaves the faces at the cut location")
             obj.addProperty("App::PropertyBool", "InPlace",
                             "Draft", _tip)
             obj.InPlace = True
         if not "SegmentLength" in pl:
             _tip = QT_TRANSLATE_NOOP("App::Property",
-                    "Length of line segments if tessellating Ellipses or B-splines \
-                    into line segments")
+                    "Length of line segments if tessellating Ellipses or B-splines into line segments")
             obj.addProperty("App::PropertyFloat", "SegmentLength",
                             "Draft", _tip)
             obj.SegmentLength = .05
@@ -151,21 +149,19 @@ class Shape2DView(DraftObject):
         edges = []
         _groups = TechDraw.projectEx(shape, direction)
         for g in _groups[0:5]:
-            if g:
+            if not g.isNull():
                 edges.append(g)
-        if hasattr(obj,"HiddenLines"):
-            if obj.HiddenLines:
-                for g in _groups[5:]:
+        if getattr(obj, "HiddenLines", False):
+            for g in _groups[5:]:
+                if not g.isNull():
                     edges.append(g)
         edges = self.cleanExcluded(obj,edges)
-        #return Part.makeCompound(edges)
-        if hasattr(obj,"Tessellation") and obj.Tessellation:
+        if getattr(obj, "Tessellation", False):
             return DraftGeomUtils.cleanProjection(Part.makeCompound(edges),
                                                   obj.Tessellation,
                                                   obj.SegmentLength)
         else:
             return Part.makeCompound(edges)
-            #return DraftGeomUtils.cleanProjection(Part.makeCompound(edges))
 
     def cleanExcluded(self,obj,shapes):
 

@@ -53,17 +53,14 @@ class _TaskPanel:
         QtCore.QObject.connect(
             self.parameterWidget.if_elelen,
             QtCore.SIGNAL("valueChanged(Base::Quantity)"),
-            self.elelen_changed
+            self.elelen_changed,
         )
         self.init_parameter_widget()
 
         # geometry selection widget
         # start with Solid in list!
         self.selectionWidget = selection_widgets.GeometryElementsSelection(
-            obj.References,
-            ["Solid", "Face", "Edge", "Vertex"],
-            True,
-            False
+            obj.References, ["Solid", "Face", "Edge", "Vertex"], True, False
         )
 
         # form made from param and selection widget
@@ -82,9 +79,7 @@ class _TaskPanel:
     def recompute_and_set_back_all(self):
         doc = FreeCADGui.getDocument(self.obj.Document)
         doc.Document.recompute()
-        self.selectionWidget.setback_listobj_visibility()
-        if self.selectionWidget.sel_server:
-            FreeCADGui.Selection.removeObserver(self.selectionWidget.sel_server)
+        self.selectionWidget.finish_selection()
         doc.resetEdit()
 
     def init_parameter_widget(self):

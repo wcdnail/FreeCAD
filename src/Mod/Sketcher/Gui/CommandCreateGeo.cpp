@@ -57,7 +57,6 @@
 #include "DrawSketchHandlerArcOfParabola.h"
 #include "DrawSketchHandlerArcSlot.h"
 #include "DrawSketchHandlerBSpline.h"
-#include "DrawSketchHandlerBSplineByInterpolation.h"
 #include "DrawSketchHandlerCarbonCopy.h"
 #include "DrawSketchHandlerCircle.h"
 #include "DrawSketchHandlerEllipse.h"
@@ -182,7 +181,7 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreateLine, "Sketcher_CreateLine")
 void CmdSketcherCreateLine::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerLine());
+    ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerLine>());
 }
 
 bool CmdSketcherCreateLine::isActive()
@@ -213,7 +212,7 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreatePolyline, "Sketcher_CreatePolyline")
 void CmdSketcherCreatePolyline::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerLineSet());
+    ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerLineSet>());
 }
 
 bool CmdSketcherCreatePolyline::isActive()
@@ -245,9 +244,9 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreateRectangle, "Sketcher_CreateRectangle
 void CmdSketcherCreateRectangle::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(
-        getActiveGuiDocument(),
-        new DrawSketchHandlerRectangle(ConstructionMethods::RectangleConstructionMethod::Diagonal));
+    ActivateHandler(getActiveGuiDocument(),
+                    std::make_unique<DrawSketchHandlerRectangle>(
+                        ConstructionMethods::RectangleConstructionMethod::Diagonal));
 }
 
 bool CmdSketcherCreateRectangle::isActive()
@@ -277,7 +276,7 @@ void CmdSketcherCreateRectangleCenter::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
     ActivateHandler(getActiveGuiDocument(),
-                    new DrawSketchHandlerRectangle(
+                    std::make_unique<DrawSketchHandlerRectangle>(
                         ConstructionMethods::RectangleConstructionMethod::CenterAndCorner));
 }
 
@@ -310,10 +309,10 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreateOblong, "Sketcher_CreateOblong")
 void CmdSketcherCreateOblong::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(
-        getActiveGuiDocument(),
-        new DrawSketchHandlerRectangle(ConstructionMethods::RectangleConstructionMethod::Diagonal,
-                                       true));
+    ActivateHandler(getActiveGuiDocument(),
+                    std::make_unique<DrawSketchHandlerRectangle>(
+                        ConstructionMethods::RectangleConstructionMethod::Diagonal,
+                        true));
 }
 
 bool CmdSketcherCreateOblong::isActive()
@@ -341,17 +340,17 @@ void CmdSketcherCompCreateRectangles::activated(int iMsg)
 {
     if (iMsg == 0) {
         ActivateHandler(getActiveGuiDocument(),
-                        new DrawSketchHandlerRectangle(
+                        std::make_unique<DrawSketchHandlerRectangle>(
                             ConstructionMethods::RectangleConstructionMethod::Diagonal));
     }
     else if (iMsg == 1) {
         ActivateHandler(getActiveGuiDocument(),
-                        new DrawSketchHandlerRectangle(
+                        std::make_unique<DrawSketchHandlerRectangle>(
                             ConstructionMethods::RectangleConstructionMethod::CenterAndCorner));
     }
     else if (iMsg == 2) {
         ActivateHandler(getActiveGuiDocument(),
-                        new DrawSketchHandlerRectangle(
+                        std::make_unique<DrawSketchHandlerRectangle>(
                             ConstructionMethods::RectangleConstructionMethod::Diagonal,
                             true));
     }
@@ -474,7 +473,7 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreateArc, "Sketcher_CreateArc")
 void CmdSketcherCreateArc::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerArc());
+    ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerArc>());
 }
 
 bool CmdSketcherCreateArc::isActive()
@@ -506,9 +505,9 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreate3PointArc, "Sketcher_Create3PointArc
 void CmdSketcherCreate3PointArc::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(
-        getActiveGuiDocument(),
-        new DrawSketchHandlerArc(ConstructionMethods::CircleEllipseConstructionMethod::ThreeRim));
+    ActivateHandler(getActiveGuiDocument(),
+                    std::make_unique<DrawSketchHandlerArc>(
+                        ConstructionMethods::CircleEllipseConstructionMethod::ThreeRim));
 }
 
 bool CmdSketcherCreate3PointArc::isActive()
@@ -609,7 +608,7 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreateCircle, "Sketcher_CreateCircle")
 void CmdSketcherCreateCircle::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerCircle());
+    ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerCircle>());
 }
 
 bool CmdSketcherCreateCircle::isActive()
@@ -643,7 +642,7 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreateEllipseByCenter, "Sketcher_CreateEll
 void CmdSketcherCreateEllipseByCenter::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerEllipse());
+    ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerEllipse>());
 }
 
 bool CmdSketcherCreateEllipseByCenter::isActive()
@@ -677,7 +676,7 @@ void CmdSketcherCreateEllipseBy3Points::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
     ActivateHandler(getActiveGuiDocument(),
-                    new DrawSketchHandlerEllipse(
+                    std::make_unique<DrawSketchHandlerEllipse>(
                         ConstructionMethods::CircleEllipseConstructionMethod::ThreeRim));
 }
 
@@ -707,7 +706,7 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreateArcOfEllipse, "Sketcher_CreateEllipt
 void CmdSketcherCreateArcOfEllipse::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerArcOfEllipse());
+    ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerArcOfEllipse>());
 }
 
 bool CmdSketcherCreateArcOfEllipse::isActive()
@@ -735,7 +734,7 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreateArcOfHyperbola, "Sketcher_CreateHype
 
 void CmdSketcherCreateArcOfHyperbola::activated(int /*iMsg*/)
 {
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerArcOfHyperbola());
+    ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerArcOfHyperbola>());
 }
 
 bool CmdSketcherCreateArcOfHyperbola::isActive()
@@ -763,7 +762,7 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreateArcOfParabola, "Sketcher_CreateParab
 
 void CmdSketcherCreateArcOfParabola::activated(int /*iMsg*/)
 {
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerArcOfParabola());
+    ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerArcOfParabola>());
 }
 
 bool CmdSketcherCreateArcOfParabola::isActive()
@@ -860,7 +859,9 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreateBSpline, "Sketcher_CreateBSpline")
 void CmdSketcherCreateBSpline::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerBSpline(0));
+    ActivateHandler(getActiveGuiDocument(),
+                    std::make_unique<DrawSketchHandlerBSpline>(
+                        ConstructionMethods::BSplineConstructionMethod::ControlPoints));
 }
 
 bool CmdSketcherCreateBSpline::isActive()
@@ -893,7 +894,10 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreatePeriodicBSpline, "Sketcher_Create_Pe
 void CmdSketcherCreatePeriodicBSpline::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerBSpline(1));
+    ActivateHandler(getActiveGuiDocument(),
+                    std::make_unique<DrawSketchHandlerBSpline>(
+                        ConstructionMethods::BSplineConstructionMethod::ControlPoints,
+                        true));
 }
 
 bool CmdSketcherCreatePeriodicBSpline::isActive()
@@ -925,7 +929,9 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreateBSplineByInterpolation,
 void CmdSketcherCreateBSplineByInterpolation::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerBSplineByInterpolation(0));
+    ActivateHandler(getActiveGuiDocument(),
+                    std::make_unique<DrawSketchHandlerBSpline>(
+                        ConstructionMethods::BSplineConstructionMethod::Knots));
 }
 
 bool CmdSketcherCreateBSplineByInterpolation::isActive()
@@ -958,7 +964,11 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreatePeriodicBSplineByInterpolation,
 void CmdSketcherCreatePeriodicBSplineByInterpolation::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerBSplineByInterpolation(1));
+
+    ActivateHandler(getActiveGuiDocument(),
+                    std::make_unique<DrawSketchHandlerBSpline>(
+                        ConstructionMethods::BSplineConstructionMethod::Knots,
+                        true));
 }
 
 bool CmdSketcherCreatePeriodicBSplineByInterpolation::isActive()
@@ -992,16 +1002,26 @@ CmdSketcherCompCreateBSpline::CmdSketcherCompCreateBSpline()
 void CmdSketcherCompCreateBSpline::activated(int iMsg)
 {
     if (iMsg == 0) {
-        ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerBSpline(iMsg));
+        ActivateHandler(getActiveGuiDocument(),
+                        std::make_unique<DrawSketchHandlerBSpline>(
+                            ConstructionMethods::BSplineConstructionMethod::ControlPoints));
     }
     else if (iMsg == 1) {
-        ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerBSpline(iMsg));
+        ActivateHandler(getActiveGuiDocument(),
+                        std::make_unique<DrawSketchHandlerBSpline>(
+                            ConstructionMethods::BSplineConstructionMethod::ControlPoints,
+                            true));
     }
     else if (iMsg == 2) {
-        ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerBSplineByInterpolation(0));
+        ActivateHandler(getActiveGuiDocument(),
+                        std::make_unique<DrawSketchHandlerBSpline>(
+                            ConstructionMethods::BSplineConstructionMethod::Knots));
     }
     else if (iMsg == 3) {
-        ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerBSplineByInterpolation(1));
+        ActivateHandler(getActiveGuiDocument(),
+                        std::make_unique<DrawSketchHandlerBSpline>(
+                            ConstructionMethods::BSplineConstructionMethod::Knots,
+                            true));
     }
     else {
         return;
@@ -1155,7 +1175,7 @@ void CmdSketcherCreate3PointCircle::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
     ActivateHandler(getActiveGuiDocument(),
-                    new DrawSketchHandlerCircle(
+                    std::make_unique<DrawSketchHandlerCircle>(
                         ConstructionMethods::CircleEllipseConstructionMethod::ThreeRim));
 }
 
@@ -1186,7 +1206,7 @@ CmdSketcherCreatePoint::CmdSketcherCreatePoint()
 void CmdSketcherCreatePoint::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerPoint());
+    ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerPoint>());
 }
 
 bool CmdSketcherCreatePoint::isActive()
@@ -1215,9 +1235,9 @@ CmdSketcherCreateFillet::CmdSketcherCreateFillet()
 void CmdSketcherCreateFillet::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(
-        getActiveGuiDocument(),
-        new DrawSketchHandlerFillet(ConstructionMethods::FilletConstructionMethod::Fillet));
+    ActivateHandler(getActiveGuiDocument(),
+                    std::make_unique<DrawSketchHandlerFillet>(
+                        ConstructionMethods::FilletConstructionMethod::Fillet));
 }
 
 bool CmdSketcherCreateFillet::isActive()
@@ -1246,9 +1266,9 @@ CmdSketcherCreateChamfer::CmdSketcherCreateChamfer()
 void CmdSketcherCreateChamfer::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(
-        getActiveGuiDocument(),
-        new DrawSketchHandlerFillet(ConstructionMethods::FilletConstructionMethod::Chamfer));
+    ActivateHandler(getActiveGuiDocument(),
+                    std::make_unique<DrawSketchHandlerFillet>(
+                        ConstructionMethods::FilletConstructionMethod::Chamfer));
 }
 
 bool CmdSketcherCreateChamfer::isActive()
@@ -1310,7 +1330,7 @@ CmdSketcherTrimming::CmdSketcherTrimming()
 void CmdSketcherTrimming::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerTrimming());
+    ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerTrimming>());
 }
 
 bool CmdSketcherTrimming::isActive()
@@ -1341,7 +1361,7 @@ CmdSketcherExtend::CmdSketcherExtend()
 void CmdSketcherExtend::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerExtend());
+    ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerExtend>());
 }
 
 bool CmdSketcherExtend::isActive()
@@ -1372,7 +1392,7 @@ CmdSketcherSplit::CmdSketcherSplit()
 void CmdSketcherSplit::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerSplitting());
+    ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerSplitting>());
 }
 
 bool CmdSketcherSplit::isActive()
@@ -1435,7 +1455,7 @@ CmdSketcherExternal::CmdSketcherExternal()
 void CmdSketcherExternal::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerExternal());
+    ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerExternal>());
 }
 
 bool CmdSketcherExternal::isActive()
@@ -1466,7 +1486,7 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCarbonCopy, "Sketcher_CarbonCopy")
 void CmdSketcherCarbonCopy::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerCarbonCopy());
+    ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerCarbonCopy>());
 }
 
 bool CmdSketcherCarbonCopy::isActive()
@@ -1553,7 +1573,7 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreateSlot, "Sketcher_CreateSlot")
 void CmdSketcherCreateSlot::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerSlot());
+    ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerSlot>());
 }
 
 bool CmdSketcherCreateSlot::isActive()
@@ -1584,7 +1604,7 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreateArcSlot, "Sketcher_CreateArcSlot")
 void CmdSketcherCreateArcSlot::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerArcSlot());
+    ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerArcSlot>());
 }
 
 bool CmdSketcherCreateArcSlot::isActive(void)
@@ -1615,7 +1635,7 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreateTriangle, "Sketcher_CreateTriangle")
 void CmdSketcherCreateTriangle::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerPolygon(3));
+    ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerPolygon>(3));
 }
 
 bool CmdSketcherCreateTriangle::isActive()
@@ -1644,7 +1664,7 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreateSquare, "Sketcher_CreateSquare")
 void CmdSketcherCreateSquare::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerPolygon(4));
+    ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerPolygon>(4));
 }
 
 bool CmdSketcherCreateSquare::isActive()
@@ -1673,7 +1693,7 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreatePentagon, "Sketcher_CreatePentagon")
 void CmdSketcherCreatePentagon::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerPolygon(5));
+    ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerPolygon>(5));
 }
 
 bool CmdSketcherCreatePentagon::isActive()
@@ -1703,7 +1723,7 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreateHexagon, "Sketcher_CreateHexagon")
 void CmdSketcherCreateHexagon::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerPolygon(6));
+    ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerPolygon>(6));
 }
 
 bool CmdSketcherCreateHexagon::isActive()
@@ -1732,7 +1752,7 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreateHeptagon, "Sketcher_CreateHeptagon")
 void CmdSketcherCreateHeptagon::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerPolygon(7));
+    ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerPolygon>(7));
 }
 
 bool CmdSketcherCreateHeptagon::isActive()
@@ -1761,7 +1781,7 @@ CONSTRUCTION_UPDATE_ACTION(CmdSketcherCreateOctagon, "Sketcher_CreateOctagon")
 void CmdSketcherCreateOctagon::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerPolygon(8));
+    ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerPolygon>(8));
 }
 
 bool CmdSketcherCreateOctagon::isActive()
@@ -1794,7 +1814,8 @@ void CmdSketcherCreateRegularPolygon::activated(int iMsg)
     // Pop-up asking for values
     SketcherRegularPolygonDialog srpd;
     if (srpd.exec() == QDialog::Accepted) {
-        ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerPolygon(srpd.sides));
+        ActivateHandler(getActiveGuiDocument(),
+                        std::make_unique<DrawSketchHandlerPolygon>(srpd.sides));
     }
 }
 
@@ -1822,28 +1843,29 @@ void CmdSketcherCompCreateRegularPolygon::activated(int iMsg)
 {
     switch (iMsg) {
         case 0:
-            ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerPolygon(3));
+            ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerPolygon>(3));
             break;
         case 1:
-            ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerPolygon(4));
+            ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerPolygon>(4));
             break;
         case 2:
-            ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerPolygon(5));
+            ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerPolygon>(5));
             break;
         case 3:
-            ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerPolygon(6));
+            ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerPolygon>(6));
             break;
         case 4:
-            ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerPolygon(7));
+            ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerPolygon>(7));
             break;
         case 5:
-            ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerPolygon(8));
+            ActivateHandler(getActiveGuiDocument(), std::make_unique<DrawSketchHandlerPolygon>(8));
             break;
         case 6: {
             // Pop-up asking for values
             SketcherRegularPolygonDialog srpd;
             if (srpd.exec() == QDialog::Accepted) {
-                ActivateHandler(getActiveGuiDocument(), new DrawSketchHandlerPolygon(srpd.sides));
+                ActivateHandler(getActiveGuiDocument(),
+                                std::make_unique<DrawSketchHandlerPolygon>(srpd.sides));
             }
         } break;
         default:

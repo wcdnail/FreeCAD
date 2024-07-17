@@ -53,17 +53,14 @@ class _TaskPanel:
         QtCore.QObject.connect(
             self.parameterWidget.if_rotation,
             QtCore.SIGNAL("valueChanged(Base::Quantity)"),
-            self.rotation_changed
+            self.rotation_changed,
         )
         self.rotation = self.obj.Rotation
         self.parameterWidget.if_rotation.setText(self.rotation.UserString)
 
         # geometry selection widget
         self.selectionWidget = selection_widgets.GeometryElementsSelection(
-            obj.References,
-            ["Edge"],
-            False,
-            True
+            obj.References, ["Edge"], False, True
         )
 
         # form made from param and selection widget
@@ -81,9 +78,7 @@ class _TaskPanel:
     def recompute_and_set_back_all(self):
         doc = FreeCADGui.getDocument(self.obj.Document)
         doc.Document.recompute()
-        self.selectionWidget.setback_listobj_visibility()
-        if self.selectionWidget.sel_server:
-            FreeCADGui.Selection.removeObserver(self.selectionWidget.sel_server)
+        self.selectionWidget.finish_selection()
         doc.resetEdit()
 
     def rotation_changed(self, base_quantity_value):

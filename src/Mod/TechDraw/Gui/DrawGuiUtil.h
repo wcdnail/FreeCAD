@@ -76,6 +76,7 @@ class TechDrawGuiExport DrawGuiUtil {
     static void loadLineStandardsChoices(QComboBox* combo);
     static void loadLineStyleChoices(QComboBox* combo,
                                      TechDraw::LineGenerator* generator = nullptr);
+    static void loadLineGroupChoices(QComboBox* combo);
     static QIcon iconForLine(size_t lineNumber, TechDraw::LineGenerator* generator);
 
     static double roundToDigits(double original, int digits);
@@ -91,6 +92,8 @@ class TechDrawGuiExport DrawGuiUtil {
 
     static bool findObjectInSelection(const std::vector<Gui::SelectionObject>& selection,
                                       const App::DocumentObject& targetObject);
+    static std::vector<std::string>  getSubsForSelectedObject(const std::vector<Gui::SelectionObject>& selection,
+                                                                App::DocumentObject* selectedObj);
 };
 
 } //end namespace TechDrawGui

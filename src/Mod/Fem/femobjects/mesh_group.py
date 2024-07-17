@@ -40,13 +40,13 @@ class MeshGroup(base_fempythonobject.BaseFemPythonObject):
     Type = "Fem::MeshGroup"
 
     def __init__(self, obj):
-        super(MeshGroup, self).__init__(obj)
+        super().__init__(obj)
 
         obj.addProperty(
             "App::PropertyBool",
             "UseLabel",
             "MeshGroupProperties",
-            "The identifier used for export (True: Label, False: Name)"
+            "The identifier used for export (True: Label, False: Name)",
         )
         obj.setPropertyStatus("UseLabel", "LockDynamic")
 
@@ -54,6 +54,6 @@ class MeshGroup(base_fempythonobject.BaseFemPythonObject):
             "App::PropertyLinkSubList",
             "References",
             "MeshGroupShapes",
-            "List of FEM mesh group shapes"
+            "List of FEM mesh group shapes",
         )
         obj.setPropertyStatus("References", "LockDynamic")

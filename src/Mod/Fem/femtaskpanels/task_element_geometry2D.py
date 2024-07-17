@@ -53,16 +53,13 @@ class _TaskPanel:
         QtCore.QObject.connect(
             self.parameterWidget.if_thickness,
             QtCore.SIGNAL("valueChanged(Base::Quantity)"),
-            self.thickness_changed
+            self.thickness_changed,
         )
         self.init_parameter_widget()
 
         # geometry selection widget
         self.selectionWidget = selection_widgets.GeometryElementsSelection(
-            obj.References,
-            ["Face"],
-            False,
-            True
+            obj.References, ["Face"], False, True
         )
 
         # form made from param and selection widget
@@ -81,9 +78,7 @@ class _TaskPanel:
     def recompute_and_set_back_all(self):
         doc = FreeCADGui.getDocument(self.obj.Document)
         doc.Document.recompute()
-        self.selectionWidget.setback_listobj_visibility()
-        if self.selectionWidget.sel_server:
-            FreeCADGui.Selection.removeObserver(self.selectionWidget.sel_server)
+        self.selectionWidget.finish_selection()
         doc.resetEdit()
 
     def init_parameter_widget(self):

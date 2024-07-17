@@ -95,7 +95,7 @@ SET(FemExamples_SRCS
     femexamples/rc_wall_2d.py
     femexamples/square_pipe_end_twisted_edgeforces.py
     femexamples/square_pipe_end_twisted_nodeforces.py
-    femexamples/thermomech_bimetall.py
+    femexamples/thermomech_bimetal.py
     femexamples/truss_3d_cs_circle_ele_seg2.py
     femexamples/truss_3d_cs_circle_ele_seg3.py
 )
@@ -132,7 +132,7 @@ SET(FemExampleMeshes_SRCS
     femexamples/meshes/mesh_section_print_tetra10.py
     femexamples/meshes/mesh_selfweight_cantilever_tetra10.py
     femexamples/meshes/mesh_square_pipe_end_twisted_tria6.py
-    femexamples/meshes/mesh_thermomech_bimetall_tetra10.py
+    femexamples/meshes/mesh_thermomech_bimetal_tetra10.py
     femexamples/meshes/mesh_transform_beam_hinged_tetra10.py
     femexamples/meshes/mesh_transform_torque_tetra10.py
     femexamples/meshes/mesh_truss_crane_seg2.py
@@ -169,6 +169,8 @@ SET(FemMesh_SRCS
 
 SET(FemObjects_SRCS
     femobjects/__init__.py
+    femobjects/base_femelement.py
+    femobjects/base_femmeshelement.py
     femobjects/base_fempythonobject.py
     femobjects/constant_vacuumpermittivity.py
     femobjects/constraint_bodyheatsource.py
@@ -378,7 +380,7 @@ SET(FemTestsCcx_SRCS
     femtest/data/calculix/material_nonlinear.inp
     femtest/data/calculix/square_pipe_end_twisted_edgeforces.inp
     femtest/data/calculix/square_pipe_end_twisted_nodeforces.inp
-    femtest/data/calculix/thermomech_bimetall.inp
+    femtest/data/calculix/thermomech_bimetal.inp
 )
 
 SET(FemTestsElmer_SRCS
@@ -606,6 +608,9 @@ SET(FemGuiUtils_SRCS
 SET(FemGuiViewProvider_SRCS
     femviewprovider/__init__.py
     femviewprovider/view_base_femconstraint.py
+    femviewprovider/view_base_femelement.py
+    femviewprovider/view_base_femmaterial.py
+    femviewprovider/view_base_femmeshelement.py
     femviewprovider/view_base_femobject.py
     femviewprovider/view_constant_vacuumpermittivity.py
     femviewprovider/view_constraint_bodyheatsource.py

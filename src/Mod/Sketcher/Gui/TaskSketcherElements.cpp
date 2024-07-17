@@ -305,7 +305,7 @@ private:
         {QT_TR_NOOP("Arc of ellipse"), 1},
         {QT_TR_NOOP("Arc of hyperbola"), 1},
         {QT_TR_NOOP("Arc of parabola"), 1},
-        {QT_TR_NOOP("B-Spline"), 1}};
+        {QT_TR_NOOP("B-spline"), 1}};
 };
 }// namespace SketcherGui
 
@@ -1301,7 +1301,7 @@ void TaskSketcherElements::onListMultiFilterItemChanged(QListWidgetItem* item)
     for (int i = filterList->count() - 1; i >= 0; i--) {
         bool isChecked = filterList->item(i)->checkState() == Qt::Checked;
         filterState = filterState << 1;// we shift left first, else the list is shifted at the end.
-        filterState = filterState | isChecked;
+        filterState = filterState | (isChecked ? 1 : 0);
     }
     ParameterGrp::handle hGrp = App::GetApplication().GetParameterGroupByPath(
         "User parameter:BaseApp/Preferences/Mod/Sketcher/General");
@@ -1409,6 +1409,26 @@ void TaskSketcherElements::onSelectionChanged(const Gui::SelectionChanges& msg)
                                 if (item->ElementNbr == ElementId) {
                                     item->isLineSelected = select;
                                     modified_item = item;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (shapetype.size() > 12 && shapetype.substr(0, 12) == "ExternalEdge") {
+                    QRegularExpression rx(QString::fromLatin1("^ExternalEdge(\\d+)$"));
+                    QRegularExpressionMatch match;
+                    boost::ignore_unused(expr.indexOf(rx, 0, &match));
+                    if (match.hasMatch()) {
+                        bool ok;
+                        int ElementId = -match.captured(1).toInt(&ok) - 2;
+                        if (ok) {
+                            int countItems = ui->listWidgetElements->count();
+                            for (int i = 0; i < countItems; i++) {
+                                ElementItem* item =
+                                    static_cast<ElementItem*>(ui->listWidgetElements->item(i));
+                                if (item->ElementNbr == ElementId) {
+                                    item->isLineSelected = select;
                                     break;
                                 }
                             }
@@ -1607,7 +1627,12 @@ void TaskSketcherElements::onListWidgetElementsItemPressed(QListWidgetItem* it)
 
 
             if (item->isLineSelected) {
-                ss << "Edge" << item->ElementNbr + 1;
+                if (item->ElementNbr >= 0) {
+                    ss << "Edge" << item->ElementNbr + 1;
+                }
+                else {
+                    ss << "ExternalEdge" << -item->ElementNbr - 2;
+                }
                 elementSubNames.push_back(ss.str());
             }
 
@@ -1708,7 +1733,12 @@ void TaskSketcherElements::onListWidgetElementsMouseMoveOnItem(QListWidgetItem* 
         else if (item->hovered == SubElementType::mid)
             preselectvertex(item->ElementNbr, Sketcher::PointPos::mid);
         else if (item->hovered == SubElementType::edge) {
-            ss << "Edge" << item->ElementNbr + 1;
+            if (item->ElementNbr >= 0) {
+                ss << "Edge" << item->ElementNbr + 1;
+            }
+            else {
+                ss << "ExternalEdge" << -item->ElementNbr - 2;
+            }
             Gui::Selection().setPreselect(doc_name.c_str(), obj_name.c_str(), ss.str().c_str());
         }
     }
@@ -1823,12 +1853,12 @@ void TaskSketcherElements::slotElementsChanged()
                                                      : QString::fromLatin1("")))
                                       : (QString::fromLatin1("%1-").arg(i) + tr("Parabolic Arc")))
                 : type == Part::GeomBSplineCurve::getClassTypeId()
-                ? (isNamingBoxChecked ? (tr("BSpline") + IdInformation())
+                ? (isNamingBoxChecked ? (tr("B-spline") + IdInformation())
                            + (construction
                                   ? (QString::fromLatin1("-") + tr("Construction"))
                                   : (internalAligned ? (QString::fromLatin1("-") + tr("Internal"))
                                                      : QString::fromLatin1("")))
-                                      : (QString::fromLatin1("%1-").arg(i) + tr("BSpline")))
+                                      : (QString::fromLatin1("%1-").arg(i) + tr("B-spline")))
                 : (isNamingBoxChecked ? (tr("Other") + IdInformation())
                            + (construction
                                   ? (QString::fromLatin1("-") + tr("Construction"))
@@ -1935,8 +1965,8 @@ void TaskSketcherElements::slotElementsChanged()
                            ? (tr("Parabolic Arc") + linkname)
                            : (QString::fromLatin1("%1-").arg(i - 2) + tr("Parabolic Arc")))
                     : type == Part::GeomBSplineCurve::getClassTypeId()
-                    ? (isNamingBoxChecked ? (tr("BSpline") + linkname)
-                                          : (QString::fromLatin1("%1-").arg(i - 2) + tr("BSpline")))
+                    ? (isNamingBoxChecked ? (tr("B-spline") + linkname)
+                                          : (QString::fromLatin1("%1-").arg(i - 2) + tr("B-spline")))
                     : (isNamingBoxChecked ? (tr("Other") + linkname)
                                           : (QString::fromLatin1("%1-").arg(i - 2) + tr("Other"))),
                 sketchView);
