@@ -67,6 +67,21 @@ if(BUILD_GUI)
             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         )
     endif()
+
+    if (MSVC)
+        set(DBG_PATH "PATH=$(PATH);${VCPKG_INSTALLED_CONF_DIR}/bin")
+        set_target_properties(FreeCADMain PROPERTIES VS_DEBUGGER_ENVIRONMENT "${DBG_PATH}")
+        #set_target_properties(FreeCADMain PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE})
+        set_target_properties(FreeCADMain PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "\$(SolutionDir)bin\\\$(ConfigurationName)")        
+    
+        #set_target_properties(FreeCADMain PROPERTIES VS_DEBUGGER_COMMAND_ARGUMENTS 
+           #"-v3 --server=0.0.0.0:27027"
+           #"--cert=${CMAKE_SOURCE_DIR}/ssl-cert.pem --pk=${CMAKE_SOURCE_DIR}/ssl-pk.pem"
+        #)
+
+        set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT FreeCADMain)
+    endif()
+
 endif(BUILD_GUI)
 ######################## FreeCADMainCmd ########################
 
