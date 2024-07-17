@@ -2,8 +2,8 @@
 
 rem Var section -------------------------------------------------------------------------
 
-rem set BUILD_CONF=Release
-set BUILD_CONF=Debug
+set BUILD_CONF=Release
+:: set BUILD_CONF=Debug
 
 call %CD%\mk-vars.cmd
 call %CD%\mk-trace.cmd
