@@ -1,4 +1,4 @@
-/***************************************************************************
+﻿/***************************************************************************
  *   Copyright (c) 2008 Jürgen Riegel <juergen.riegel@web.de>              *
  *                                                                         *
  *   This file is part of the FreeCAD CAx development system.              *
@@ -37,6 +37,8 @@
 #include <QLocale>
 #include <QMessageBox>
 
+#include <QQuickStyle>
+
 // FreeCAD header
 #include <App/Application.h>
 #include <Base/ConsoleObserver.h>
@@ -57,7 +59,9 @@
 #include <map>
 #include <stdexcept>
 
+#if defined(_WIN32) && defined(_MSC_VER)
 #include <filesystem>
+#endif
 
 void PrintInitHelp();
 
@@ -125,7 +129,7 @@ int main(int argc, char** argv)
     if (!py_home && mingw_prefix) {
         _putenv_s("PYTHONHOME", mingw_prefix);
     }
-#else
+#elif defined(_WIN32) && defined(_MSC_VER)
     _wputenv(L"PYTHONPATH=");
     // https://forum.freecad.org/viewtopic.php?f=4&t=18288
     // https://forum.freecad.org/viewtopic.php?f=3&t=20515
@@ -138,6 +142,17 @@ int main(int argc, char** argv)
     }
     else {
         _wputenv(L"PYTHONHOME=");
+    }
+#else
+    _putenv("PYTHONPATH=");
+    // https://forum.freecad.org/viewtopic.php?f=4&t=18288
+    // https://forum.freecad.org/viewtopic.php?f=3&t=20515
+    const char* fc_py_home = getenv("FC_PYTHONHOME");
+    if (fc_py_home) {
+        _putenv_s("PYTHONHOME", fc_py_home);
+    }
+    else {
+        _putenv("PYTHONHOME=");
     }
 #endif
 
@@ -293,6 +308,12 @@ int main(int argc, char** argv)
     std::streambuf* oldcout = std::cout.rdbuf(&stdcout);
     std::streambuf* oldclog = std::clog.rdbuf(&stdclog);
     std::streambuf* oldcerr = std::cerr.rdbuf(&stdcerr);
+
+    //{
+    //    auto const sStyle{QString::fromUtf8("Fusion:darkmode=1")};
+    //    QQuickStyle::setStyle(sStyle);
+    //    QQuickStyle::setFallbackStyle(sStyle);
+    //}
 
     try {
         // if console option is set then run in cmd mode

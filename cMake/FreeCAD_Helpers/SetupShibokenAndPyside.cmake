@@ -69,9 +69,7 @@ macro(SetupShibokenAndPyside)
 
     find_package(PySide${PYSIDE_MAJOR_VERSION}Tools QUIET) # PySide utilities (uic & rcc executables)
     if(NOT PYSIDE_TOOLS_FOUND)
-        message("=======================\n"
-                "PySide${PYSIDE_MAJOR_VERSION}Tools not found.\n"
-                "=======================\n")
+        message(STATUS ">>>> PySide${PYSIDE_MAJOR_VERSION}Tools not found.")
     endif()
 
     file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Ext/PySide)
@@ -118,7 +116,6 @@ macro(SetupShibokenAndPyside)
 
     # If shiboken cannot be found the build option will be set to OFF
     if(NOT SHIBOKEN_INCLUDE_DIR)
-        message(WARNING "Shiboken${PYSIDE_MAJOR_VERSION} include files not found, FREECAD_USE_SHIBOKEN automatically set to OFF")
         set(FREECAD_USE_SHIBOKEN OFF)
     endif()
 
@@ -130,10 +127,7 @@ macro(SetupShibokenAndPyside)
     )
 
     if(FAILURE)
-        message(WARNING
-                "==================================\n"
-                "Shiboken${SHIBOKEN_MAJOR_VERSION} Python module not found.\n"
-                "==================================\n")
+        message(STATUS ">>>> Shiboken${SHIBOKEN_MAJOR_VERSION} Python module not found.")
     else()
         execute_process(
             COMMAND ${PYTHON_EXECUTABLE} -c "import shiboken${SHIBOKEN_MAJOR_VERSION};print(shiboken${SHIBOKEN_MAJOR_VERSION}.__version__, end='')"
@@ -144,7 +138,7 @@ macro(SetupShibokenAndPyside)
 
     # If PySide cannot be found the build option will be set to OFF
     if(NOT PYSIDE_INCLUDE_DIR)
-        message(WARNING "PySide${PYSIDE_MAJOR_VERSION} include files not found, FREECAD_USE_PYSIDE automatically set to OFF")
+        message(STATUS ">>>> PySide${PYSIDE_MAJOR_VERSION} include files not found, FREECAD_USE_PYSIDE automatically set to OFF")
         set(FREECAD_USE_PYSIDE OFF)
     endif()
 
@@ -155,10 +149,7 @@ macro(SetupShibokenAndPyside)
         OUTPUT_VARIABLE PRINT_OUTPUT
     )
     if(FAILURE)
-        message(WARNING
-                "================================\n"
-                "PySide${PYSIDE_MAJOR_VERSION} Python module not found.\n"
-                "================================\n")
+        message(STATUS ">>>> PySide${PYSIDE_MAJOR_VERSION} Python module not found.")
     else()
         execute_process(
             COMMAND ${PYTHON_EXECUTABLE} -c "import PySide${PYSIDE_MAJOR_VERSION};print(PySide${PYSIDE_MAJOR_VERSION}.__version__, end='')"

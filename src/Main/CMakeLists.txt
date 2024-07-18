@@ -28,6 +28,7 @@ endif(BUILD_GUI)
 
 ######################## FreeCADMain ########################
 if(BUILD_GUI)
+    find_package(Qt${FREECAD_QT_MAJOR_VERSION} COMPONENTS QuickControls2 REQUIRED)
 
     SET(FreeCAD_SRCS
         ${CMAKE_CURRENT_BINARY_DIR}/freecad.rc
@@ -37,6 +38,7 @@ if(BUILD_GUI)
 
     SET(FreeCAD_LIBS
         FreeCADGui
+        ${Qt${FREECAD_QT_MAJOR_VERSION}QuickControls2_LIBRARIES}
     )
 
     if(NOT BUILD_DYNAMIC_LINK_PYTHON)
@@ -49,6 +51,11 @@ if(BUILD_GUI)
 
     add_executable(FreeCADMain WIN32 ${FreeCAD_SRCS})
     set_target_properties(FreeCADMain PROPERTIES FOLDER "Main")
+
+    target_include_directories(FreeCADMain SYSTEM PUBLIC
+        ${Qt${FREECAD_QT_MAJOR_VERSION}QuickControls2_INCLUDE_DIRS}
+    )
+
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES
         icon.ico
         MainGui.cpp
@@ -85,6 +92,7 @@ if(BUILD_GUI)
         set_target_properties(FreeCADMain PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "\$(SolutionDir)bin\\\$(ConfigurationName)")
         #set_target_properties(FreeCADMain PROPERTIES VS_DEBUGGER_COMMAND_ARGUMENTS
             # #TODO: DEBUG command line here
+            # --platform=windows:darkmode=2
         #)
         set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT FreeCADMain)
     endif()

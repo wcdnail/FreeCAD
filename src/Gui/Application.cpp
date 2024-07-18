@@ -2157,6 +2157,14 @@ void Application::runApplication()
     Instance->pNavlibInterface->enableNavigation();
 #endif
 
+    {
+        auto const  sStyle{QString::fromUtf8("fusion")};
+        auto const* pStyle{GUISingleApplication::setStyle(sStyle)};
+        if (pStyle) {
+            auto sName{pStyle->name().toStdString()};
+            Base::Console().Message("Applying style: %s\n", sName.c_str());
+        }
+    }
     runEventLoop(mainApp);
 
     Base::Console().Log("Finish: Event loop left\n");
