@@ -67,14 +67,15 @@ Also this fork provide vcpkg-tool WITH NO MS metering service - sending metering
 cd /FreeCAD/source/root/dir
 
 setup-vcpkg
+mk-msvs-solution
 
 cmake --build bld
 ```
 
-Or run MSVS from solution in bld dir.
-(My MSVS with ReSharper **crashes** with opened FreeCAD solution file! I use cmake for build)
+Or run MSVS from solution from bld dir.
+(My MSVS with ReSharper **crashes** with opened FreeCAD solution file!)
 
-### Build with VCPKG done
+#### Build with VCPKG done
 
 Compiling FreeCAD requires installation of several libraries and their 
 development files such as OCCT (Open Cascade), Coin and Qt, listed in the 

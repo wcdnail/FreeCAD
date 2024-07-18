@@ -85,15 +85,20 @@ if(BUILD_GUI)
     endif()
 
     if (MSVC)
+        file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/config)
+
         set(DBG_PATH "PATH=$(PATH);${VCPKG_INSTALLED_CONF_DIR}/bin")
         set(QTP_PATH "QT_QPA_PLATFORM_PLUGIN_PATH=\$(VCPKG_ROOT)\\installed\\x64-windows\\Qt6\\plugins\\platforms")
         set(FC_PYTHONHOME "FC_PYTHONHOME=\$(VCPKG_ROOT)\\installed\\x64-windows\\tools\\python3")
         set_target_properties(FreeCADMain PROPERTIES VS_DEBUGGER_ENVIRONMENT "${FC_PYTHONHOME}\n${QTP_PATH}\n${DBG_PATH}")
-        set_target_properties(FreeCADMain PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "\$(SolutionDir)bin\\\$(ConfigurationName)")
-        #set_target_properties(FreeCADMain PROPERTIES VS_DEBUGGER_COMMAND_ARGUMENTS
-            # #TODO: DEBUG command line here
-            # --platform=windows:darkmode=2
-        #)
+        set_target_properties(FreeCADMain PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "\$(SolutionDir)")
+        set_target_properties(FreeCADMain PROPERTIES VS_DEBUGGER_COMMAND_ARGUMENTS "\
+--user-cfg ${CMAKE_BINARY_DIR}/config/user.cfg \
+--system-cfg ${CMAKE_BINARY_DIR}/config/system.cfg \
+--module-path ${CMAKE_BINARY_DIR} \
+--pass \"-platform windows:darkmode=2\" \
+"
+)
         set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT FreeCADMain)
     endif()
 

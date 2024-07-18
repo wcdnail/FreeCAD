@@ -39,6 +39,34 @@ endif()
 
 project(FreeCAD)
 
+if (VCPKG_ROOT)
+    if ("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-")
+        if (MSVS)
+            set(VCPKG_TARGET_TRIPLET x64-windows)
+        elseif (MSYS OR MINGW)
+            set(VCPKG_TARGET_TRIPLET x64-msys-clang)
+        else()
+            set(VCPKG_TARGET_TRIPLET x64-linux)
+        endif()
+        message(STATUS "VCPKG triplet setup from CMAKE: ${VCPKG_TARGET_TRIPLET}")
+    endif()
+    set(VCPKG_INSTALLED_DIR "${VCPKG_ROOT}/installed/${VCPKG_TARGET_TRIPLET}")
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(VCPKG_INSTALLED_CONF_DIR "${VCPKG_INSTALLED_DIR}/debug")
+    else()
+        set(VCPKG_INSTALLED_CONF_DIR "${VCPKG_INSTALLED_DIR}")
+    endif()
+    message(STATUS "VCPKG installed dir: ${VCPKG_INSTALLED_DIR}")
+    message(STATUS "VCPKG installed conf dir: ${VCPKG_INSTALLED_CONF_DIR}")
+    include_directories(
+        ${VCPKG_INSTALLED_DIR}/include
+        ${VCPKG_INSTALLED_DIR}/include/Qt6/QtCore5Compat
+    )
+endif()
+
+#set(FC_BUILD_DEBUG_ODIR ${CMAKE_CURRENT_BINARY_DIR}/${VCPKG_TARGET_TRIPLET}-debug)
+#set(FC_BUILD_RELEASE_ODIR ${CMAKE_CURRENT_BINARY_DIR}/${VCPKG_TARGET_TRIPLET}-release)
+
 set(PACKAGE_VERSION_NAME "Vulcan")
 set(PACKAGE_VERSION_MAJOR "0")
 set(PACKAGE_VERSION_MINOR "22")
@@ -109,31 +137,6 @@ endif(BUILD_VR)
 SetLibraryVersions()
 SetGlobalCompilerAndLinkerSettings()
 
-if (VCPKG_ROOT)
-    if ("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-")
-        if (MSVS)
-            set(VCPKG_TARGET_TRIPLET x64-windows)
-        elseif (MSYS OR MINGW)
-            set(VCPKG_TARGET_TRIPLET x64-msys-clang)
-        else()
-            set(VCPKG_TARGET_TRIPLET x64-linux)
-        endif()
-        message(STATUS "VCPKG triplet setup from CMAKE: ${VCPKG_TARGET_TRIPLET}")
-    endif()
-    set(VCPKG_INSTALLED_DIR "${VCPKG_ROOT}/installed/${VCPKG_TARGET_TRIPLET}")
-    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-        set(VCPKG_INSTALLED_CONF_DIR "${VCPKG_INSTALLED_DIR}/debug")
-    else()
-        set(VCPKG_INSTALLED_CONF_DIR "${VCPKG_INSTALLED_DIR}")
-    endif()
-    message(STATUS "VCPKG installed dir: ${VCPKG_INSTALLED_DIR}")
-    message(STATUS "VCPKG installed conf dir: ${VCPKG_INSTALLED_CONF_DIR}")
-    include_directories(
-        ${VCPKG_INSTALLED_DIR}/include
-        ${VCPKG_INSTALLED_DIR}/include/Qt6/QtCore5Compat
-    )
-endif()
-
 add_subdirectory(src)
 add_subdirectory(data)
 
@@ -151,8 +154,79 @@ if (ENABLE_DEVELOPER_TESTS)
     add_subdirectory(tests)
 endif()
 
+set(ROOT_FILES
+    ${CMAKE_SOURCE_DIR}/README.md
+    ${CMAKE_SOURCE_DIR}/PRIVACY_POLICY.md
+    ${CMAKE_SOURCE_DIR}/CMakeLists.txt
+    ${CMAKE_SOURCE_DIR}/cMake/ConfigureChecks.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FindCoin3DDoc.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FindEigen3.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FindKDL.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FindMatplotlib.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FindMEDFile.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FindNETGEN.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FindOCC.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FindOpenCV.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FindPyCXX.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FindPySide2Tools.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FindPySide6.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FindPySide6Tools.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FindRift.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FindShiboken6.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FindSMESH.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FindSpnav.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCadMacros.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/UseLibPack3.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/UseLibPackCLbundler.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/BuildAndInstallDesignerPlugin.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/CheckInterModuleDependencies.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/ChooseQtVersion.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/CMakeLists.txt
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/CompilerChecksAndSetups.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/ConfigureCMakeVariables.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/CopyLibpackDirectories.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/CreatePackagingTargets.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/FreeCADLibpackChecks.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/InitializeFreeCADBuildOptions.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/PrintFinalReport.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/README.md
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/SetGlobalCompilerAndLinkerSettings.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/SetLibraryVersions.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/SetupBoost.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/SetupCoin3D.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/SetupDoxygen.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/SetupEigen.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/SetupFreeType.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/SetupLibFmt.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/SetupLibOndselSolver.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/SetupLibYaml.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/SetupMatplotlib.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/SetupOpenCasCade.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/SetupOpenGL.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/SetupPCL.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/SetupPybind11.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/SetupPython.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/SetupQt.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/SetupSalomeSMESH.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/SetupShibokenAndPyside.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/SetupSpaceball.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/SetupSwig.cmake
+    ${CMAKE_SOURCE_DIR}/cMake/FreeCAD_Helpers/SetupXercesC.cmake
+    $<$<PLATFORM_ID:Windows>:${CMAKE_SOURCE_DIR}/setup-vcpkg.cmd>
+    $<$<PLATFORM_ID:Windows>:${CMAKE_SOURCE_DIR}/mk-msvs-solution.cmd>
+    $<$<PLATFORM_ID:Windows>:${CMAKE_SOURCE_DIR}/vs.base.props>
+)
+
+add_custom_target(${PROJECT_NAME}_Root SOURCES ${ROOT_FILES})
+set_target_properties(${PROJECT_NAME}_Root PROPERTIES FOLDER "A_FC")
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ROOT_FILES})
+
 PrintFinalReport()
 
 message("\n=================================================\n"
         "Now run 'cmake --build ${CMAKE_BINARY_DIR}' to build ${PROJECT_NAME}\n"
         "=================================================\n")
+
+if (MSVC)
+    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT FreeCADMain)
+endif()

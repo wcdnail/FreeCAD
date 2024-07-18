@@ -237,7 +237,7 @@ int main(int argc, char** argv)
         }
     }
     catch (const Base::UnknownProgramOption& e) {
-        //QApplication app(argc, argv); // ##FIXME: ctor raises exception!
+        QApplication app(argc, argv); // ##TODO: ctor raises assert!
         QString appName = QString::fromLatin1(App::Application::Config()["ExeName"].c_str());
         QString msg = QString::fromLatin1(e.what());
         QString s = QLatin1String("<pre>") + msg + QLatin1String("</pre>");
@@ -245,7 +245,7 @@ int main(int argc, char** argv)
         exit(1);
     }
     catch (const Base::ProgramInformation& e) {
-        //QApplication app(argc, argv); // ##FIXME: ctor raises exception!
+        QApplication app(argc, argv); // ##TODO: ctor raises assert!
         QString appName = QString::fromLatin1(App::Application::Config()["ExeName"].c_str());
         QString msg = QString::fromUtf8(e.what());
         QString s = QLatin1String("<pre>") + msg + QLatin1String("</pre>");
@@ -260,7 +260,7 @@ int main(int argc, char** argv)
     }
     catch (const Base::Exception& e) {
         // Popup an own dialog box instead of that one of Windows
-        //QApplication app(argc, argv); // ##FIXME: ctor raises exception!
+        QApplication app(argc, argv); // ##TODO: ctor raises assert!
         QString appName = QString::fromLatin1(App::Application::Config()["ExeName"].c_str());
         QString msg;
         msg = QObject::tr("While initializing %1 the following exception occurred: '%2'\n\n"
@@ -289,7 +289,7 @@ int main(int argc, char** argv)
     }
     catch (...) {
         // Popup an own dialog box instead of that one of Windows
-        //QApplication app(argc, argv); // ##FIXME: ctor raises exception!
+        QApplication app(argc, argv); // ##TODO: ctor raises assert!
         QString appName = QString::fromLatin1(App::Application::Config()["ExeName"].c_str());
         QString msg =
             QObject::tr("Unknown runtime error occurred while initializing %1.\n\n"

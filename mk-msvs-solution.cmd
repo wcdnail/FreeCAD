@@ -1,28 +1,25 @@
 @echo off
 
-rem Var section -------------------------------------------------------------------------
+:: Var section -------------------------------------------------------------------------
 
-:: set BUILD_CONF=Release
+::set BUILD_CONF=Release
 set BUILD_CONF=Debug
 
 call %CD%\mk-vars.cmd
 call %CD%\mk-trace.cmd
 
-rem Compiler section --------------------------------------------------------------------
+:: Compiler section --------------------------------------------------------------------
 set VT_CMAKE_GENERATOR=%MSVC_CMAKE_GENERATOR%
 set VT_C_COMPILER=%MSVC_C_COMPILER%
 set VT_CXX_COMPILER=%MSVC_CXX_COMPILER%
 
-rem -------------------------------------------------------------------------------------
+:: -------------------------------------------------------------------------------------
 pushd %SOURCE_DIR%
 mkdir %BUILD_DIR% 2>NUL
 cd %BUILD_DIR%
 
-rem -------------------------------------------------------------------------------------
-:: -DNGLIB_INCLUDE_DIR="%VCPKG_ROOT%\installed\x64-windows\include" ^
+:: -------------------------------------------------------------------------------------
 :: -DCMAKE_CONFIGURATION_TYPES:STRING="%BUILD_CONF%" ^
-:: -DFREECAD_USE_SHIBOKEN=0 ^
-:: -DFREECAD_USE_PYSIDE=0 ^
 
 chcp 65001 >NUL
 cmake -Wno-dev -G %VT_CMAKE_GENERATOR% ^
@@ -32,6 +29,7 @@ cmake -Wno-dev -G %VT_CMAKE_GENERATOR% ^
 -DCMAKE_CXX_COMPILER:FILEPATH="%VT_CXX_COMPILER%" ^
 -DCMAKE_RC_COMPILER:FILEPATH="%MSVC_RC_COMPILER%" ^
 -DCMAKE_INSTALL_PREFIX="instd" ^
+-DFREECAD_RELEASE_PDB=1 ^
 -DFREECAD_LIBPACK_USE=0 ^
 -DBUILD_ENABLE_CXX_STD="C++20" ^
 -DBUILD_FEM=0 ^
@@ -54,7 +52,7 @@ pause
 popd
 exit /B %RV%
 
-rem -------------------------------------------------------------------------------------
+:: -------------------------------------------------------------------------------------
 :CMAKE_OK
 :: start "WFreeCAD" FreeCAD.sln
 popd
