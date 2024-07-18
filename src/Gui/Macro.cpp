@@ -80,15 +80,15 @@ bool MacroFile::commit()
 
     // sort import lines and avoid duplicates
     QTextStream str(&file);
-    QStringList import;
-    import << QString::fromLatin1("import FreeCAD");
+    QStringList slImport;
+    slImport << QString::fromLatin1("import FreeCAD");
     QStringList body;
 
     for (const auto& it : std::as_const(this->macroInProgress)) {
         if (it.startsWith(QLatin1String("import ")) ||
             it.startsWith(QLatin1String("#import "))) {
-            if (import.indexOf(it) == -1)
-                import.push_back(it);
+            if (slImport.indexOf(it) == -1)
+                slImport.push_back(it);
         }
         else {
             body.push_back(it);
@@ -107,7 +107,7 @@ bool MacroFile::commit()
 
     // write the data to the text file
     str << header;
-    for (const auto& it : std::as_const(import)) {
+    for (const auto& it : std::as_const(slImport)) {
         str << it << QLatin1Char('\n');
     }
     str << QLatin1Char('\n');
