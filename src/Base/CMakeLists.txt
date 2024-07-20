@@ -63,7 +63,6 @@ include_directories(
 )
 list(APPEND FreeCADBase_LIBS
     ${QtCore_LIBRARIES}
-   #${QtWidgets_LIBRARIES}
     fmt::fmt
 )
 
@@ -392,7 +391,7 @@ endif(FREECAD_USE_PCH)
 add_library(FreeCADBase SHARED ${FreeCADBase_SRCS})
 set_target_properties(FreeCADBase PROPERTIES FOLDER "Main")
 
-message(STATUS ">>>> FreeCADBase_LIBS: ${FreeCADBase_LIBS}")
+#message(STATUS ">>>> FreeCADBase_LIBS: ${FreeCADBase_LIBS}")
 target_link_libraries(FreeCADBase
     ${FreeCADBase_LIBS}
 )

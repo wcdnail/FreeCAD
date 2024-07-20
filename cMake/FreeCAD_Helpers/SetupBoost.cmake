@@ -3,9 +3,12 @@ macro(SetupBoost)
 
     set(_boost_TEST_VERSIONS ${Boost_ADDITIONAL_VERSIONS})
 
+    if (POLICY CMP0167)
+        cmake_policy(SET CMP0167 NEW)
+    endif()
+
     set (BOOST_COMPONENTS filesystem program_options regex system thread date_time)
-    find_package(Boost ${BOOST_MIN_VERSION}
-        COMPONENTS ${BOOST_COMPONENTS} REQUIRED)
+    find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS ${BOOST_COMPONENTS} REQUIRED)
 
     if(UNIX AND NOT APPLE)
         # Boost.Thread 1.67+ headers reference pthread_condattr_*

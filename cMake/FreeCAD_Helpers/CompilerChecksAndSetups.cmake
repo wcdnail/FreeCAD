@@ -29,17 +29,17 @@ macro(CompilerChecksAndSetups)
     endif(CMAKE_COMPILER_IS_GNUCXX AND NOT CMAKE_CXX_COMPILER_VERSION)
 
     # Enabled C++17 for Freecad 0.20 and later
-        set(BUILD_ENABLE_CXX_STD "C++20"  CACHE STRING  "Enable C++ standard")
-        set_property(CACHE BUILD_ENABLE_CXX_STD PROPERTY STRINGS
-                     "C++17"
-                     "C++20"
-        )
-
-        if (CMAKE_COMPILER_IS_GNUCXX AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.3)
-            message(FATAL_ERROR "FreeCAD 0.20 and later requires C++17.  G++ must be 7.3 or later, the used version is ${CMAKE_CXX_COMPILER_VERSION}")
-        elseif(CMAKE_COMPILER_IS_CLANGXX AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0)
-            message(FATAL_ERROR "FreeCAD 0.20 and later requires C++17.  Clang must be 6.0 or later, the used version is ${CMAKE_CXX_COMPILER_VERSION}")
-        endif()
+    set(BUILD_ENABLE_CXX_STD "C++17" CACHE STRING "Enable C++ standard")
+    set_property(CACHE BUILD_ENABLE_CXX_STD PROPERTY STRINGS
+                    "C++17"
+                    "C++20"
+    )
+    
+    if (CMAKE_COMPILER_IS_GNUCXX AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.3)
+        message(FATAL_ERROR "FreeCAD 0.20 and later requires C++17.  G++ must be 7.3 or later, the used version is ${CMAKE_CXX_COMPILER_VERSION}")
+    elseif(CMAKE_COMPILER_IS_CLANGXX AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0)
+        message(FATAL_ERROR "FreeCAD 0.20 and later requires C++17.  Clang must be 6.0 or later, the used version is ${CMAKE_CXX_COMPILER_VERSION}")
+    endif()
 
     # Escape the two plus chars as otherwise cmake complains about invalid regex
     if(${BUILD_ENABLE_CXX_STD} MATCHES "C\\+\\+20")
@@ -49,12 +49,16 @@ macro(CompilerChecksAndSetups)
     endif()
 
     # Log the compiler and version
-    message(STATUS "Compiler: ${CMAKE_CXX_COMPILER_ID}, version: ${CMAKE_CXX_COMPILER_VERSION}")
+    message(STATUS ">>>> Compiler: ${CMAKE_CXX_COMPILER_ID}, version: ${CMAKE_CXX_COMPILER_VERSION} C++${CMAKE_CXX_STANDARD}")
 
     if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
         include(${CMAKE_SOURCE_DIR}/cMake/ConfigureChecks.cmake)
         configure_file(${CMAKE_SOURCE_DIR}/src/config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
         add_definitions(-DHAVE_CONFIG_H)
+        
+        #set(CMAKE_CXX_FLAGS "-std=c++${CMAKE_CXX_STANDARD} ${CMAKE_CXX_FLAGS}")
+        #set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-v -std=gnu++${CMAKE_CXX_STANDARD}")
+        #set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-v -std=gnu++${CMAKE_CXX_STANDARD}")
 
         # For now only set pedantic option for clang
         if(CMAKE_COMPILER_IS_CLANGXX)
@@ -80,6 +84,8 @@ macro(CompilerChecksAndSetups)
                 endif()
             endif()
         endif(BUILD_DYNAMIC_LINK_PYTHON)
+    #elseif(MSVC)
+    #    set(CMAKE_CXX_FLAGS "/std=c++${CMAKE_CXX_STANDARD} ${CMAKE_CXX_FLAGS}")
     endif(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
 
     if(CMAKE_COMPILER_IS_CLANGXX)
@@ -102,5 +108,4 @@ macro(CompilerChecksAndSetups)
     endif()
 
     set (COMPILE_DEFINITIONS ${COMPILE_DEFINITIONS} BOOST_NO_CXX98_FUNCTION_BASE)
-
 endmacro(CompilerChecksAndSetups)

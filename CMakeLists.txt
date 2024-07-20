@@ -139,6 +139,7 @@ if(BUILD_VR)
 endif(BUILD_VR)
 
 SetLibraryVersions()
+
 SetGlobalCompilerAndLinkerSettings()
 
 add_subdirectory(src)
@@ -227,9 +228,9 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ROOT_FILES})
 
 PrintFinalReport()
 
-message("\n=================================================\n"
-        "Now run 'cmake --build ${CMAKE_BINARY_DIR}' to build ${PROJECT_NAME}\n"
-        "=================================================\n")
+message(STATUS "=================================================")
+message(STATUS "Now run 'cmake --build ${CMAKE_BINARY_DIR}' to build ${PROJECT_NAME}")
+message(STATUS "=================================================")
 
 if (MSVC)
     set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT FreeCADMain)

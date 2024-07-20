@@ -257,7 +257,7 @@ MACRO(SET_BIN_DIR ProjectName OutputName)
                 set_property(TARGET ${ProjectName} APPEND PROPERTY INSTALL_RPATH ${CMAKE_INSTALL_LIBDIR})
             endif()
         endif()
-    endif(WIN32)
+    endif()
 ENDMACRO(SET_BIN_DIR)
 
 # Set python prefix & suffix together

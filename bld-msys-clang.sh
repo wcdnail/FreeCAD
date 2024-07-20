@@ -10,9 +10,9 @@ BUILD_CONF=Release
 #BUILD_CONF=Debug
 
 # Compiler section --------------------------------------------------------------------
-FC_C_COMPILER=$MSYS_ROOT/ucrt64/bin/clang.exe
-FC_CXX_COMPILER=$MSYS_ROOT/ucrt64/bin/clang++.exe
-FC_RC_COMPILER=$MSYS_ROOT/ucrt64/bin/windres.exe
+FC_C_COMPILER=$MSYS_ROOT/clang64/bin/clang.exe
+FC_CXX_COMPILER=$MSYS_ROOT/clang64/bin/clang++.exe
+FC_RC_COMPILER=$MSYS_ROOT/clang64/bin/windres.exe
 
 FC_CC_BN=`basename $FC_C_COMPILER`
 FC_CC_VER=`$FC_C_COMPILER -dumpversion`
@@ -43,7 +43,8 @@ cmake -Wno-dev -G "Ninja" \
 -DCMAKE_INSTALL_PREFIX="$SOURCE_DIR/instd" \
 -DFREECAD_RELEASE_PDB=1 \
 -DFREECAD_LIBPACK_USE=0 \
--DBUILD_ENABLE_CXX_STD="C++20" \
+-DBUILD_ENABLE_CXX_STD="C++17" \
+-DCMAKE_VERBOSE_MAKEFILE=1 \
 -DBUILD_FEM=0 \
 -DBUILD_MESH=0 \
 -DBUILD_GUI=1 \

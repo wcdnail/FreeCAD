@@ -283,40 +283,36 @@
             ]
         },
         {
+            "name": "msys-hints",
+            "displayName": "DO NOT select this!",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/.chacha",
+            "cacheVariables": {
+                "CMAKE_VERBOSE_MAKEFILE":  { "type": "BOOL", "value": "ON" },
+                "CMAKE_MAKE_PROGRAM": {
+                    "type": "FILEPATH",
+                    "value": "$env{MSYS_ROOT}/usr/bin/make.exe"
+                }
+            }
+        },
+        {
             "name": "msys-release",
             "displayName": "MSYS Release",
             "description": "MSYS clang bconf",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/.chacha",
             "cacheVariables": {
+                "CMAKE_VERBOSE_MAKEFILE":  { "type": "BOOL", "value": "ON" },
+                "BUILD_ENABLE_CXX_STD": "C++17",
                 "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_C_COMPILER": {
-                    "type": "FILEPATH",
-                    "value": "$env{MSYS_ROOT}/ucrt64/bin/clang.exe"
-                },
-                "CMAKE_CXX_COMPILER": {
-                    "type": "FILEPATH",
-                    "value": "$env{MSYS_ROOT}/ucrt64/bin/clang++.exe"
-                },
-                "CMAKE_RC_COMPILER": {
-                    "type": "FILEPATH",
-                    "value": "$env{MSYS_ROOT}/ucrt64/bin/windres.exe"
-                },
-                "CMAKE_INSTALL_PREFIX": {
-                    "type": "FILEPATH",
-                    "value": "${sourceDir}/instd"
-                },
-                "CMAKE_PREFIX_PATH": {
-                    "type": "FILEPATH",
-                    "value": "$env{MSYS_ROOT}/clang64"
-                },
-                "CMAKE_SYSTEM_PREFIX_PATH": {
-                    "type": "FILEPATH",
-                    "value": "$env{MSYS_ROOT}/clang64"
-                },
+                "CMAKE_C_COMPILER": { "type": "FILEPATH", "value": "$env{MSYS_ROOT}/clang64/bin/clang.exe" },
+                "CMAKE_CXX_COMPILER": { "type": "FILEPATH", "value": "$env{MSYS_ROOT}/clang64/bin/clang++.exe" },
+                "CMAKE_RC_COMPILER": { "type": "FILEPATH", "value": "$env{MSYS_ROOT}/clang64/bin/windres.exe" },
+                "CMAKE_INSTALL_PREFIX": { "type": "FILEPATH", "value": "${sourceDir}/instd" },
+                "CMAKE_PREFIX_PATH": { "type": "FILEPATH", "value": "$env{MSYS_ROOT}/clang64" },
+                "CMAKE_SYSTEM_PREFIX_PATH": { "type": "FILEPATH", "value": "$env{MSYS_ROOT}/clang64" },
                 "FREECAD_RELEASE_PDB":  { "type": "BOOL", "value": "ON" },
                 "FREECAD_LIBPACK_USE": { "type": "BOOL", "value": "OFF" },
-                "BUILD_ENABLE_CXX_STD": "C++20",
                 "BUILD_FEM": { "type": "BOOL", "value": "OFF" },
                 "BUILD_MESH": { "type": "BOOL", "value": "OFF" },
                 "BUILD_GUI": { "type": "BOOL", "value": "ON" },

@@ -19,18 +19,30 @@ elseif (MSVC71)
 elseif (MSVC70)
     set(T1_ "-vc7")
 elseif (MINGW)
-    set(T1_ "-mgw")
-    exec_program(${CMAKE_CXX_COMPILER}
-        ARGS ${CMAKE_CXX_COMPILER_ARG1} -dumpversion
-        OUTPUT_VARIABLE T2_
+    if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")    
+        set(T1_ "-clang")
+    else()
+        set(T1_ "-mgw")
+    endif()
+    execute_process(
+        COMMAND
+            ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_COMPILER_ARG1} -dumpversion
+        OUTPUT_VARIABLE 
+            T2_
     )
     string(REGEX REPLACE "([0-9])\\.([0-9])(\\.[0-9])?" "\\1\\2" T2_ ${T2_})
     set(T1_ ${T1_}${T2_})
 elseif (CMAKE_COMPILER_IS_GNUCXX)
-    set(T1_ "-gcc")
-    exec_program(${CMAKE_CXX_COMPILER}
-        ARGS ${CMAKE_CXX_COMPILER_ARG1} -dumpversion
-        OUTPUT_VARIABLE T2_
+    if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")    
+        set(T1_ "-clang")
+    else()
+        set(T1_ "-gcc")
+    endif()
+    execute_process(
+        COMMAND
+            ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_COMPILER_ARG1} -dumpversion
+        OUTPUT_VARIABLE
+            T2_
     )
     string(REGEX REPLACE "([0-9])\\.([0-9])(\\.[0-9])?" "\\1\\2" T2_ ${T2_})
     set(T1_ ${T1_}${T2_})
@@ -39,3 +51,4 @@ else()
 endif()
 set(T_ ${T_}${T1_})
 set(${PROJECT_NAME}_BUILD_TAG ${T_})
+message(STATUS ">>>> ${PROJECT_NAME}_BUILD_TAG: ${${PROJECT_NAME}_BUILD_TAG}")
