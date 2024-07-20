@@ -37,6 +37,9 @@
 #include "PyTools.h"
 #include "Stream.h"
 
+#if defined(_WIN32)
+#include <filesystem>
+#endif
 
 char format2[1024];  // Warning! Can't go over 512 characters!!!
 unsigned int format2_len = 1024;
@@ -613,7 +616,8 @@ void initInterpreter(int argc, char* argv[])
         PyConfig_Read(&config);
         ss << virtualenv << L"/lib/python" << PY_MAJOR_VERSION << "." << PY_MINOR_VERSION
            << "/site-packages";
-        PyObject* venvLocation = PyUnicode_FromWideChar(ss.str().c_str(), ss.str().size());
+        std::wstring pyLibsStr{ss.str()};
+        PyObject* venvLocation = PyUnicode_FromWideChar(pyLibsStr.c_str(), pyLibsStr.length());
         PyObject* path = PySys_GetObject("path");
         PyList_Append(path, venvLocation);
     }
@@ -628,11 +632,31 @@ const char* InterpreterSingleton::init(int argc, char* argv[])
     try {
         if (!Py_IsInitialized()) {
             initInterpreter(argc, argv);
+#if defined(_WIN32)
+            {
+                auto const* pyBinary{Py_GetProgramFullPath()};
+                wprintf(L"PYTHON: %s\n", pyBinary);
+                if (pyBinary) {
+                    auto pyLibs{std::filesystem::path{pyBinary}.parent_path()};
 
+                    std::wstringstream stm;
+                    stm << L"/lib/python" << PY_MAJOR_VERSION << "." << PY_MINOR_VERSION;
+                    std::wstring pyLibsVer{stm.str()};
+
+                    pyLibs /= pyLibsVer;
+
+                    std::wstring pyLibsStr{pyLibs.wstring()};
+                    PyObject*         path{PySys_GetObject("path")};
+                    PyObject*         libs{PyUnicode_FromWideChar(pyLibsStr.c_str(), pyLibsStr.length())};
+                    PyList_Append(path, libs);
+                    
+                    wprintf(L"PYTHON sys.path: %s\n", pyLibsStr.c_str());
+                }
+            }
+#endif
             PythonStdOutput::init_type();
             this->_global = PyEval_SaveThread();
         }
-
         PyGILStateLocker lock;
         return Py_EncodeLocale(Py_GetPath(), nullptr);
     }

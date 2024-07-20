@@ -3,7 +3,7 @@
 pacman -S \
  mingw-w64-clang-x86_64-clang \
  mingw-w64-clang-x86_64-clang-tools-extra \
- mingw-w64-clang-x86_64-make \
+ mingw-w64-clang-x86_64-gdb \
  mingw-w64-clang-x86_64-qt6-base \
  mingw-w64-clang-x86_64-qt6-3d \
  mingw-w64-clang-x86_64-qt6-datavis3d \
@@ -22,6 +22,7 @@ pacman -S \
  mingw-w64-clang-x86_64-boost \
  mingw-w64-clang-x86_64-python-numpy \
  mingw-w64-clang-x86_64-python-pivy \
+ mingw-w64-clang-x86_64-python-pip \
  mingw-w64-clang-x86_64-coin \
  mingw-w64-clang-x86_64-eigen3 \
  mingw-w64-clang-x86_64-swig \

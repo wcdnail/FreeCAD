@@ -64,7 +64,6 @@ if (VCPKG_ROOT)
     message(STATUS "VCPKG installed conf dir: ${VCPKG_INSTALLED_CONF_DIR}")
     include_directories(
         ${VCPKG_INSTALLED_DIR}/include
-        ${VCPKG_INSTALLED_DIR}/include/Qt6/QtCore5Compat
     )
 endif()
 

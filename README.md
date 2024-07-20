@@ -58,6 +58,8 @@ Compiling
 
 ## Windows
 
+- MSYS/VCPKG builds with fresh versions of libs, QT version 6 or greater, etc
+
 ### Build with MSYS/Clang
 
 - Install cmake for windows, do not install msys cmake

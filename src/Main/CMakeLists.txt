@@ -84,9 +84,9 @@ if(BUILD_GUI)
         )
     endif()
 
-    if (MSVC)
-        file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/config)
+    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/config)
 
+    if (MSVC)
         set(FC_PYD_PATH
             ${CMAKE_BINARY_DIR}/Mod/Start
             ${CMAKE_BINARY_DIR}/Mod/Material

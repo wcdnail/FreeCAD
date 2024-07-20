@@ -10,7 +10,9 @@ include_directories(
     ${OCC_INCLUDE_DIR}
     ${ZLIB_INCLUDE_DIR}
     ${XercesC_INCLUDE_DIRS}
+    ${QtCore5Compat_INCLUDE_DIRS}
 )
+
 link_directories(${OCC_LIBRARY_DIR})
 
 set(DrawingGui_LIBS
