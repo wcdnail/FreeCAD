@@ -367,8 +367,11 @@ std::string Base::Tools::joinList(const std::vector<std::string>& vec, const std
 
 std::string Base::Tools::currentDateTimeString()
 {
-    return QDateTime::currentDateTime()
-        .toTimeSpec(Qt::OffsetFromUTC)
-        .toString(Qt::ISODate)
-        .toStdString();
+    return qstr2str(QDateTime::currentDateTime().toTimeSpec(Qt::OffsetFromUTC).toString(Qt::ISODate));
+}
+
+std::string Base::Tools::qstr2str(QString const& qstr)
+{
+    auto const qarr{qstr.toUtf8()};
+    return std::string{qarr.constData(), static_cast<std::string::size_type>(qstr.length())};
 }

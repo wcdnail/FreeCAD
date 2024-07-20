@@ -48,7 +48,7 @@ elseif(MINGW)
         ${XercesC_LIBRARIES}
         ${Boost_LIBRARIES}
         ${ZLIB_LIBRARIES}
-        Rpcrt4.lib
+        rpcrt4.lib
     )
 else(MSVC)
     set(FreeCADBase_LIBS
@@ -61,9 +61,11 @@ endif(MSVC)
 include_directories(
     ${QtCore_INCLUDE_DIRS}
 )
-list(APPEND FreeCADBase_LIBS ${QtCore_LIBRARIES})
-
-list(APPEND FreeCADBase_LIBS fmt::fmt)
+list(APPEND FreeCADBase_LIBS
+    ${QtCore_LIBRARIES}
+   #${QtWidgets_LIBRARIES}
+    fmt::fmt
+)
 
 if (BUILD_DYNAMIC_LINK_PYTHON)
     list(APPEND FreeCADBase_LIBS ${PYTHON_LIBRARIES})
@@ -71,7 +73,7 @@ endif (BUILD_DYNAMIC_LINK_PYTHON)
 
 # needed for OpenSUSE
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-    list(APPEND FreeCADBase_LIBS -lutil -ldl)
+    list(APPEND FreeCADBase_LIBS util dl)
 endif()
 
 generate_from_xml(TypePy)
@@ -390,7 +392,10 @@ endif(FREECAD_USE_PCH)
 add_library(FreeCADBase SHARED ${FreeCADBase_SRCS})
 set_target_properties(FreeCADBase PROPERTIES FOLDER "Main")
 
-target_link_libraries(FreeCADBase ${FreeCADBase_LIBS})
+message(STATUS ">>>> FreeCADBase_LIBS: ${FreeCADBase_LIBS}")
+target_link_libraries(FreeCADBase
+    ${FreeCADBase_LIBS}
+)
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(FreeCADBase)
 endif()

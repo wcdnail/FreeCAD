@@ -3,17 +3,9 @@
 # for further info why
 cmake_minimum_required(VERSION 3.16.3 FATAL_ERROR)
 
-set(VCPKG_ROOT "$ENV{VCPKG_ROOT}" CACHE PATH "VCPKG_ROOT")
-if (VCPKG_ROOT)
-    if (NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-        set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "VCPKG toolchain file")
-    endif()
+if (VCPKG_ROOT AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "VCPKG toolchain file")
 endif()
-
-set(VCPKG_APPLOCAL_DEPS OFF)
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
-add_definitions(-DQT_NO_DEPRECATED_WARNINGS)
 
 # policy CMP0072 was introduced with CMake 3.11
 # relates to FindOpenGL module
@@ -38,6 +30,18 @@ if(FREECAD_USE_CCACHE)
 endif()
 
 project(FreeCAD)
+
+if (WIN32 AND NOT VCPKG_ROOT)
+    message(STATUS ">>>> MINGW build ${MINGW}")
+endif()
+
+set(VCPKG_APPLOCAL_DEPS OFF)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+add_definitions(
+    -DQT_NO_DEPRECATED_WARNINGS
+   #-D_GLIBCXX_USE_CXX11_ABI=0
+)
 
 if (VCPKG_ROOT)
     if ("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-")

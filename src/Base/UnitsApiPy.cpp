@@ -32,6 +32,7 @@
 #include "UnitsApi.h"
 #include "Quantity.h"
 #include "QuantityPy.h"
+#include "Tools.h"
 
 
 using namespace Base;
@@ -107,7 +108,7 @@ PyObject* UnitsApi::sListSchemas(PyObject* /*self*/, PyObject* args)
         Py::Tuple tuple(num);
         for (int i = 0; i < num; i++) {
             const auto description {
-                UnitsApi::getDescription(static_cast<UnitSystem>(i)).toStdString()};
+                Tools::qstr2str(UnitsApi::getDescription(static_cast<UnitSystem>(i)))};
             tuple.setItem(i, Py::String(description.c_str()));
         }
 
@@ -124,7 +125,7 @@ PyObject* UnitsApi::sListSchemas(PyObject* /*self*/, PyObject* args)
         }
 
         const auto description {
-            UnitsApi::getDescription(static_cast<UnitSystem>(index)).toStdString()};
+            Tools::qstr2str(UnitsApi::getDescription(static_cast<UnitSystem>(index)))};
         return Py_BuildValue("s", description.c_str());
     }
 
@@ -222,5 +223,5 @@ PyObject* UnitsApi::sToNumber(PyObject* /*self*/, PyObject* args)
     }
 
     QString string = toNumber(value, qf);
-    return Py::new_reference_to(Py::String(string.toStdString()));
+    return Py::new_reference_to(Py::String(Tools::qstr2str(string)));
 }

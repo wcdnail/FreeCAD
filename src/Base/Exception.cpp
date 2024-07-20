@@ -177,7 +177,7 @@ void Exception::FormatPyStatusMessage(std::string_view sMessage, PyStatus const&
     std::ostringstream stm;
     stm << sMessage 
         << " (" << status.exitcode << " : " << status.err_msg << ")";
-    _sErrMsg = std::move(stm.str());
+    _sErrMsg = stm.str();
 }
 
 // ---------------------------------------------------------

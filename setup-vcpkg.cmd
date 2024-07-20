@@ -11,11 +11,13 @@ if NOT exist vcpkg.exe (
     call bootstrap-vcpkg.bat -disableMetrics
 )
 
+:: "qtbase[brotli,concurrent,pcre2,png,jpeg,zstd,thread,sql-sqlite,gui,opengl,widgets,openssl,network]" ^
 :: "qt3d[vulkan]" ^
 
 echo.
 vcpkg install --disable-metrics ^
-qtbase[gui,opengl,widgets] ^
+openssl[fips,ssl3,tools] ^
+qt ^
 vtk[qt,opengl,python,utf8] ^
 yaml-cpp ^
 xerces-c ^

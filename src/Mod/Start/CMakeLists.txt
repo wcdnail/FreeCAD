@@ -24,11 +24,20 @@
 if ( EXISTS "${CMAKE_SOURCE_DIR}/src/3rdParty/GSL/include" )
     include_directories( ${CMAKE_SOURCE_DIR}/src/3rdParty/GSL/include )
 else()
-    find_package(Microsoft.GSL)
+    find_package(Microsoft.GSL QUIET)
     if( Microsoft.GSL_FOUND )
         message( STATUS "Found Microsoft.GSL: version ${Microsoft.GSL_VERSION}" )
     else()
-        message( SEND_ERROR "The C++ Guidelines Support Library (GSL) submodule is not available. Please run git submodule update --init" )
+        # message( SEND_ERROR "The C++ Guidelines Support Library (GSL) submodule is not available. Please run git submodule update --init" )
+        set(MS_GSL_VERSION "v4.0.0")
+        message( STATUS "Fetching Microsoft.GSL ${MS_GSL_VERSION} ..." )
+        include(FetchContent)
+        FetchContent_Declare(GSL
+            GIT_REPOSITORY "https://github.com/microsoft/GSL"
+            GIT_TAG ${MS_GSL_VERSION}
+            GIT_SHALLOW ON
+        )
+        FetchContent_MakeAvailable(GSL)
     endif()
 endif()
 

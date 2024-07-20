@@ -95,6 +95,7 @@ recompute path. Also, it enables more complicated dependencies beyond trees.
 #include <Base/Sequencer.h>
 #include <Base/Stream.h>
 #include <Base/UnitsApi.h>
+#include <Base/Tools.h>
 
 #include "Document.h"
 #include "private/DocumentP.h"
@@ -830,7 +831,7 @@ Document::Document(const char* documentName)
     std::vector<std::string> enumValsAsVector;
     for (int i = 0; i < num; i++) {
         QString item = Base::UnitsApi::getDescription(static_cast<Base::UnitSystem>(i));
-        enumValsAsVector.emplace_back(item.toStdString());
+        enumValsAsVector.emplace_back(Base::Tools::qstr2str(item));
     }
     UnitSystem.setEnums(enumValsAsVector);
     // Get the preferences/General unit system as the default for a new document

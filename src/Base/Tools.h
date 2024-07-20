@@ -325,6 +325,8 @@ struct BaseExport Tools
     static std::string joinList(const std::vector<std::string>& vec, const std::string& sep = ", ");
 
     static std::string currentDateTimeString();
+    
+    static std::string qstr2str(QString const& qstr);
 };
 
 
