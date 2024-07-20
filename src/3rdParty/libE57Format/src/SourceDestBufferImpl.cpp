@@ -151,7 +151,7 @@ template <typename T> void SourceDestBufferImpl::_setNextReal( T inValue )
          }
          //??? fault if get special value: NaN, NegInf...  (all other ints below
          // too)
-         if ( inValue < E57_INT8_MIN || E57_INT8_MAX < inValue )
+         if ( inValue < (T)E57_INT8_MIN || (T)E57_INT8_MAX < inValue )
          {
             throw E57_EXCEPTION2( E57_ERROR_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " value=" + toString( inValue ) );
@@ -163,7 +163,7 @@ template <typename T> void SourceDestBufferImpl::_setNextReal( T inValue )
          {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
          }
-         if ( inValue < E57_UINT8_MIN || E57_UINT8_MAX < inValue )
+         if ( inValue < (T)E57_UINT8_MIN || (T)E57_UINT8_MAX < inValue )
          {
             throw E57_EXCEPTION2( E57_ERROR_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " value=" + toString( inValue ) );
@@ -199,7 +199,7 @@ template <typename T> void SourceDestBufferImpl::_setNextReal( T inValue )
          {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
          }
-         if ( inValue < E57_INT32_MIN || E57_INT32_MAX < inValue )
+         if ( inValue < (T)E57_INT32_MIN || (T)E57_INT32_MAX < inValue )
          {
             throw E57_EXCEPTION2( E57_ERROR_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " value=" + toString( inValue ) );
@@ -211,7 +211,7 @@ template <typename T> void SourceDestBufferImpl::_setNextReal( T inValue )
          {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
          }
-         if ( inValue < E57_UINT32_MIN || E57_UINT32_MAX < inValue )
+         if ( inValue < (T)E57_UINT32_MIN || (T)E57_UINT32_MAX < inValue )
          {
             throw E57_EXCEPTION2( E57_ERROR_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " value=" + toString( inValue ) );
@@ -223,7 +223,7 @@ template <typename T> void SourceDestBufferImpl::_setNextReal( T inValue )
          {
             throw E57_EXCEPTION2( E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_ );
          }
-         if ( inValue < E57_INT64_MIN || E57_INT64_MAX < inValue )
+         if ( inValue < (T)E57_INT64_MIN || (T)E57_INT64_MAX < inValue )
          {
             throw E57_EXCEPTION2( E57_ERROR_VALUE_NOT_REPRESENTABLE,
                                   "pathName=" + pathName_ + " value=" + toString( inValue ) );
@@ -243,7 +243,7 @@ template <typename T> void SourceDestBufferImpl::_setNextReal( T inValue )
             /// Does this count as conversion?  It loses information.
             /// Check for really large exponents that can't fit in a single
             /// precision
-            if ( inValue < E57_DOUBLE_MIN || E57_DOUBLE_MAX < inValue )
+            if ( inValue < (T)E57_DOUBLE_MIN || (T)E57_DOUBLE_MAX < inValue )
             {
                throw E57_EXCEPTION2( E57_ERROR_VALUE_NOT_REPRESENTABLE,
                                      "pathName=" + pathName_ + " value=" + toString( inValue ) );

@@ -71,20 +71,11 @@ if(MSVC)
          ${COIN3D_LIBRARIES}
          ${OPENGL_gl_LIBRARY}
     )
-
-    if(FREECAD_QT_MAJOR_VERSION EQUAL 6)
-        list(APPEND FreeCADGui_LIBS
-            Qt6::GuiPrivate
-        )
-    endif()
-
-
     if(FREECAD_USE_3DCONNEXION)
         list(APPEND FreeCADGui_LIBS
             hid
         )
     endif()
-
 else(MSVC)
     set(FreeCADGui_LIBS
         FreeCADApp
@@ -94,6 +85,12 @@ else(MSVC)
         ${3DCONNEXION_LINKFLAGS}
     )
 endif(MSVC)
+
+if(FREECAD_QT_MAJOR_VERSION EQUAL 6)
+list(APPEND FreeCADGui_LIBS
+    Qt6::GuiPrivate
+)
+endif()
 
 include_directories(
     ${QtCore_INCLUDE_DIRS}
@@ -105,7 +102,9 @@ include_directories(
     ${QtNetwork_INCLUDE_DIRS}
     ${QtUiTools_INCLUDE_DIRS}
     ${QtXml_INCLUDE_DIRS}
+    ${QtGui_INCLUDE_DIRS}
 )
+
 list(APPEND FreeCADGui_LIBS
     ${QtCore_LIBRARIES}
     ${QtWidgets_LIBRARIES}

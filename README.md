@@ -1,6 +1,6 @@
 <a href="https://freecad.org"><img src="/src/Gui/Icons/freecad.svg" height="100px" width="100px"></a>
 
-### Your own 3D parametric modeler
+## Your own 3D parametric modeler
 
 [Website](https://www.freecad.org) • 
 [Documentation](https://wiki.freecad.org) •
@@ -56,9 +56,30 @@ Other options are described at the [wiki Download page](https://wiki.freecad.org
 Compiling
 ---------
 
-### Build with VCPKG
+## Windows
 
-(Fork specific)
+### Build with MSYS/Clang
+
+- Install cmake for windows, do not install msys cmake
+- Install ninja, also not from msys
+- Install msys
+- Add cmake/bin, ninja, msys/clang64/bin & msys/usr/bin to PATH
+
+The msys cmake & ninja binaries works incorrectly with windows paths, so install native windows msi packages, or standalone binaries.
+
+Open msys bash and run:
+```bash
+cd /FreeCAD/source/root/dir
+
+./setup-msys.sh
+./bld-msys-clang.sh
+
+cmake --build .chacha
+```
+
+Or open `/FreeCAD/source/root/dir` in Visual Studio Code, select `MSYS Release` preset, and ALGA! :-)
+
+### Build with MSVS/VCPKG
 
 Clone VCPKG [this fork](https://gitflic.ru/project/gera/wcpkg.git) it contain all patches to build FreeCAD.
 Also this fork provide vcpkg-tool WITH NO MS metering service - sending metering was prohibited (removed from code).
@@ -75,7 +96,7 @@ cmake --build bld
 Or run MSVS from solution from bld dir.
 (My MSVS with ReSharper **crashes** with opened FreeCAD solution file!)
 
-#### Build with VCPKG done
+## Legacy build
 
 Compiling FreeCAD requires installation of several libraries and their 
 development files such as OCCT (Open Cascade), Coin and Qt, listed in the 

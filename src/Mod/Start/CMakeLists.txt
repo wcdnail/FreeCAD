@@ -36,8 +36,10 @@ else()
             GIT_REPOSITORY "https://github.com/microsoft/GSL"
             GIT_TAG ${MS_GSL_VERSION}
             GIT_SHALLOW ON
+            FIND_PACKAGE_ARGS NAMES Microsoft.GS
         )
         FetchContent_MakeAvailable(GSL)
+        include_directories(${CMAKE_BINARY_DIR}/_deps/gsl-src/include)
     endif()
 endif()
 

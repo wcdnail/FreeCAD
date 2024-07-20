@@ -326,7 +326,7 @@ struct BaseExport Tools
 
     static std::string currentDateTimeString();
     
-    static std::string qstr2str(QString const& qstr);
+    static std::string qstr2Str(QString const& qstr);
 };
 
 

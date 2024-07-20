@@ -343,7 +343,6 @@ endif(FREECAD_USE_PCH)
 add_library(FreeCADApp SHARED ${FreeCADApp_SRCS})
 set_target_properties(FreeCADApp PROPERTIES FOLDER "Main")
 
-message(STATUS ">>>> FreeCADApp_LIBS: ${FreeCADApp_LIBS}")
 target_link_libraries(FreeCADApp ${FreeCADApp_LIBS})
 if (FREECAD_WARN_ERROR)
     target_compile_warn_error(FreeCADApp)

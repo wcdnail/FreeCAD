@@ -257,7 +257,7 @@ QString Quantity::getSafeUserString() const
         }
     }
     retString =
-        QString::fromStdString(Base::Tools::escapeQuotesFromString(Tools::qstr2str(retString)));
+        QString::fromStdString(Base::Tools::escapeQuotesFromString(retString.toStdString()));
     return retString;
 }
 

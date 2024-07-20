@@ -302,7 +302,7 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/.chacha",
             "cacheVariables": {
-                "CMAKE_VERBOSE_MAKEFILE":  { "type": "BOOL", "value": "ON" },
+                "CMAKE_VERBOSE_MAKEFILE":  { "type": "BOOL", "value": "OFF" },
                 "BUILD_ENABLE_CXX_STD": "C++17",
                 "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_C_COMPILER": { "type": "FILEPATH", "value": "$env{MSYS_ROOT}/clang64/bin/clang.exe" },
