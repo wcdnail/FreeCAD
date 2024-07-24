@@ -134,7 +134,7 @@ int main(int argc, char** argv)
         if (fc_py_stdlib) {
             Py_SetPath(fc_py_stdlib);
         }
-#elif defined(_WIN32) && defined(_MSC_VER)
+#elif 0 // defined(_WIN32) && defined(_MSC_VER)
         _wputenv(L"PYTHONPATH=");
         wchar_t* fc_py_home{_wgetenv(L"FC_PYTHONHOME")};
         if (fc_py_home) {
