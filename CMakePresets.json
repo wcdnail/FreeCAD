@@ -283,78 +283,90 @@
             ]
         },
         {
-            "name": "msys-hints",
-            "displayName": "DO NOT select this!",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/.chacha",
+            "name": "CxxCommon",
+            "hidden": true,
+            "environment": {
+                "CFLAGS": "-fdiagnostics-absolute-paths",
+                "CXXFLAGS": "-fdiagnostics-absolute-paths"
+            },
+            "cacheVariables": {
+                "CMAKE_VERBOSE_MAKEFILE": { "type": "BOOL", "value": "ON" },
+                "CMAKE_INSTALL_PREFIX": { "type": "FILEPATH", "value": "${sourceDir}/instd" }
+            }
+        },
+        {
+            "name": "MSYSClangCommon",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": { "type": "FILEPATH", "value": "$env{MSYS_ROOT}/clang64/bin/clang.exe" },
+                "CMAKE_CXX_COMPILER": { "type": "FILEPATH", "value": "$env{MSYS_ROOT}/clang64/bin/clang++.exe" },
+                "CMAKE_RC_COMPILER": { "type": "FILEPATH", "value": "$env{MSYS_ROOT}/clang64/bin/windres.exe" },
+                "CMAKE_PREFIX_PATH": { "type": "FILEPATH", "value": "$env{MSYS_ROOT}/clang64" },
+                "CMAKE_SYSTEM_PREFIX_PATH": { "type": "FILEPATH", "value": "$env{MSYS_ROOT}/clang64" }
+            }
+        },
+        {
+            "name": "MSYS_Temp",
+            "hidden": true,
             "cacheVariables": {
                 "CMAKE_VERBOSE_MAKEFILE":  { "type": "BOOL", "value": "ON" },
-                "CMAKE_MAKE_PROGRAM": {
-                    "type": "FILEPATH",
-                    "value": "$env{MSYS_ROOT}/usr/bin/make.exe"
-                }
+                "CMAKE_MAKE_PROGRAM": { "type": "FILEPATH", "value": "$env{MSYS_ROOT}/usr/bin/make.exe" }
             }
         },
         {
-            "name": "msys-release",
-            "displayName": "MSYS Release",
-            "description": "MSYS clang bconf",
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/.chacha",
+            "name": "HCTools",
+            "hidden": true,
             "cacheVariables": {
-                "CMAKE_VERBOSE_MAKEFILE":  { "type": "BOOL", "value": "OFF" },
+                "CMAKE_MAKE_PROGRAM": { "type": "FILEPATH", "value": "C:/_/tools/ninja.exe" }
+            }
+        },
+        {
+            "name": "FreeCADCommon",
+            "hidden": true,
+            "cacheVariables": {
                 "BUILD_ENABLE_CXX_STD": "C++20",
-                "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_C_COMPILER": { "type": "FILEPATH", "value": "$env{MSYS_ROOT}/clang64/bin/clang.exe" },
-                "CMAKE_CXX_COMPILER": { "type": "FILEPATH", "value": "$env{MSYS_ROOT}/clang64/bin/clang++.exe" },
-                "CMAKE_RC_COMPILER": { "type": "FILEPATH", "value": "$env{MSYS_ROOT}/clang64/bin/windres.exe" },
-                "CMAKE_INSTALL_PREFIX": { "type": "FILEPATH", "value": "${sourceDir}/instd" },
-                "CMAKE_PREFIX_PATH": { "type": "FILEPATH", "value": "$env{MSYS_ROOT}/clang64" },
-                "CMAKE_SYSTEM_PREFIX_PATH": { "type": "FILEPATH", "value": "$env{MSYS_ROOT}/clang64" },
                 "FREECAD_RELEASE_PDB":  { "type": "BOOL", "value": "ON" },
                 "FREECAD_LIBPACK_USE": { "type": "BOOL", "value": "OFF" },
+                "FREECAD_USE_EXTERNAL_SMESH": { "type": "BOOL", "value": "OFF" },
+                "FREECAD_USE_PCH": { "type": "BOOL", "value": "ON" },
+                "FREECAD_USE_OCC_VARIANT": "SYSTEM",
                 "BUILD_FEM": { "type": "BOOL", "value": "OFF" },
                 "BUILD_MESH": { "type": "BOOL", "value": "OFF" },
                 "BUILD_GUI": { "type": "BOOL", "value": "ON" },
                 "BUILD_DRAWING": { "type": "BOOL", "value": "ON" },
                 "BUILD_ASSEMBLY": { "type": "BOOL", "value": "OFF" },
-                "FREECAD_USE_EXTERNAL_SMESH": { "type": "BOOL", "value": "OFF" },
                 "ENABLE_DEVELOPER_TESTS": { "type": "BOOL", "value": "OFF" },
                 "BUILD_DESIGNER_PLUGIN": { "type": "BOOL", "value": "OFF" },
-                "FREECAD_USE_PCH": { "type": "BOOL", "value": "ON" },
-                "FREECAD_USE_OCC_VARIANT": "SYSTEM",
                 "PACKAGE_WCURL": "https://github.com/wcdnail/FreeCAD"
             }
         },
         {
-            "name": "msys-debug",
-            "displayName": "MSYS Debug",
-            "description": "MSYS clang bconf",
+            "name": "MSYSClangDebug",
+            "displayName": "MSYS/Clang Debug",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/.chacha-debug",
+            "inherits": [
+                "CxxCommon",
+                "MSYSClangCommon",
+                "FreeCADCommon"
+            ],
             "cacheVariables": {
-                "CMAKE_VERBOSE_MAKEFILE":  { "type": "BOOL", "value": "OFF" },
-                "BUILD_ENABLE_CXX_STD": "C++20",
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_C_COMPILER": { "type": "FILEPATH", "value": "$env{MSYS_ROOT}/clang64/bin/clang.exe" },
-                "CMAKE_CXX_COMPILER": { "type": "FILEPATH", "value": "$env{MSYS_ROOT}/clang64/bin/clang++.exe" },
-                "CMAKE_RC_COMPILER": { "type": "FILEPATH", "value": "$env{MSYS_ROOT}/clang64/bin/windres.exe" },
-                "CMAKE_INSTALL_PREFIX": { "type": "FILEPATH", "value": "${sourceDir}/instd" },
-                "CMAKE_PREFIX_PATH": { "type": "FILEPATH", "value": "$env{MSYS_ROOT}/clang64" },
-                "CMAKE_SYSTEM_PREFIX_PATH": { "type": "FILEPATH", "value": "$env{MSYS_ROOT}/clang64" },
-                "FREECAD_RELEASE_PDB":  { "type": "BOOL", "value": "ON" },
-                "FREECAD_LIBPACK_USE": { "type": "BOOL", "value": "OFF" },
-                "BUILD_FEM": { "type": "BOOL", "value": "OFF" },
-                "BUILD_MESH": { "type": "BOOL", "value": "OFF" },
-                "BUILD_GUI": { "type": "BOOL", "value": "ON" },
-                "BUILD_DRAWING": { "type": "BOOL", "value": "ON" },
-                "BUILD_ASSEMBLY": { "type": "BOOL", "value": "OFF" },
-                "FREECAD_USE_EXTERNAL_SMESH": { "type": "BOOL", "value": "OFF" },
-                "ENABLE_DEVELOPER_TESTS": { "type": "BOOL", "value": "OFF" },
-                "BUILD_DESIGNER_PLUGIN": { "type": "BOOL", "value": "OFF" },
-                "FREECAD_USE_PCH": { "type": "BOOL", "value": "ON" },
-                "FREECAD_USE_OCC_VARIANT": "SYSTEM",
-                "PACKAGE_WCURL": "https://github.com/wcdnail/FreeCAD"
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "MSYSClangMSVSDebug",
+            "displayName": "MSYS/Clang MSVS Debug",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/.chacha-debug",
+            "inherits": [
+                "CxxCommon",
+                "HCTools",
+                "MSYSClangCommon",
+                "FreeCADCommon"
+            ],
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
             }
         }
     ]

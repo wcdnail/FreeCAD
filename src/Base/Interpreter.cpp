@@ -632,9 +632,9 @@ const char* InterpreterSingleton::init(int argc, char* argv[])
     try {
         if (!Py_IsInitialized()) {
             initInterpreter(argc, argv);
-#if defined(_WIN32)
+#if 0 // defined(_WIN32)
             {
-                auto const* pyBinary{Py_GetProgramFullPath()};
+                auto const* pyBinary{Py_GetPath()};
                 wprintf(L"PYTHON: %s\n", pyBinary);
                 if (pyBinary) {
                     auto pyLibs{std::filesystem::path{pyBinary}.parent_path()};

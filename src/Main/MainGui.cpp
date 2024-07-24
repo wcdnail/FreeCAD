@@ -59,7 +59,7 @@
 #include <map>
 #include <stdexcept>
 
-#if defined(_WIN32) && defined(_MSC_VER)
+#if defined(_WIN32)
 #include <filesystem>
 #endif
 
@@ -110,51 +110,55 @@ private:
 
 int main(int argc, char** argv)
 {
+    {
 #if defined(FC_OS_LINUX) || defined(FC_OS_BSD)
-    setlocale(LC_ALL, "");  // use native environment settings
+        setlocale(LC_ALL, "");  // use native environment settings
 
-    // Make sure to setup the Qt locale system before setting LANG and LC_ALL to C.
-    // which is needed to use the system locale settings.
-    (void)QLocale::system();
-    // See https://forum.freecad.org/viewtopic.php?f=18&t=20600
-    // See Gui::Application::runApplication()
-    putenv("LC_NUMERIC=C");
-    putenv("PYTHONPATH=");
+        // Make sure to setup the Qt locale system before setting LANG and LC_ALL to C.
+        // which is needed to use the system locale settings.
+        (void)QLocale::system();
+        // See https://forum.freecad.org/viewtopic.php?f=18&t=20600
+        // See Gui::Application::runApplication()
+        putenv("LC_NUMERIC=C");
+        putenv("PYTHONPATH=");
 #elif defined(FC_OS_MACOSX)
-    (void)QLocale::system();
-    putenv("PYTHONPATH=");
+        (void)QLocale::system();
+        putenv("PYTHONPATH=");
 #elif defined(__MINGW32__)
-    const char* mingw_prefix = getenv("MINGW_PREFIX");
-    const char* py_home = getenv("PYTHONHOME");
-    if (!py_home && mingw_prefix) {
-        _putenv_s("PYTHONHOME", mingw_prefix);
-    }
+        const char* mingw_prefix = getenv("MINGW_PREFIX");
+        const char* py_home = getenv("PYTHONHOME");
+        if (!py_home && mingw_prefix) {
+            _putenv_s("PYTHONHOME", mingw_prefix);
+        }
+        wchar_t* fc_py_stdlib{_wgetenv(L"FC_PYTHON_STDLIB")};
+        if (fc_py_stdlib) {
+            Py_SetPath(fc_py_stdlib);
+        }
 #elif defined(_WIN32) && defined(_MSC_VER)
-    _wputenv(L"PYTHONPATH=");
-    // https://forum.freecad.org/viewtopic.php?f=4&t=18288
-    // https://forum.freecad.org/viewtopic.php?f=3&t=20515
-    wchar_t* fc_py_home{_wgetenv(L"FC_PYTHONHOME")};
-    if (fc_py_home) {
-        _wputenv_s(L"PYTHONHOME", fc_py_home);
-        std::filesystem::path py_lib_path{fc_py_home};
-        py_lib_path /= L"Lib";
-        Py_SetPath(py_lib_path.c_str());
-    }
-    else {
-        _wputenv(L"PYTHONHOME=");
-    }
+        _wputenv(L"PYTHONPATH=");
+        wchar_t* fc_py_home{_wgetenv(L"FC_PYTHONHOME")};
+        if (fc_py_home) {
+            _wputenv_s(L"PYTHONHOME", fc_py_home);
+            std::filesystem::path py_lib_path{fc_py_home};
+            py_lib_path /= L"Lib";
+            Py_SetPath(py_lib_path.c_str());
+        }
+        else {
+            _wputenv(L"PYTHONHOME=");
+        }
 #else
-    _putenv("PYTHONPATH=");
-    // https://forum.freecad.org/viewtopic.php?f=4&t=18288
-    // https://forum.freecad.org/viewtopic.php?f=3&t=20515
-    const char* fc_py_home = getenv("FC_PYTHONHOME");
-    if (fc_py_home) {
-        _putenv_s("PYTHONHOME", fc_py_home);
-    }
-    else {
-        _putenv("PYTHONHOME=");
-    }
+        _putenv("PYTHONPATH=");
+        // https://forum.freecad.org/viewtopic.php?f=4&t=18288
+        // https://forum.freecad.org/viewtopic.php?f=3&t=20515
+        const char* fc_py_home = getenv("FC_PYTHONHOME");
+        if (fc_py_home) {
+            _putenv_s("PYTHONHOME", fc_py_home);
+        }
+        else {
+            _putenv("PYTHONHOME=");
+        }
 #endif
+    }
 
 #if defined(FC_OS_WIN32)
     // we need to force Coin not to use Freetype in order to find installed fonts on Windows
@@ -177,7 +181,7 @@ int main(int argc, char** argv)
     }
 
     // https://www.qt.io/blog/dark-mode-on-windows-11-with-qt-6.5
-    _putenv("QT_QPA_PLATFORM=windows:darkmode=1");
+    //_putenv("QT_QPA_PLATFORM=windows:darkmode=1");
 #endif
 
     // Name and Version of the Application

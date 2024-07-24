@@ -1,16 +1,17 @@
 #!/bin/bash
 
-pushd .chacha
+export MINGW_PREFIX=$MSYS_ROOT/clang64
+export FC_ROOT=c:/_/FreeCAD/.chacha-debug
+export FC_PYTHON_STDLIB=$(python -c "import sysconfig; print(sysconfig.get_path('stdlib'))")
 
 # Log: PythonSearchPath = C:/msys/clang64/lib/python311.zip;C:/msys/clang64/lib/python3.11;D:/a/msys64/clang64/lib/python3.11/lib-dynload
+#export PYTHONPATH=${FCROOT}/bin;${FCROOT}/Mod/Start
 
-export MINGW_PREFIX=$MSYS_ROOT/clang64
-export FCROOT=c:/_/FreeCAD/.chacha
-export PYTHONPATH=${FCROOT}/bin;${FCROOT}/Mod/Start
+pushd $FC_ROOT
 
-mkdir ${FCROOT}/config 2> /dev/null
+mkdir ${FC_ROOT}/config 2> /dev/null
 
-./bin/FreeCAD.exe --log-file ${FCROOT}/log.txt -u ${FCROOT}/config/user.cfg ${FCROOT}/config/system.cfg
+./bin/FreeCAD.exe --log-file ${FC_ROOT}/log.txt -u ${FC_ROOT}/config/user.cfg ${FC_ROOT}/config/system.cfg
 
 cat log.txt
 

@@ -5,15 +5,19 @@
             "name": "C++WINGDB",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/.chacha/bin/FreeCAD.exe",
+            "program": "${workspaceFolder}/.chacha-debug/bin/FreeCAD.exe",
             "args": [
-                "--log-file log.txt",
-                "-u config/user.cfg",
-                "-s config/system.cfg"
+                "--log-file", "log.txt",
+                "-u", "config/user.cfg",
+                "-s", "config/system.cfg"
             ],
-            "stopAtEntry": true,
-            "cwd": "${workspaceFolder}/.chacha",
-            "environment": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/.chacha-debug",
+            "environment": [
+                { "name": "MINGW_PREFIX", "value": "${env:MSYS_ROOT}/clang64" },
+                { "name": "FC_PYTHON_STDLIB", "value": "C:/msys/clang64/lib/python311.zip;C:/msys/clang64/lib/python3.11;D:/a/msys64/clang64/lib/python3.11/lib-dynload" },
+                { "name": "VS_CODE_LAUNCH_HINT", "value": "https://code.visualstudio.com/docs/editor/variables-reference#_environment-variables" }
+            ],
             "externalConsole": true,
             "pipeTransport": {
                 "debuggerPath": "${env:MSYS_ROOT}/clang64/bin/gdb.exe",
@@ -38,14 +42,14 @@
             "name": "C++VSDBG",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/.chacha/bin/FreeCAD.exe",
+            "program": "${workspaceFolder}/.chacha-debug/bin/FreeCAD.exe",
             "args": [
-                "--log-file log.txt",
-                "-u config/user.cfg",
-                "-s config/system.cfg"
+                "--log-file", "log.txt",
+                "-u", "config/user.cfg",
+                "-s", "config/system.cfg"
             ],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/.chacha",
+            "cwd": "${workspaceFolder}/.chacha-debug",
             "environment": [],
             "console": "externalTerminal"
         }

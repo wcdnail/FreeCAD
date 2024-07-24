@@ -58,7 +58,7 @@ macro(InitializeFreeCADBuildOptions)
             # message(STATUS "Libpack NOT found.\nIf you intend to use a Windows libpack, set the FREECAD_LIBPACK_DIR to the libpack directory.")
             # message(STATUS "Visit: https://github.com/FreeCAD/FreeCAD-Libpack/releases/ for Windows libpack downloads.")
             
-            message(STATUS ">>>> Юзаем VCPKG! В жопу Libpack!")
+            message(STATUS ">>>> Юзаем VCPKG/MSYS! В жопу Libpack!")
         endif()
     elseif(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
         option(FREECAD_WARN_ERROR "Make all warnings into errors. " OFF)
