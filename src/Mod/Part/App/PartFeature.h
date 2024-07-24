@@ -71,7 +71,7 @@ public:
 
     PyObject* getPyObject() override;
 
-    std::pair<std::string,std::string> getElementName(
+    App::ElementNamePair getElementName(
             const char *name, ElementNameType type=Normal) const override;
 
     static std::list<Data::HistoryItem> getElementHistory(App::DocumentObject *obj,
@@ -157,7 +157,7 @@ public:
 #ifdef FC_USE_TNP_FIX
 
     const std::vector<std::string>& searchElementCache(const std::string &element,
-                                                       Data::SearchOptions options = Data::SearchOptions::CheckGeometry,
+                                                       Data::SearchOptions options = Data::SearchOption::CheckGeometry,
                                                        double tol = 1e-7,
                                                        double atol = 1e-10) const override;
 #endif
@@ -180,7 +180,7 @@ protected:
      * Vertex/Edge/Face, this function will auto generate a name from primary
      * sub-shapes.
      */
-    std::pair<std::string,std::string> getExportElementName(TopoShape shape, const char *name) const;
+    App::ElementNamePair getExportElementName(TopoShape shape, const char *name) const;
 
     /**
      * Build a history of changes

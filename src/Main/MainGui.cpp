@@ -130,10 +130,12 @@ int main(int argc, char** argv)
         if (!py_home && mingw_prefix) {
             _putenv_s("PYTHONHOME", mingw_prefix);
         }
+#if 0
         wchar_t* fc_py_stdlib{_wgetenv(L"FC_PYTHON_STDLIB")};
         if (fc_py_stdlib) {
             Py_SetPath(fc_py_stdlib);
         }
+#endif
 #elif 0 // defined(_WIN32) && defined(_MSC_VER)
         _wputenv(L"PYTHONPATH=");
         wchar_t* fc_py_home{_wgetenv(L"FC_PYTHONHOME")};
